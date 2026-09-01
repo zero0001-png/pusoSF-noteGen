@@ -1,1 +1,2089 @@
 
+html {
+    scroll-behavior: smooth;
+}
+
+/* =========================================================
+   SPACING VARIABLES
+   ========================================================= */
+:root {
+    --field-gap: 6px;      
+    --field-stack: 16px;   
+    --row-gap: 12px;       
+}
+
+:root {
+    /* ---- Light mode (default) ---- */
+    --bg-input: #ffffff;
+    --scrollbar-track: transparent;
+    --scrollbar-thumb: #cbd5e1;
+    --scrollbar-thumb-hover: #94a3b8;
+    --field-radius: 10px;
+
+    /* ---- Glassmorphism surfaces (light) ---- */
+    --glass-bg: rgba(255, 255, 255, 0.55);
+    --glass-bg-strong: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.6);
+    --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
+    --glass-highlight: rgba(255, 255, 255, 0.8);
+    --glass-blur: 18px;
+
+    /* ---- Gradient ray background (light) — color scheme from the 1st CSS file ---- */
+--ray-bg:
+    radial-gradient(1200px 600px at 10% -10%, rgba(255, 99, 132, 0.18), rgba(246, 247, 251, 0) 55%),
+    radial-gradient(1000px 700px at 90% 0%, rgba(58, 134, 255, 0.16), rgba(246, 247, 251, 0) 55%),
+    radial-gradient(900px 900px at 50% 110%, rgba(47, 158, 68, 0.14), rgba(246, 247, 251, 0) 60%),
+    #f6f7fb;
+
+
+    /* ---- Modal-specific glass (light): lighter, more opaque than panel glass ---- */
+    --modal-backdrop: rgba(148, 163, 184, 0.35);
+    --glass-modal-bg: rgba(255, 255, 255, 0.82);
+    --glass-field-bg: rgba(255, 255, 255, 0.95);
+    --glass-field-border: rgba(15, 23, 42, 0.14);
+    --glass-field-text: #0f172a;
+}
+
+/* This project toggles dark mode via the "dark" class on <body> */
+body.dark {
+    /* ---- Dark mode overrides ---- */
+    --bg-input: #1a202c;
+    --scrollbar-track: transparent;
+    --scrollbar-thumb: #4a5568;
+    --scrollbar-thumb-hover: #718096;
+
+    /* ---- Glassmorphism surfaces (dark) ---- */
+    --glass-bg: rgba(21, 23, 30, 0.55);
+    --glass-bg-strong: rgba(21, 23, 30, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+    --glass-highlight: rgba(255, 255, 255, 0.04);
+    --glass-blur: 18px;
+
+    /* ---- Gradient ray background (dark) — deeper black base, 1st-file color scheme ---- */
+--ray-bg: 
+  radial-gradient(1200px 600px at 10% -10%, rgba(245, 158, 11, 0.1), rgba(12, 10, 9, 0) 50%),
+  radial-gradient(1000px 700px at 90% -5%, rgba(168, 85, 247, 0.14), rgba(12, 10, 9, 0) 55%),
+  radial-gradient(900px 900px at 50% 110%, rgba(239, 68, 68, 0.07), rgba(12, 10, 9, 0) 60%),
+  #020202; 
+
+
+    /* ---- Modal-specific glass (dark): richer + more opaque than panel glass, darker fields for contrast ---- */
+    --modal-backdrop: rgba(2, 6, 15, 0.55);
+    --glass-modal-bg: rgba(22, 24, 32, 0.86);
+    --glass-field-bg: rgba(9, 10, 14, 0.75);
+    --glass-field-border: rgba(255, 255, 255, 0.12);
+    --glass-field-text: #f1f5f9;
+}
+
+textarea {
+    border-radius: var(--field-radius);
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* Chrome / Safari / Edge */
+textarea::-webkit-scrollbar {
+    width: 10px;
+}
+
+textarea::-webkit-scrollbar-track {
+    background: var(--scrollbar-track) !important;
+    margin: 6px 0; /* keeps thumb clear of the rounded top/bottom corners */
+}
+
+textarea::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb) !important;
+    border-radius: 999px;
+    border: 2px solid var(--bg-input); /* creates the "floating pill" premium look */
+    background-clip: padding-box;
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover) !important;
+}
+
+/* Native resizer can't take border-radius reliably — see note below */
+textarea::-webkit-resizer {
+    background: var(--scrollbar-track) !important;
+}
+
+/* =========================================================
+   FONT
+   ========================================================= */
+* {
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-feature-settings: "tnum" on, "lnum" on;
+	
+}
+/* =========================================================
+   BODY & BACKGROUND
+   ========================================================= */
+body {
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    background: var(--ray-bg);
+    background-attachment: fixed;
+    transition: background 0.5s ease, color 0.3s;
+}
+
+body.dark {
+    color: #e2e8f0;
+}
+
+/* =========================================================
+   DATE INPUT - DARK MODE CALENDAR ICON
+   ========================================================= */
+input[type="date"] {
+    position: relative;
+}
+
+body.dark input[type="date"] {
+    color: #f8fafc;
+    background-color: var(--glass-bg-strong);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px 16px;
+    padding-right: 40px;
+    color-scheme: dark;
+}
+
+body.dark input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* =========================================================
+   APP HEADER ROW — title left, controls right
+   ========================================================= */
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* =========================================================
+   PREMIUM DARK MODE TOGGLE — TOGGLE ONLY
+   ========================================================= */
+
+.premium-toggle {
+    /* now a flex item inside .header-controls instead of absolutely positioned */
+    position: relative;
+    flex-shrink: 0;
+
+    width: 42px;
+    height: 42px;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--glass-border);
+    border-radius: 50%;
+
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 12px rgba(15, 23, 42, 0.08),
+        inset 0 1px 0 var(--glass-highlight);
+
+    transition:
+        background 0.35s ease,
+        border-color 0.35s ease,
+        box-shadow 0.35s ease,
+        transform 0.2s ease;
+
+    /* --- glass-glow additions --- */
+    overflow: hidden;
+    isolation: isolate;
+    animation: idle-pulse 6s ease-in-out infinite;
+}
+
+.premium-toggle::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+        from var(--angle, 0deg),
+        rgba(56,189,248,0) 0%,
+        rgba(56,189,248,0.6) 15%,
+        rgba(99,102,241,0.6) 35%,
+        rgba(56,189,248,0) 55%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity .35s ease;
+    z-index: -1;
+    animation: spin-border 4s linear infinite paused;
+}
+
+.premium-toggle:hover::before {
+    opacity: 1;
+    animation-play-state: running;
+}
+
+.premium-toggle:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 7px 18px rgba(15, 23, 42, 0.13),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.premium-toggle:active {
+    transform: translateY(0) scale(0.97);
+}
+
+@keyframes idle-pulse {
+    0%, 100% { box-shadow: 0 4px 12px rgba(15,23,42,0.08), inset 0 1px 0 var(--glass-highlight); }
+    50% { box-shadow: 0 4px 12px rgba(15,23,42,0.08), inset 0 1px 0 var(--glass-highlight), 0 0 0 3px rgba(56,189,248,0.08); }
+}
+
+@keyframes spin-border { to { --angle: 360deg; } }
+
+@property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .premium-toggle,
+    .premium-toggle::before,
+    .premium-sun,
+    .premium-moon {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* =========================================================
+   TOGGLE ICON — single sun/moon icon centered in the circle
+   (replaces the old track+knob switch since the reference
+   image shows a compact icon button, not a sliding switch)
+   ========================================================= */
+
+.premium-toggle-track,
+.premium-toggle-knob {
+    display: none; /* switch visuals no longer used in the icon-button layout */
+}
+
+.premium-toggle-icon {
+    position: static;
+    transform: none;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    line-height: 1;
+    pointer-events: none;
+    transition:
+        opacity 0.3s ease,
+        transform 0.35s ease,
+        filter 0.3s ease;
+}
+
+.premium-sun {
+    color: #f59e0b;
+    opacity: 1;
+    position: absolute;
+}
+
+.premium-moon {
+    color: #64748b;
+    opacity: 0;
+    position: absolute;
+    transform: scale(0.7);
+}
+
+body.dark .premium-sun {
+    opacity: 0;
+    transform: scale(0.7);
+}
+
+body.dark .premium-moon {
+    opacity: 1;
+    color: #7dd3fc;
+    transform: scale(1);
+}
+
+.premium-toggle:hover .premium-sun {
+    filter: drop-shadow(0 0 5px rgba(245,166,35,0.6));
+    transform: rotate(25deg) scale(1.1);
+}
+
+body.dark .premium-toggle:hover .premium-moon {
+    filter: drop-shadow(0 0 5px rgba(125,211,252,0.6));
+    transform: rotate(-18deg) scale(1.1);
+}
+
+/* =========================================================
+   DARK MODE — toggle button surface
+   ========================================================= */
+
+body.dark .premium-toggle {
+    box-shadow:
+        0 5px 18px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 var(--glass-highlight);
+}
+
+body.dark .premium-toggle:hover {
+    border-color: #3b4558;
+
+    box-shadow:
+        0 8px 22px rgba(0, 0, 0, 0.5),
+        0 0 18px rgba(56, 189, 248, 0.06);
+}
+
+/* =========================================================
+   HEADER TITLE — dark pill, left-aligned (matches reference image)
+   ========================================================= */
+h1 {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    margin: 0;
+    flex-shrink: 1;
+    min-width: 0;
+    background: rgba(60, 60, 66, 0.65);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    padding: 12px 24px;
+    color: #f8fafc;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+body.dark h1 {
+    background: rgba(0, 0, 0, 0.55);
+}
+
+/* =========================================================
+   TOOLBAR
+   ========================================================= */
+.toolbar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.toolbar button {
+    font-size: 11px;
+    padding: 6px 14px;
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    cursor: pointer;
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: #334155;
+    font-weight: 600;
+    box-shadow: inset 0 1px 0 var(--glass-highlight);
+    transition: all 0.2s;
+}
+
+.toolbar button:hover {
+    background: rgba(56, 189, 248, 0.18);
+    color: #0f172a;
+}
+
+body.dark .toolbar button {
+    color: #cbd5e1;
+}
+
+body.dark .toolbar button:hover {
+    background: rgba(56, 189, 248, 0.12);
+    color: #fff;
+}
+
+/* =========================================================
+   LAYOUT
+   ========================================================= */
+.container {
+    width: 1300px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: stretch;
+}
+/* =========================================================
+   PANELS
+   ========================================================= */
+.panel {
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid var(--glass-border);
+    box-shadow:
+        var(--glass-shadow),
+        inset 0 1px 0 var(--glass-highlight);
+    display: flex;
+    flex-direction: column;
+    min-height: 720px;
+    transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+body.dark .panel {
+    box-shadow:
+        var(--glass-shadow),
+        inset 0 1px 0 var(--glass-highlight);
+}
+
+.panel h2 {
+    margin: 0 0 15px;
+    color: #38bdf8;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+/* =========================================================
+   INPUTS & LABELS
+   ========================================================= */
+label {
+    display: block;
+    margin: var(--field-stack) 0 var(--field-gap) 0;
+    font-size: 11px;
+    font-weight: 700;
+    color: #94a3b8;
+    letter-spacing: 0.5px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(148, 163, 184, 0.55);
+    font-size: 13px;
+    outline: none;
+    background: #ffffff;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: #1e293b;
+    box-shadow:
+        0 1px 3px rgba(15, 23, 42, 0.07),
+        inset 0 1px 0 var(--glass-highlight);
+    transition: all 0.2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #38bdf8;
+    box-shadow: inset 0 1px 0 var(--glass-highlight), 0 0 0 1px #38bdf8;
+}
+
+body.dark input,
+body.dark select,
+body.dark textarea {
+    background: var(--glass-bg-strong);
+    border-color: var(--glass-border);
+    color: #d3d9e0;
+    box-shadow: inset 0 1px 0 var(--glass-highlight);
+}
+
+/* =========================================================
+   SELECT ARROW
+   ========================================================= */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b'><path d='M1 4l5 5 5-5H1z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: calc(100% - 14px) center;
+    padding-right: 36px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 75px;
+}
+
+/* =========================================================
+   GRID UTILITIES
+   ========================================================= */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--row-gap);
+    margin-top: 0;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+/* =========================================================
+   OUTPUT
+   ========================================================= */
+.output {
+    margin-top: var(--field-stack);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+input[readonly],
+textarea[readonly] {
+    background-color: #f0f0f0;
+    color: #6b7280;
+    border-color: #e0e0e0;
+    cursor: default;
+    opacity: 0.95;
+}
+
+#subjectOutput {
+    padding: 10px 12px;
+}
+
+.output textarea,
+.report-area textarea {
+    min-height: 250px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+    font-size: 14px;
+    white-space: pre-wrap;
+}
+
+body.dark input[readonly],
+body.dark textarea[readonly] {
+    background: #1c1f26;
+    color: #b8c2cc;
+    border: 1px solid #363c46;
+    border-left: 4px solid rgba(99, 102, 241, 0.4);
+    box-shadow:
+        inset 0 2px 3px rgba(0, 0, 0, 0.35),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.03);
+    opacity: 1;
+}
+
+body.dark input[type="date"]::-webkit-datetime-edit {
+    color: #d3d9e0;
+}
+
+body.dark input[type="date"]::-webkit-datetime-edit-text {
+    color: #8b95a3;
+}
+
+body.dark input[type="date"]::-webkit-datetime-edit-month-field,
+body.dark input[type="date"]::-webkit-datetime-edit-day-field,
+body.dark input[type="date"]::-webkit-datetime-edit-year-field {
+    color: #d3d9e0;
+}
+
+body.dark select {
+    background-color: var(--glass-bg-strong);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238b95a3'><path d='M1 4l5 5 5-5H1z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: calc(100% - 14px) center;
+    color: #d3d9e0;
+}
+
+body.dark select option {
+    background: #1a1c1d;
+    color: #d3d9e0;
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+button.action {
+    position: relative;
+    overflow: hidden;
+    margin-top: 14px;
+    padding: 11px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-shadow:
+        0 4px 10px rgba(29, 78, 216, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.3s ease,
+        background 0.3s ease;
+}
+
+/* Shine sweep — same technique as .premium-reset */
+button.action::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.35),
+        transparent
+    );
+    transform: skewX(-20deg);
+    transition: left 0.5s ease;
+}
+
+button.action:hover {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    transform: translateY(-2px);
+    box-shadow:
+        0 8px 20px rgba(29, 78, 216, 0.35),
+        0 0 0 3px rgba(56, 189, 248, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+button.action:hover::before {
+    left: 130%;
+}
+
+button.action:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: 0 3px 8px rgba(29, 78, 216, 0.3);
+}
+
+button.action:focus-visible {
+    outline: none;
+    box-shadow:
+        0 0 0 2px #f4f6f9,
+        0 0 0 4px #38bdf8,
+        0 8px 20px rgba(29, 78, 216, 0.3);
+}
+
+body.dark button.action {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    box-shadow:
+        0 4px 14px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+body.dark button.action:hover {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.5),
+        0 0 18px rgba(56, 189, 248, 0.15);
+}
+body.dark button.action:focus-visible {
+    box-shadow:
+        0 0 0 2px #0d0e12,
+        0 0 0 4px #38bdf8,
+        0 8px 20px rgba(56, 189, 248, 0.3);
+}
+
+button.action.copied {
+    background: linear-gradient(135deg, #34d399 0%, #10b981 100%) !important;
+    box-shadow:
+        0 8px 20px rgba(16, 185, 129, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    animation: actionPop 0.35s ease;
+}
+@keyframes actionPop {
+    0%   { transform: scale(1); }
+    35%  { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* =========================================================
+   BUTTON ICON ANIMATION
+   ========================================================= */
+.action-icon {
+    display: inline-block;
+    transition: transform 0.3s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* idle hover wiggle */
+button.action:hover .action-icon {
+    animation: iconWiggle 0.5s ease;
+}
+@keyframes iconWiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25%      { transform: rotate(-12deg) scale(1.1); }
+    75%      { transform: rotate(12deg) scale(1.1); }
+}
+
+/* press feedback */
+button.action:active .action-icon {
+    transform: scale(0.85);
+}
+
+/* success — icon flips over like a card, swaps to a checkmark */
+button.action.copied .action-icon {
+    animation: iconFlip 0.4s ease forwards;
+}
+@keyframes iconFlip {
+    0%   { transform: rotateY(0deg) scale(1); }
+    50%  { transform: rotateY(90deg) scale(0.7); }
+    51%  { content: "✓"; }
+    100% { transform: rotateY(0deg) scale(1.1); }
+}
+
+
+/* =========================================================
+   TWO COLUMN ROW
+   ========================================================= */
+.two-column-row {
+    display: flex;
+    gap: var(--row-gap);
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.two-column-row .input-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* =========================================================
+   BUSINESS ZONE SEARCH
+   ========================================================= */
+.business-search-section {
+    max-width: 1300px;
+    margin: 25px auto 0;
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow:
+        var(--glass-shadow),
+        inset 0 1px 0 var(--glass-highlight);
+}
+
+.business-search-section h2 {
+    margin: 0 0 15px;
+    color: #38bdf8;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.business-search-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 15px;
+    align-items: start;
+}
+
+.business-search-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.business-search-box label {
+    margin-top: 0;
+}
+
+.business-search-box input {
+    height: 42px;
+}
+
+.business-search-hint {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 7px;
+    line-height: 1.4;
+}
+
+.business-results-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    max-height: 350px;
+    overflow-y: auto;
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+}
+
+.business-results-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.business-results-table th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    color: #334155;
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.business-results-table td {
+    padding: 9px 12px;
+    border-top: 1px solid #e2e8f0;
+    color: #334155;
+    vertical-align: middle;
+}
+
+body.dark .business-results-table th {
+    color: #94a3b8;
+}
+
+body.dark .business-results-table td {
+    border-top-color: #222530;
+    color: #e2e8f0;
+}
+
+.business-results-table tbody tr:hover {
+    background: rgba(56, 189, 248, 0.08);
+}
+
+.business-empty {
+    text-align: center;
+    color: #94a3b8;
+    padding: 25px !important;
+}
+
+.business-count {
+    margin-top: 7px;
+    font-size: 10px;
+    color: #64748b;
+}
+
+body.dark .business-count {
+    color: #94a3b8;
+}
+
+.business-highlight {
+    background-color: #ffe066;
+    color: #000;
+    font-weight: 700;
+    padding: 1px 3px;
+    border-radius: 3px;
+}
+
+/* =========================================================
+   SEARCH SELECT BUTTON
+   ========================================================= */
+.business-select-cell {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.business-select-button {
+    border: 1px solid #38bdf8;
+    border-radius: 6px;
+    padding: 6px 12px;
+    background: #e0f2fe;
+    color: #0369a1;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.1s;
+}
+
+.business-select-button:hover {
+    background: #38bdf8;
+    color: #ffffff;
+}
+
+.business-select-button:active {
+    transform: scale(0.96);
+}
+
+body.dark .business-select-button {
+    background: #082f49;
+    border-color: #38bdf8;
+    color: #7dd3fc;
+}
+
+body.dark .business-select-button:hover {
+    background: #38bdf8;
+    color: #082f49;
+}
+
+/* =========================================================
+   ZONE EMAIL DIRECTORY BUTTON + MODAL CONTENT
+   ========================================================= */
+.zone-directory-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-left: 6px;
+    vertical-align: middle;
+    border: 1px solid #38bdf8;
+    border-radius: 6px;
+    background: #e0f2fe;
+    color: #0369a1;
+    font-size: 11px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.1s;
+}
+
+.zone-directory-btn:hover {
+    background: #38bdf8;
+    color: #ffffff;
+}
+
+.zone-directory-btn:active {
+    transform: scale(0.94);
+}
+
+body.dark .zone-directory-btn {
+    background: #082f49;
+    border-color: #38bdf8;
+    color: #7dd3fc;
+}
+
+body.dark .zone-directory-btn:hover {
+    background: #38bdf8;
+    color: #082f49;
+}
+
+.zone-directory-leader {
+    padding: 10px 12px;
+    border: 1px solid var(--glass-field-border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    background: var(--glass-field-bg);
+    font-size: 12px;
+    color: var(--glass-field-text);
+    line-height: 1.5;
+}
+
+.zone-directory-leader strong {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #64748b;
+    margin-bottom: 2px;
+}
+
+.zone-directory-group {
+    border: 1px solid var(--glass-field-border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+}
+
+.zone-directory-group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.zone-directory-group h3 {
+    margin: 0;
+    font-size: 13px;
+    color: #38bdf8;
+}
+
+.zone-directory-brgys {
+    font-size: 11px;
+    color: #64748b;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+/* ---- Copy-group button ---- */
+.zone-directory-copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    padding: 4px 10px;
+    border: 1px solid #38bdf8;
+    border-radius: 999px;
+    background: #e0f2fe;
+    color: #0369a1;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.1s;
+}
+
+.zone-directory-copy-btn:hover {
+    background: #38bdf8;
+    color: #ffffff;
+}
+
+.zone-directory-copy-btn:active {
+    transform: scale(0.94);
+}
+
+.zone-directory-copy-btn.confirmed {
+    background: #22c55e;
+    border-color: #22c55e;
+    color: #ffffff;
+}
+
+body.dark .zone-directory-copy-btn {
+    background: #082f49;
+    border-color: #38bdf8;
+    color: #7dd3fc;
+}
+
+body.dark .zone-directory-copy-btn:hover {
+    background: #38bdf8;
+    color: #082f49;
+}
+
+body.dark .zone-directory-copy-btn.confirmed {
+    background: #16a34a;
+    border-color: #16a34a;
+    color: #ffffff;
+}
+
+/* ---- Simple, understated email tags (display only, no per-email action) ---- */
+.zone-directory-emails .zone-directory-email {
+    display: inline-flex;
+    align-items: center;
+    margin: 3px 6px 3px 0;
+    padding: 3px 8px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #000000;
+    background: #f5f5f0;
+    border: 1px solid #000000;
+    border-radius: 4px;
+}
+
+/* Leadership row's email tag, same style but inline with text */
+.zone-directory-leader .zone-directory-email {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #000000;
+    background: #f5f5f0;
+    border: 1px solid #000000;
+    border-radius: 4px;
+}
+
+body.dark .zone-directory-group h3 {
+    color: #7dd3fc;
+}
+
+body.dark .zone-directory-emails .zone-directory-email,
+body.dark .zone-directory-leader .zone-directory-email {
+    color: #d4d4d4;
+    background: #2a2a2a;
+    border-color: #6b6b6b;
+}
+
+body.dark .zone-directory-brgys,
+body.dark .zone-directory-leader strong {
+    color: #94a3b8;
+}
+
+/* =========================================================
+   CASE INFORMATION BUTTON
+   ========================================================= */
+.case-info-trigger {
+    max-width: 1300px;
+    margin: 20px auto 0;
+}
+.case-info-trigger .action {
+    width: 100%;
+    margin-top: 0;
+    padding: 16px;
+    font-size: 14px;
+}
+
+/* =========================================================
+   EMAIL ESCALATION BUTTON — DISTINCT PREMIUM STYLE
+   ========================================================= */
+button.action.action-escalate {
+    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    box-shadow:
+        0 3px 8px rgba(67, 56, 202, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    animation: escalatePulse 2.4s ease-in-out infinite;
+}
+
+button.action.action-escalate:hover {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    transform: translateY(-2px);
+    animation-play-state: paused;
+    box-shadow:
+        0 10px 24px rgba(67, 56, 202, 0.45),
+        0 0 0 4px rgba(99, 102, 241, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+button.action.action-escalate:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: 0 4px 10px rgba(67, 56, 202, 0.4);
+}
+
+button.action.action-escalate:focus-visible {
+    outline: none;
+    box-shadow:
+        0 0 0 2px #f4f6f9,
+        0 0 0 4px #6366f1,
+        0 8px 20px rgba(67, 56, 202, 0.4);
+}
+
+@keyframes escalatePulse {
+    0%, 100% {
+        box-shadow:
+            0 3px 8px rgba(67, 56, 202, 0.22),
+            inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+    50% {
+        box-shadow:
+            0 3px 12px rgba(99, 102, 241, 0.32),
+            inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+}
+
+body.dark button.action.action-escalate {
+    background: linear-gradient(135deg, #4338ca 0%, #3730a3 100%);
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+body.dark button.action.action-escalate:hover {
+    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    box-shadow:
+        0 10px 26px rgba(0, 0, 0, 0.55),
+        0 0 20px rgba(99, 102, 241, 0.25);
+}
+
+/* =========================================================
+   CASE INFORMATION MODAL
+   ========================================================= */
+.case-info-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--modal-backdrop);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    transition: background 0.4s ease;
+}
+
+.case-info-modal.show {
+    display: flex;
+}
+
+.case-info-modal-content {
+    width: min(900px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: var(--glass-modal-bg);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 var(--glass-highlight);
+    transition: background 0.4s ease;
+}
+
+body.dark .case-info-modal-content {
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.65),
+        inset 0 1px 0 var(--glass-highlight);
+}
+
+.case-info-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.case-info-header h2 {
+    margin: 0;
+    color: #38bdf8;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.case-info-close {
+    width: 34px;
+    height: 34px;
+    border: 1px solid #cbd5e1;
+    border-radius: 50%;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.case-info-close:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+body.dark .case-info-close {
+    background: #090a0d;
+    border-color: #334155;
+    color: #94a3b8;
+}
+
+body.dark .case-info-close:hover {
+    background: #1f222f;
+    color: #ffffff;
+}
+
+/* =========================================================
+   CASE INFORMATION FIELDS
+   ========================================================= */
+.case-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 16px;
+}
+
+.case-info-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.case-info-field label {
+    margin-top: var(--field-stack);
+    margin-bottom: var(--field-gap);
+}
+
+.case-info-field input,
+.case-info-field select,
+.case-info-field textarea {
+    width: 100%;
+    background: var(--glass-field-bg);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1px solid var(--glass-field-border);
+    color: var(--glass-field-text);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.case-info-field input:focus,
+.case-info-field select:focus,
+.case-info-field textarea:focus {
+    border-color: #38bdf8;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04), 0 0 0 1px #38bdf8;
+}
+
+.case-info-field textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.case-info-full {
+    grid-column: 1 / -1;
+}
+
+/* =========================================================
+   CASE INFORMATION SEARCH BUTTON
+   ========================================================= */
+.case-search-button {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex: 1;
+    margin-top: 12px;
+    padding: 10px 14px;
+    border: 1px solid #38bdf8;
+    border-radius: 8px;
+    background: #e0f2fe;
+    color: #0369a1;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.case-search-button:hover {
+    background: #38bdf8;
+    color: #ffffff;
+}
+
+body.dark .case-search-button {
+    background: #082f49;
+    color: #7dd3fc;
+    border-color: #38bdf8;
+}
+
+body.dark .case-search-button:hover {
+    background: #38bdf8;
+    color: #082f49;
+}
+
+/* =========================================================
+   SELECTED FIELD FEEDBACK
+   ========================================================= */
+.field-selected {
+    border-color: #10b981 !important;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.18) !important;
+}
+
+/* =========================================================
+   CASE MODAL ACTIONS
+   ========================================================= */
+.case-info-actions {
+    margin-top: 18px;
+}
+
+.case-info-actions .action {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex: 1;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 900px) {
+    .form-grid,
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .panel {
+        min-height: auto;
+    }
+
+    .business-search-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .business-search-box {
+        width: 100%;
+    }
+}
+
+@media (max-width: 700px) {
+    .case-info-modal {
+        padding: 10px;
+    }
+
+    .case-info-modal-content {
+        max-height: 95vh;
+        padding: 16px;
+    }
+
+    .case-info-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .case-info-full {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .two-column-row {
+        flex-direction: column;
+        gap: var(--row-gap);
+    }
+
+    .business-results-table {
+        min-width: 700px;
+    }
+
+    .app-header {
+        flex-wrap: wrap;
+    }
+
+    h1 {
+        white-space: normal;
+        font-size: 14px;
+    }
+}
+
+/* =========================================================
+   CLIENT ENDORSEMENT
+   ========================================================= */
+
+.client-endorsement-field {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.client-endorsement-field > label {
+    margin-top: 10px;
+    margin-bottom: 6px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.client-endorsement-options {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-height: 38px;
+}
+
+.client-endorsement-options label {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 6px;
+    margin: 0 !important;
+    padding: 0;
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.client-endorsement-options input[type="radio"] {
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    accent-color: #38bdf8;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+    .client-endorsement-options {
+        gap: 14px;
+    }
+}
+
+/* ==========================================
+   OUTBOUND CALL
+   ========================================== */
+
+.outbound-call-title span {
+    font-size: 10px;
+    font-weight: normal;
+    opacity: 0.6;
+    text-transform: none;
+}
+
+/* Call/Cosmo ID + ANI/CBR */
+.outbound-call-details {
+    margin-top: 8px;
+}
+
+.outbound-call-details .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--row-gap);
+}
+
+.outbound-call-details .form-group {
+    min-width: 0;
+}
+
+.outbound-call-details input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .outbound-call-details .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+/* =========================================================
+   SECTION HEADING - QUOTE STYLE
+   ========================================================= */
+   
+.section-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    margin-bottom: 15px;
+}
+.section-heading-line {
+    width: 4px;
+    height: 30px;
+    background: #6366f1;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+.section-heading h2 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+}
+.section-heading span {
+    display: block;
+    margin-top: 5px;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.2;
+}
+/* DARK MODE */
+body.dark .section-heading h2 {
+    color: #f8fafc;
+}
+body.dark .section-heading span {
+    color: #94a3b8;
+}
+   /* =========================================================
+   EMAIL ESCALATION HEADER
+   ========================================================= */
+.case-info-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+.case-info-header .section-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    margin: 0;
+}
+.case-info-header .section-heading-line {
+    width: 4px;
+    height: 30px;
+    background: #6366f1;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+.case-info-header .section-heading h2 {
+    margin: 0;
+    padding: 0;
+    color: #0f172a;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+}
+.case-info-header .section-heading span {
+    display: block;
+    margin-top: 5px;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.2;
+}
+/* DARK MODE */
+body.dark .case-info-header .section-heading h2 {
+    color: #f8fafc;
+}
+body.dark .case-info-header .section-heading span {
+    color: #94a3b8;
+}
+   
+/* =========================================================
+   PREMIUM RESET BUTTON
+   ========================================================= */
+
+.premium-reset {
+    /* now a flex item inside .header-controls instead of absolutely positioned */
+    position: relative;
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 42px;
+    min-width: 92px;
+    padding: 0 18px;
+    border: 1px solid var(--glass-border);
+    border-radius: 999px;
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    color: #334155;
+    font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    overflow: hidden;
+    isolation: isolate;
+    box-shadow:
+        0 4px 10px rgba(15, 23, 42, 0.08),
+        inset 0 1px 0 var(--glass-highlight);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease,
+        background 0.3s ease,
+        color 0.3s ease;
+}
+
+/* Shine effect */
+.premium-reset::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.65),
+        transparent
+    );
+    transform: skewX(-20deg);
+    transition: left 0.5s ease;
+}
+
+/* Animated glass border ring — shares the spin-border keyframe/--angle
+   property declared once in the PREMIUM DARK MODE TOGGLE section above */
+.premium-reset::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+        from var(--angle, 0deg),
+        rgba(239,68,68,0) 0%,
+        rgba(239,68,68,0.6) 15%,
+        rgba(56,189,248,0.6) 35%,
+        rgba(239,68,68,0) 55%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity .35s ease;
+    z-index: -1;
+    animation: spin-border 4s linear infinite paused;
+}
+
+.premium-reset:hover::after {
+    opacity: 1;
+    animation-play-state: running;
+}
+
+/* Hover */
+.premium-reset:hover {
+    transform: translateY(-2px);
+    border-color: #94a3b8;
+    color: #0f172a;
+    box-shadow:
+        0 8px 20px rgba(15, 23, 42, 0.14),
+        0 0 0 3px rgba(56, 189, 248, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.premium-reset:hover::before {
+    left: 130%;
+}
+
+/* Click */
+.premium-reset:active {
+    transform: translateY(0) scale(0.96);
+    box-shadow: 0 3px 8px rgba(15, 23, 42, 0.12);
+}
+
+/* =========================================================
+   RESET ICON
+   ========================================================= */
+
+.reset-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    font-size: 16px;
+    line-height: 1;
+    color: #64748b;
+    transition:
+        transform 0.5s cubic-bezier(.4, 0, .2, 1),
+        color 0.25s ease;
+}
+
+.premium-reset:hover .reset-icon {
+    transform: rotate(-180deg);
+    color: #ef4444;
+}
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+body.dark .premium-reset {
+    color: #cbd5e1;
+    box-shadow:
+        0 5px 18px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 var(--glass-highlight);
+}
+
+body.dark .premium-reset:hover {
+    border-color: #475569;
+    color: #f8fafc;
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.45),
+        0 0 18px rgba(56, 189, 248, 0.08);
+}
+
+body.dark .premium-reset .reset-icon {
+    color: #94a3b8;
+}
+
+body.dark .premium-reset:hover .reset-icon {
+    color: #f87171;
+}
+
+/* =========================================================
+   RESETTING ANIMATION
+   ========================================================= */
+
+.premium-reset.resetting .reset-icon {
+    animation: resetSpin 0.65s ease;
+}
+
+@keyframes resetSpin {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(-180deg) scale(1.15);
+    }
+
+    100% {
+        transform: rotate(-360deg) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .premium-reset::after {
+        animation: none !important;
+    }
+}
+
+/* =========================================================
+   FIELD MISSING
+   ========================================================= */
+
+.field-missing {
+    border: 1px solid #e53935 !important;
+    background-color: #fff5f5;
+    box-shadow: 0 0 0 2px rgba(229, 57, 53, 0.15);
+    animation: field-missing-pulse 0.3s ease-in-out;
+}
+
+.field-missing::placeholder {
+    color: #e5393580;
+}
+
+/* For wrapper elements (e.g. radio button groups) that can't take a border nicely */
+div.field-missing,
+.outbound-call-options.field-missing {
+    border: 1px solid #e53935 !important;
+    background-color: #fff5f5;
+    border-radius: 6px;
+    padding: 6px 8px;
+    box-shadow: 0 0 0 2px rgba(229, 57, 53, 0.15);
+}
+
+@keyframes field-missing-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(229, 57, 53, 0.35); }
+    100% { box-shadow: 0 0 0 4px rgba(229, 57, 53, 0); }
+}
+
+/* =========================================================
+   CLICK CONFIRMATION FLASH
+   ========================================================= */
+button.action.confirmed,
+.premium-reset.confirmed,
+.case-search-button.confirmed,
+.business-select-button.confirmed {
+    background: #10b981 !important;
+    color: #ffffff !important;
+    border-color: #10b981 !important;
+}
+
+/* =========================================================
+   PREMIUM SEGMENTED TOGGLE (replaces radio circles)
+   ========================================================= */
+.outbound-call-section {
+    margin-bottom: 14px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.outbound-call-title {
+    display: flex !important;
+    align-items: baseline;
+    gap: 5px;
+    margin: 0 !important;
+    white-space: nowrap;
+}
+
+.segmented-toggle {
+    margin-top: 0;
+    display: inline-flex;
+    width: fit-content;
+    gap: 6px;
+    margin-top: -15px;
+    margin-bottom: -24px;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.segmented-option {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 17px;
+    border-radius: 9px;
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #8b95a3;
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+    line-height: 1;
+}
+
+.segmented-option:hover {
+    color: #d3d9e0;
+    border-color: rgba(99, 102, 241, 0.5);
+}
+
+.segmented-option:has(input[value="Yes"]:checked) {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    border-color: #818cf8;
+    color: #ffffff;
+}
+
+.segmented-option:has(input[value="No"]:checked) {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    border-color: #818cf8;
+    color: #ffffff;
+}
+
+.segmented-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+}
+
+.segmented-option span::before {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 14px;
+    background-size: 14px 14px;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-right: 0;
+    opacity: 0;
+    transition: width 0.2s ease, margin-right 0.2s ease, opacity 0.2s ease;
+    vertical-align: -2px;
+}
+
+/* Yes — green outgoing call, arrow up-right */
+.segmented-option:has(input[value="Yes"]:checked) span::before {
+    width: 14px;
+    margin-right: 7px;
+    opacity: 1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='23 7 23 1 17 1'%3E%3C/polyline%3E%3Cline x1='16' y1='8' x2='23' y2='1'%3E%3C/line%3E%3Cpath d='M21 16.42v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.11 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 16.42z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+/* No — red declined call, arrow down-left */
+.segmented-option:has(input[value="No"]:checked) span::before {
+    width: 14px;
+    margin-right: 7px;
+    opacity: 1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ef4444' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='1 7 1 1 7 1'%3E%3C/polyline%3E%3Cline x1='8' y1='8' x2='1' y2='1'%3E%3C/line%3E%3Cpath d='M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.field-transition {
+    position: relative;
+    overflow: hidden;
+    margin-top: var(--field-stack);
+    transition: height 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.output {
+    margin-top: auto;   /* was: margin-top: var(--field-stack); flex: 1; */
+    display: flex;
+    flex-direction: column;
+}
+
+/* =========================================================
+   ACTION DOCK (PUSO Report / Email Escalation / Resolved)
+   ========================================================= */
+.action-dock-trigger {
+    max-width: 1300px;
+    margin: 20px auto 0;
+    display: flex;
+    justify-content: center;
+}
+
+.action-dock {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    border: 1px solid var(--glass-border);
+    box-shadow:
+        0 10px 25px rgba(15, 23, 42, 0.15),
+        inset 0 1px 0 var(--glass-highlight);
+    transition: transform 0.3s ease, background 0.4s ease;
+}
+
+.action-dock:hover {
+    transform: scaleX(1.03);
+}
+
+body.dark .action-dock {
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 var(--glass-highlight);
+}
+
+.dock-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    line-height: 1;
+    transition: transform 0.3s ease;
+}
+
+.dock-btn:hover {
+    transform: translateY(-10px) scale(1.12);
+}
+
+.dock-btn:active {
+    transform: translateY(-10px) scale(1.02);
+}
+
+.dock-btn svg {
+    display: block;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+}
+
+/* tooltip */
+.dock-btn::before {
+    content: attr(data-label);
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    height: 16px;
+    padding: 0 7px;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+body.dark .dock-btn::before {
+    background: rgba(255, 255, 255, 0.9);
+    color: #000;
+}
+
+.dock-btn:hover::before {
+    display: flex;
+}
