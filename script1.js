@@ -4079,5 +4079,3 @@ document.getElementById("businessSearch").addEventListener(
     "input",
     searchBusinessZones
 );
-
-
