@@ -89,7 +89,39 @@ ${actionTaken}`;
 // FUSE NOTES
 // =========================================================
 
+function openPusoReportModal() {
+    document.getElementById('pusoActionsDone').value =
+        document.getElementById('actionsDone')?.value || '';
+    document.getElementById('pusoReportModal').classList.add('show');
+}
+function closePusoReportModal() {
+    document.getElementById('pusoReportModal').classList.remove('show');
+}
 
+async function copyPusoReport() {
+    const caseNumber  = document.getElementById('pusoCaseNumber').value.trim();
+    const concern      = document.getElementById('pusoConcern').value.trim();
+    const ftSoSr        = document.getElementById('pusoFtSoSr').value.trim();
+    const actionsDone  = document.getElementById('pusoActionsDone').value.trim();
+
+    const output =
+`PUSO - Social Media Handling / Case #: ${caseNumber} / ${concern}
+FT/SO/SR: ${ftSoSr}
+
+A- ${actionsDone}
+
+CNDT-PusoAdvocate`;
+
+    const temp = document.getElementById('pusoReportCopyOutput');
+    temp.value = output;
+
+    try {
+        await navigator.clipboard.writeText(output);
+    } catch {
+        temp.select();
+        document.execCommand('copy');
+    }
+}
 	
 // =========================================================
 // SYNC PLATFORM -> OUTBOUND CALL
