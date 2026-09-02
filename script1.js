@@ -1,4 +1,3 @@
-
 // =========================================================
 // RESOLVED CASE MODAL
 // =========================================================
@@ -3559,6 +3558,42 @@ function closeCaseInfoModal() {
 }
 
 /* =========================================================
+   CLEAR MODAL FIELDS
+   Resets every input/select/textarea inside a given modal
+   back to its blank/default state. Works for any modal that
+   shares the .case-info-modal-content structure.
+   ========================================================= */
+
+function clearModalFields(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+
+    modal.querySelectorAll("input, select, textarea").forEach((el) => {
+        el.classList.remove("field-missing");
+
+        if (el.type === "radio") {
+            el.checked = el.hasAttribute("data-default");
+        } else if (el.tagName === "SELECT") {
+            el.selectedIndex = 0;
+        } else {
+            el.value = "";
+        }
+    });
+
+    // Re-collapse each modal's own conditional sections and
+    // restore their defaults (e.g. "N/A" placeholders)
+    if (modalId === "caseInfoModal") {
+        toggleOtherQueue();
+        toggleCallbackField();
+    } else if (modalId === "resolvedNotesModal") {
+        toggleResolvedFtCause();
+    }
+
+    const firstField = modal.querySelector("input, select, textarea");
+    if (firstField) firstField.focus();
+}
+
+/* =========================================================
    SYNC CONDITIONAL CASE FIELDS
    ========================================================= */
 
@@ -3640,25 +3675,38 @@ function openCitySearchFromCaseInfo() {
 
 /* =========================================================
    CLOSE MODAL BY CLICKING OUTSIDE
+   (covers every .case-info-modal: caseInfoModal,
+   resolvedNotesModal, pusoReportModal, and any future one)
    ========================================================= */
 
-document.addEventListener("click", function(event) {
-    const modal = document.getElementById("caseInfoModal");
+const MODAL_CLOSE_FNS = {
+    caseInfoModal: closeCaseInfoModal,
+    resolvedNotesModal: closeResolvedNotesModal,
+    pusoReportModal: closePusoReportModal
+};
 
-    if (modal && event.target === modal) {
-        closeCaseInfoModal();
-    }
+document.addEventListener("click", function(event) {
+    // Only fires when the click lands on the backdrop itself
+    // (event.target === modal), not on the modal content.
+    if (!event.target.classList.contains("case-info-modal")) return;
+
+    const closeFn = MODAL_CLOSE_FNS[event.target.id];
+    if (closeFn) closeFn();
 });
 
 
 /* =========================================================
-   ESC CLOSES MODAL
+   ESC CLOSES WHICHEVER MODAL IS CURRENTLY OPEN
    ========================================================= */
 
 document.addEventListener("keydown", function(event) {
-    if (event.key === "Escape") {
-        closeCaseInfoModal();
-    }
+    if (event.key !== "Escape") return;
+
+    const openModal = document.querySelector(".case-info-modal.show");
+    if (!openModal) return;
+
+    const closeFn = MODAL_CLOSE_FNS[openModal.id];
+    if (closeFn) closeFn();
 });
 
 
@@ -3999,6 +4047,5 @@ document.getElementById("businessSearch").addEventListener(
     "input",
     searchBusinessZones
 );
-
 
 
