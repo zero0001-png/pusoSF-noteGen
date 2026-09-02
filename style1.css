@@ -1,4 +1,5 @@
 
+
 html {
     scroll-behavior: smooth;
 }
@@ -7,9 +8,9 @@ html {
    SPACING VARIABLES
    ========================================================= */
 :root {
-    --field-gap: 6px;      
-    --field-stack: 16px;   
-    --row-gap: 12px;      
+    --field-gap: 6px;      /* space between a label and its input/select/textarea */
+    --field-stack: 16px;   /* vertical space above each label, i.e. between stacked fields */
+    --row-gap: 12px;       /* horizontal gap between fields sitting side-by-side */
 }
 
 :root {
@@ -124,7 +125,7 @@ body {
     min-height: 100vh;
     background: var(--ray-bg);
     background-attachment: fixed;
-    transition: background 0.5s ease, color 0.3s;
+    transition: background 0.3s ease, color 0.18s;
 }
 
 body.dark {
@@ -209,15 +210,14 @@ body.dark input[type="date"]::-webkit-calendar-picker-indicator {
         inset 0 1px 0 var(--glass-highlight);
 
     transition:
-        background 0.35s ease,
-        border-color 0.35s ease,
-        box-shadow 0.35s ease,
-        transform 0.2s ease;
+        background 0.12s ease,
+        border-color 0.12s ease,
+        box-shadow 0.12s ease,
+        transform 0.15s ease;
 
     /* --- glass-glow additions --- */
     overflow: hidden;
     isolation: isolate;
-    animation: idle-pulse 6s ease-in-out infinite;
 }
 
 .premium-toggle::before {
@@ -237,9 +237,9 @@ body.dark input[type="date"]::-webkit-calendar-picker-indicator {
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     opacity: 0;
-    transition: opacity .35s ease;
+    transition: opacity 0.12s ease;
     z-index: -1;
-    animation: spin-border 4s linear infinite paused;
+    animation: spin-border 1.125s linear infinite paused;
 }
 
 .premium-toggle:hover::before {
@@ -248,20 +248,15 @@ body.dark input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .premium-toggle:hover {
-    transform: translateY(-1px);
+    transform: translateY(-0.5px);
 
     box-shadow:
-        0 7px 18px rgba(15, 23, 42, 0.13),
+        0 5px 14px rgba(15, 23, 42, 0.11),
         inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 .premium-toggle:active {
     transform: translateY(0) scale(0.97);
-}
-
-@keyframes idle-pulse {
-    0%, 100% { box-shadow: 0 4px 12px rgba(15,23,42,0.08), inset 0 1px 0 var(--glass-highlight); }
-    50% { box-shadow: 0 4px 12px rgba(15,23,42,0.08), inset 0 1px 0 var(--glass-highlight), 0 0 0 3px rgba(56,189,248,0.08); }
 }
 
 @keyframes spin-border { to { --angle: 360deg; } }
@@ -305,9 +300,9 @@ body.dark input[type="date"]::-webkit-calendar-picker-indicator {
     line-height: 1;
     pointer-events: none;
     transition:
-        opacity 0.3s ease,
-        transform 0.35s ease,
-        filter 0.3s ease;
+        opacity 0.15s ease,
+        transform 0.108s ease,
+        filter 0.15s ease;
 }
 
 .premium-icon-dark {
@@ -416,7 +411,7 @@ body.dark h1 {
     color: #334155;
     font-weight: 600;
     box-shadow: inset 0 1px 0 var(--glass-highlight);
-    transition: all 0.2s;
+    transition: all 0.12s;
 }
 
 .toolbar button:hover {
@@ -464,7 +459,7 @@ body.dark .toolbar button:hover {
     display: flex;
     flex-direction: column;
     min-height: 720px;
-    transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    transition: background 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease;
 }
 
 body.dark .panel {
@@ -509,7 +504,7 @@ textarea {
     box-shadow:
         0 1px 3px rgba(15, 23, 42, 0.07),
         inset 0 1px 0 var(--glass-highlight);
-    transition: all 0.2s;
+    transition: all 0.12s;
 }
 
 input:focus,
@@ -663,9 +658,9 @@ button.action {
         0 4px 10px rgba(29, 78, 216, 0.25),
         inset 0 1px 0 rgba(255, 255, 255, 0.15);
     transition:
-        transform 0.2s ease,
-        box-shadow 0.3s ease,
-        background 0.3s ease;
+        transform 0.12s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease;
 }
 
 /* Shine sweep — same technique as .premium-reset */
@@ -683,7 +678,7 @@ button.action::before {
         transparent
     );
     transform: skewX(-20deg);
-    transition: left 0.5s ease;
+    transition: left 0.3s ease;
 }
 
 button.action:hover {
@@ -735,7 +730,7 @@ button.action.copied {
     box-shadow:
         0 8px 20px rgba(16, 185, 129, 0.35),
         inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-    animation: actionPop 0.35s ease;
+    animation: actionPop 0.21s ease;
 }
 @keyframes actionPop {
     0%   { transform: scale(1); }
@@ -748,12 +743,12 @@ button.action.copied {
    ========================================================= */
 .action-icon {
     display: inline-block;
-    transition: transform 0.3s cubic-bezier(.4, 0, .2, 1);
+    transition: transform 0.18s cubic-bezier(.4, 0, .2, 1);
 }
 
 /* idle hover wiggle */
 button.action:hover .action-icon {
-    animation: iconWiggle 0.5s ease;
+    animation: iconWiggle 0.3s ease;
 }
 @keyframes iconWiggle {
     0%, 100% { transform: rotate(0deg); }
@@ -768,7 +763,7 @@ button.action:active .action-icon {
 
 /* success — icon flips over like a card, swaps to a checkmark */
 button.action.copied .action-icon {
-    animation: iconFlip 0.4s ease forwards;
+    animation: iconFlip 0.24s ease forwards;
 }
 @keyframes iconFlip {
     0%   { transform: rotateY(0deg) scale(1); }
@@ -941,7 +936,7 @@ body.dark .business-count {
     font-size: 11px;
     font-weight: 700;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s, transform 0.1s;
+    transition: background 0.12s, color 0.12s, transform 0.1s;
 }
 
 .business-select-button:hover {
@@ -982,7 +977,7 @@ body.dark .business-select-button:hover {
     font-size: 11px;
     line-height: 1;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s, transform 0.1s;
+    transition: background 0.12s, color 0.12s, transform 0.1s;
 }
 
 .zone-directory-btn:hover {
@@ -1068,7 +1063,7 @@ body.dark .zone-directory-btn:hover {
     font-weight: 600;
     line-height: 1.2;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s, transform 0.1s;
+    transition: background 0.12s, color 0.12s, transform 0.1s;
 }
 
 .zone-directory-copy-btn:hover {
@@ -1230,13 +1225,11 @@ button.action.action-escalate {
     box-shadow:
         0 3px 8px rgba(67, 56, 202, 0.22),
         inset 0 1px 0 rgba(255, 255, 255, 0.18);
-    animation: escalatePulse 2.4s ease-in-out infinite;
 }
 
 button.action.action-escalate:hover {
     background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
     transform: translateY(-2px);
-    animation-play-state: paused;
     box-shadow:
         0 10px 24px rgba(67, 56, 202, 0.45),
         0 0 0 4px rgba(99, 102, 241, 0.15),
@@ -1254,19 +1247,6 @@ button.action.action-escalate:focus-visible {
         0 0 0 2px #f4f6f9,
         0 0 0 4px #6366f1,
         0 8px 20px rgba(67, 56, 202, 0.4);
-}
-
-@keyframes escalatePulse {
-    0%, 100% {
-        box-shadow:
-            0 3px 8px rgba(67, 56, 202, 0.22),
-            inset 0 1px 0 rgba(255, 255, 255, 0.18);
-    }
-    50% {
-        box-shadow:
-            0 3px 12px rgba(99, 102, 241, 0.32),
-            inset 0 1px 0 rgba(255, 255, 255, 0.18);
-    }
 }
 
 body.dark button.action.action-escalate {
@@ -1300,10 +1280,10 @@ body.dark button.action.action-escalate:hover {
     visibility: hidden;
     pointer-events: none;
     transition:
-        opacity 0.25s ease,
-        backdrop-filter 0.3s ease,
-        -webkit-backdrop-filter 0.3s ease,
-        visibility 0s linear 0.25s;
+        opacity 0.15s ease,
+        backdrop-filter 0.18s ease,
+        -webkit-backdrop-filter 0.18s ease,
+        visibility 0.1s linear 0.15s;
 }
 
 .case-info-modal.show {
@@ -1313,9 +1293,9 @@ body.dark button.action.action-escalate:hover {
     -webkit-backdrop-filter: blur(10px) saturate(140%);
     backdrop-filter: blur(10px) saturate(140%);
     transition:
-        opacity 0.25s ease,
-        backdrop-filter 0.3s ease,
-        -webkit-backdrop-filter 0.3s ease;
+        opacity 0.15s ease,
+        backdrop-filter 0.18s ease,
+        -webkit-backdrop-filter 0.18s ease;
 }
 
 .case-info-modal-content {
@@ -1338,9 +1318,9 @@ body.dark button.action.action-escalate:hover {
     transform: translateY(18px) scale(0.96);
     opacity: 0;
     transition:
-        transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-        opacity 0.25s ease,
-        background 0.4s ease;
+        transform 0.21s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 0.15s ease,
+        background 0.24s ease;
 }
 
 /* Content sits above the sheen overlay */
@@ -1411,11 +1391,11 @@ body.dark .case-info-modal-content {
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
     transition:
-        transform 0.25s ease,
-        background 0.2s ease,
-        color 0.2s ease,
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
+        transform 0.15s ease,
+        background 0.12s ease,
+        color 0.12s ease,
+        border-color 0.12s ease,
+        box-shadow 0.12s ease;
 }
 
 .case-info-close:hover {
@@ -1515,7 +1495,7 @@ body.dark .case-info-field textarea:focus {
     font-size: 12px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.12s;
 }
 
 .case-search-button:hover {
@@ -1794,11 +1774,11 @@ body.dark .section-heading span {
         0 4px 10px rgba(15, 23, 42, 0.08),
         inset 0 1px 0 var(--glass-highlight);
     transition:
-        transform 0.2s ease,
-        box-shadow 0.3s ease,
-        border-color 0.3s ease,
-        background 0.3s ease,
-        color 0.3s ease;
+        transform 0.12s ease,
+        box-shadow 0.18s ease,
+        border-color 0.18s ease,
+        background 0.18s ease,
+        color 0.18s ease;
 }
 
 /* Shine effect */
@@ -1816,7 +1796,7 @@ body.dark .section-heading span {
         transparent
     );
     transform: skewX(-20deg);
-    transition: left 0.5s ease;
+    transition: left 0.3s ease;
 }
 
 /* Animated glass border ring — shares the spin-border keyframe/--angle
@@ -1838,9 +1818,9 @@ body.dark .section-heading span {
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     opacity: 0;
-    transition: opacity .35s ease;
+    transition: opacity 0.21s ease;
     z-index: -1;
-    animation: spin-border 4s linear infinite paused;
+    animation: spin-border 1.8s linear infinite paused;
 }
 
 .premium-reset:hover::after {
@@ -1883,8 +1863,8 @@ body.dark .section-heading span {
     line-height: 1;
     color: #64748b;
     transition:
-        transform 0.5s cubic-bezier(.4, 0, .2, 1),
-        color 0.25s ease;
+        transform 0.3s cubic-bezier(.4, 0, .2, 1),
+        color 0.15s ease;
 }
 
 .premium-reset:hover .reset-icon {
@@ -1924,7 +1904,7 @@ body.dark .premium-reset:hover .reset-icon {
    ========================================================= */
 
 .premium-reset.resetting .reset-icon {
-    animation: resetSpin 0.65s ease;
+    animation: resetSpin 0.293s ease;
 }
 
 @keyframes resetSpin {
@@ -1955,7 +1935,7 @@ body.dark .premium-reset:hover .reset-icon {
     border: 1px solid #e53935 !important;
     background-color: #fff5f5;
     box-shadow: 0 0 0 2px rgba(229, 57, 53, 0.15);
-    animation: field-missing-pulse 0.3s ease-in-out;
+    animation: field-missing-pulse 0.18s ease-in-out;
 }
 
 .field-missing::placeholder {
@@ -2034,9 +2014,9 @@ button.action.confirmed,
     font-weight: 600;
     color: #8b95a3;
     transition:
-        color 0.2s ease,
-        background 0.2s ease,
-        border-color 0.2s ease;
+        color 0.12s ease,
+        background 0.12s ease,
+        border-color 0.12s ease;
     line-height: 1;
 }
 
@@ -2075,7 +2055,7 @@ button.action.confirmed,
     background-position: center;
     margin-right: 0;
     opacity: 0;
-    transition: width 0.2s ease, margin-right 0.2s ease, opacity 0.2s ease;
+    transition: width 0.12s ease, margin-right 0.12s ease, opacity 0.12s ease;
     vertical-align: -2px;
 }
 
@@ -2131,7 +2111,7 @@ button.action.confirmed,
     box-shadow:
         0 10px 25px rgba(15, 23, 42, 0.15),
         inset 0 1px 0 var(--glass-highlight);
-    transition: transform 0.3s ease, background 0.4s ease;
+    transition: transform 0.18s ease, background 0.24s ease;
 }
 
 .action-dock:hover {
@@ -2157,7 +2137,7 @@ body.dark .action-dock {
     padding: 0;
     cursor: pointer;
     line-height: 1;
-    transition: transform 0.3s ease;
+    transition: transform 0.18s ease;
 }
 
 .dock-btn:hover {
