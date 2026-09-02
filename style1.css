@@ -1,4 +1,3 @@
-
 html {
     scroll-behavior: smooth;
 }
@@ -7,9 +6,9 @@ html {
    SPACING VARIABLES
    ========================================================= */
 :root {
-    --field-gap: 6px;      
-    --field-stack: 16px;   
-    --row-gap: 12px;       
+    --field-gap: 6px;      /* space between a label and its input/select/textarea */
+    --field-stack: 16px;   /* vertical space above each label, i.e. between stacked fields */
+    --row-gap: 12px;       /* horizontal gap between fields sitting side-by-side */
 }
 
 :root {
@@ -28,12 +27,11 @@ html {
     --glass-highlight: rgba(255, 255, 255, 0.8);
     --glass-blur: 18px;
 
-    /* ---- Gradient ray background (light) — color scheme from the 1st CSS file ---- */
+    /* ---- Background (light) — clean, muted, professional ---- */
 --ray-bg:
-    radial-gradient(1200px 600px at 10% -10%, rgba(255, 99, 132, 0.18), rgba(246, 247, 251, 0) 55%),
-    radial-gradient(1000px 700px at 90% 0%, rgba(58, 134, 255, 0.16), rgba(246, 247, 251, 0) 55%),
-    radial-gradient(900px 900px at 50% 110%, rgba(47, 158, 68, 0.14), rgba(246, 247, 251, 0) 60%),
-    #f6f7fb;
+    radial-gradient(1400px 800px at 15% -10%, rgba(148, 163, 184, 0.14), transparent 60%),
+    radial-gradient(1200px 800px at 100% 100%, rgba(100, 116, 139, 0.10), transparent 60%),
+    #e9edf3;
 
 
     /* ---- Modal-specific glass (light): lighter, more opaque than panel glass ---- */
@@ -60,12 +58,11 @@ body.dark {
     --glass-highlight: rgba(255, 255, 255, 0.04);
     --glass-blur: 18px;
 
-    /* ---- Gradient ray background (dark) — deeper black base, 1st-file color scheme ---- */
---ray-bg: 
-  radial-gradient(1200px 600px at 10% -10%, rgba(245, 158, 11, 0.1), rgba(12, 10, 9, 0) 50%),
-  radial-gradient(1000px 700px at 90% -5%, rgba(168, 85, 247, 0.14), rgba(12, 10, 9, 0) 55%),
-  radial-gradient(900px 900px at 50% 110%, rgba(239, 68, 68, 0.07), rgba(12, 10, 9, 0) 60%),
-  #020202; 
+    /* ---- Background (dark) — clean, muted, professional ---- */
+--ray-bg:
+  radial-gradient(1400px 800px at 15% -10%, rgba(148, 163, 184, 0.07), transparent 60%),
+  radial-gradient(1200px 800px at 100% 100%, rgba(51, 65, 85, 0.35), transparent 60%),
+  #020202;
 
 
     /* ---- Modal-specific glass (dark): richer + more opaque than panel glass, darker fields for contrast ---- */
@@ -527,6 +524,13 @@ body.dark textarea {
     box-shadow: inset 0 1px 0 var(--glass-highlight);
 }
 
+body.dark input:focus,
+body.dark select:focus,
+body.dark textarea:focus {
+    border-color: #f1f5f9;
+    box-shadow: inset 0 1px 0 var(--glass-highlight), 0 0 0 1px rgba(241, 245, 249, 0.75);
+}
+
 /* =========================================================
    SELECT ARROW
    ========================================================= */
@@ -625,10 +629,12 @@ body.dark select {
     color: #d3d9e0;
 }
 
+
 body.dark select option {
     background: #1a1c1d;
     color: #d3d9e0;
 }
+
 
 /* =========================================================
    BUTTONS
@@ -1332,6 +1338,13 @@ body.dark .case-info-close:hover {
 .case-info-field textarea:focus {
     border-color: #38bdf8;
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04), 0 0 0 1px #38bdf8;
+}
+
+body.dark .case-info-field input:focus,
+body.dark .case-info-field select:focus,
+body.dark .case-info-field textarea:focus {
+    border-color: #f1f5f9;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(241, 245, 249, 0.75);
 }
 
 .case-info-field textarea {
