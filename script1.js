@@ -122,7 +122,370 @@ CNDT-PusoAdvocate`;
         document.execCommand('copy');
     }
 }
-	
+
+// =========================================================
+// BREAK & MEETING ALARMS
+// =========================================================
+
+const BREAK_ALARM_TYPES = [
+    { id: "break1", label: "1st Break", duration: 15 * 60 },
+    { id: "lunch", label: "Lunch", duration: 60 * 60 },
+    { id: "break2", label: "2nd Break", duration: 15 * 60 },
+    { id: "meeting", label: "Meeting/Coaching", duration: 30 * 60 }
+];
+
+const BREAK_ALARM_STORAGE_KEY = "breakAlarmSchedule";
+const BREAK_ALARM_RUN_KEY = "breakAlarmRunningTimer";
+
+let breakAlarmSchedule = {};    // { break1: "13:00", lunch: "14:00", ... }
+let breakAlarmFiredToday = {};  // { break1: "Thu Sep 03 2026", ... }
+let breakAlarmCheckInterval = null;
+let breakAlarmAudioCtx = null;
+let breakAlarmSoundInterval = null;
+let activeBreakTimer = null;    // { id, label, duration, endsAt }
+let activeBreakTimerInterval = null;
+
+function pad2(n) {
+    return String(n).padStart(2, "0");
+}
+
+function openBreakAlarmModal() {
+    BREAK_ALARM_TYPES.forEach(type => {
+        const input = document.getElementById("breakAlarmTime_" + type.id);
+        if (input) input.value = breakAlarmSchedule[type.id] || "";
+    });
+    updateBreakAlarmStatus();
+    refreshBreakAlarmPermissionUI();
+
+    document.getElementById("breakAlarmModal").classList.add("show");
+}
+
+function closeBreakAlarmModal() {
+    document.getElementById("breakAlarmModal").classList.remove("show");
+}
+
+function saveBreakAlarms() {
+    const newSchedule = {};
+
+    BREAK_ALARM_TYPES.forEach(type => {
+        const input = document.getElementById("breakAlarmTime_" + type.id);
+        const value = input ? input.value : "";
+        if (value) newSchedule[type.id] = value;
+    });
+
+    breakAlarmSchedule = newSchedule;
+    breakAlarmFiredToday = {};
+    persistBreakAlarmSchedule();
+    updateBreakAlarmStatus();
+    updateBreakAlarmActiveDot();
+    startBreakAlarmWatcher();
+
+    showConfirm(document.getElementById("breakAlarmSaveBtn"), "✓ Saved");
+}
+
+function clearBreakAlarms() {
+    breakAlarmSchedule = {};
+    breakAlarmFiredToday = {};
+    persistBreakAlarmSchedule();
+
+    BREAK_ALARM_TYPES.forEach(type => {
+        const input = document.getElementById("breakAlarmTime_" + type.id);
+        if (input) input.value = "";
+    });
+
+    updateBreakAlarmStatus();
+    updateBreakAlarmActiveDot();
+}
+
+function persistBreakAlarmSchedule() {
+    try {
+        localStorage.setItem(BREAK_ALARM_STORAGE_KEY, JSON.stringify(breakAlarmSchedule));
+    } catch (e) {}
+}
+
+function loadBreakAlarmSchedule() {
+    try {
+        const saved = localStorage.getItem(BREAK_ALARM_STORAGE_KEY);
+        breakAlarmSchedule = saved ? JSON.parse(saved) : {};
+    } catch (e) {
+        breakAlarmSchedule = {};
+    }
+
+    updateBreakAlarmActiveDot();
+
+    if (Object.keys(breakAlarmSchedule).length > 0) {
+        startBreakAlarmWatcher();
+    }
+}
+
+function updateBreakAlarmStatus() {
+    const statusEl = document.getElementById("breakAlarmStatus");
+    if (!statusEl) return;
+
+    const count = Object.keys(breakAlarmSchedule).length;
+    statusEl.textContent = count > 0
+        ? count + " alarm" + (count === 1 ? "" : "s") + " scheduled for today"
+        : "No alarms scheduled yet";
+}
+
+function updateBreakAlarmActiveDot() {
+    const dot = document.getElementById("breakAlarmActiveDot");
+    if (!dot) return;
+    dot.hidden = Object.keys(breakAlarmSchedule).length === 0;
+}
+
+function refreshBreakAlarmPermissionUI() {
+    const textEl = document.getElementById("breakAlarmPermissionText");
+    const enableBtn = document.getElementById("breakAlarmEnableBtn");
+    if (!textEl) return;
+
+    if (!("Notification" in window)) {
+        textEl.textContent = "Desktop notifications aren't supported in this browser. Alarms will still beep and show the on-screen timer.";
+        textEl.className = "break-alarm-permission-text warn";
+        if (enableBtn) enableBtn.style.display = "none";
+        return;
+    }
+
+    if (window.isSecureContext === false) {
+        textEl.textContent = "This page isn't loaded in a secure context, so the browser may silently block the permission prompt. Try opening it through http://localhost or a hosted URL instead of double-clicking the file.";
+        textEl.className = "break-alarm-permission-text warn";
+        if (enableBtn) enableBtn.style.display = "inline-block";
+        return;
+    }
+
+    if (Notification.permission === "granted") {
+        textEl.textContent = "Desktop notifications are enabled.";
+        textEl.className = "break-alarm-permission-text ok";
+        if (enableBtn) enableBtn.style.display = "none";
+    } else if (Notification.permission === "denied") {
+        textEl.textContent = "Notifications are blocked for this page. Click the lock/info icon in the address bar, allow notifications, then reload.";
+        textEl.className = "break-alarm-permission-text warn";
+        if (enableBtn) enableBtn.style.display = "none";
+    } else {
+        textEl.textContent = "Notifications aren't enabled yet — alarms will still beep, but won't show a desktop popup until you allow them.";
+        textEl.className = "break-alarm-permission-text";
+        if (enableBtn) enableBtn.style.display = "inline-block";
+    }
+}
+
+function requestBreakAlarmNotifyPermission() {
+    if (!("Notification" in window)) return;
+
+    Notification.requestPermission().then(() => {
+        refreshBreakAlarmPermissionUI();
+    }).catch(() => {
+        refreshBreakAlarmPermissionUI();
+    });
+}
+
+function sendBreakAlarmTestNotification() {
+    if (!("Notification" in window)) {
+        alert("This browser doesn't support desktop notifications.");
+        return;
+    }
+
+    if (Notification.permission !== "granted") {
+        alert("Notifications aren't enabled yet. Click \"Enable notifications\" first and allow the browser prompt, then try the test again.");
+        return;
+    }
+
+    try {
+        new Notification("Test notification", {
+            body: "If you can see this, desktop notifications are working."
+        });
+    } catch (err) {
+        alert("The browser blocked the notification: " + err.message);
+    }
+}
+
+function startBreakAlarmWatcher() {
+    if (breakAlarmCheckInterval) return;
+    checkBreakAlarms();
+    breakAlarmCheckInterval = setInterval(checkBreakAlarms, 15000);
+}
+
+function checkBreakAlarms() {
+    const now = new Date();
+    const nowTime = pad2(now.getHours()) + ":" + pad2(now.getMinutes());
+    const todayKey = now.toDateString();
+
+    BREAK_ALARM_TYPES.forEach(type => {
+        const scheduledTime = breakAlarmSchedule[type.id];
+        if (!scheduledTime || scheduledTime !== nowTime) return;
+        if (breakAlarmFiredToday[type.id] === todayKey) return;
+
+        breakAlarmFiredToday[type.id] = todayKey;
+        fireBreakAlarm(type);
+    });
+}
+
+function fireBreakAlarm(type) {
+    playBreakAlarmBeep();
+
+    if ("Notification" in window && Notification.permission === "granted") {
+        try {
+            new Notification(type.label + " starting", {
+                body: "Timer running for " + Math.round(type.duration / 60) + " minutes.",
+                requireInteraction: true
+            });
+        } catch (e) {}
+    }
+
+    startActiveBreakTimer(type);
+}
+
+function playBreakAlarmBeep() {
+    try {
+        if (!breakAlarmAudioCtx) {
+            breakAlarmAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        clearInterval(breakAlarmSoundInterval);
+        let beeps = 0;
+
+        const doBeep = () => {
+            const osc = breakAlarmAudioCtx.createOscillator();
+            const gain = breakAlarmAudioCtx.createGain();
+            osc.type = "sine";
+            osc.frequency.value = 880;
+            gain.gain.setValueAtTime(0.0001, breakAlarmAudioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.28, breakAlarmAudioCtx.currentTime + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, breakAlarmAudioCtx.currentTime + 0.35);
+            osc.connect(gain);
+            gain.connect(breakAlarmAudioCtx.destination);
+            osc.start();
+            osc.stop(breakAlarmAudioCtx.currentTime + 0.4);
+
+            beeps++;
+            if (beeps >= 3) clearInterval(breakAlarmSoundInterval);
+        };
+
+        doBeep();
+        breakAlarmSoundInterval = setInterval(doBeep, 500);
+    } catch (e) {}
+}
+
+function startActiveBreakTimer(type) {
+    activeBreakTimer = {
+        id: type.id,
+        label: type.label,
+        duration: type.duration,
+        endsAt: Date.now() + type.duration * 1000
+    };
+    persistActiveBreakTimer();
+    renderActiveBreakTimer();
+}
+
+function persistActiveBreakTimer() {
+    try {
+        if (activeBreakTimer) {
+            localStorage.setItem(BREAK_ALARM_RUN_KEY, JSON.stringify(activeBreakTimer));
+        } else {
+            localStorage.removeItem(BREAK_ALARM_RUN_KEY);
+        }
+    } catch (e) {}
+}
+
+function loadActiveBreakTimer() {
+    try {
+        const saved = localStorage.getItem(BREAK_ALARM_RUN_KEY);
+        if (!saved) return;
+
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.endsAt > Date.now()) {
+            activeBreakTimer = parsed;
+            renderActiveBreakTimer();
+        } else {
+            localStorage.removeItem(BREAK_ALARM_RUN_KEY);
+        }
+    } catch (e) {}
+}
+
+function renderActiveBreakTimer() {
+    const widget = document.getElementById("activeTimerWidget");
+    if (!widget || !activeBreakTimer) return;
+
+    document.getElementById("activeTimerLabel").textContent = activeBreakTimer.label;
+    widget.classList.remove("ending");
+    widget.classList.add("show");
+
+    clearInterval(activeBreakTimerInterval);
+    activeBreakTimerInterval = setInterval(updateActiveBreakTimerClock, 1000);
+    updateActiveBreakTimerClock();
+}
+
+function updateActiveBreakTimerClock() {
+    if (!activeBreakTimer) return;
+
+    const widget = document.getElementById("activeTimerWidget");
+    const clockEl = document.getElementById("activeTimerClock");
+    const remainingMs = activeBreakTimer.endsAt - Date.now();
+
+    if (remainingMs <= 0) {
+        clockEl.textContent = "00:00";
+        finishActiveBreakTimer();
+        return;
+    }
+
+    const remainingSeconds = Math.round(remainingMs / 1000);
+    clockEl.textContent = pad2(Math.floor(remainingSeconds / 60)) + ":" + pad2(remainingSeconds % 60);
+
+    if (remainingSeconds <= 10) {
+        widget.classList.add("ending");
+    } else {
+        widget.classList.remove("ending");
+    }
+}
+
+function finishActiveBreakTimer() {
+    const finishedLabel = activeBreakTimer ? activeBreakTimer.label : "Timer";
+
+    clearInterval(activeBreakTimerInterval);
+    activeBreakTimerInterval = null;
+
+    playBreakAlarmBeep();
+
+    if ("Notification" in window && Notification.permission === "granted") {
+        try {
+            new Notification(finishedLabel + " ended", {
+                body: "Time's up.",
+                requireInteraction: true
+            });
+        } catch (e) {}
+    }
+
+    activeBreakTimer = null;
+    persistActiveBreakTimer();
+
+    setTimeout(() => {
+        const widget = document.getElementById("activeTimerWidget");
+        if (widget) {
+            widget.classList.remove("show");
+            widget.classList.remove("ending");
+        }
+    }, 1500);
+}
+
+function stopActiveBreakTimer() {
+    clearInterval(activeBreakTimerInterval);
+    activeBreakTimerInterval = null;
+    clearInterval(breakAlarmSoundInterval);
+
+    activeBreakTimer = null;
+    persistActiveBreakTimer();
+
+    const widget = document.getElementById("activeTimerWidget");
+    if (widget) {
+        widget.classList.remove("show");
+        widget.classList.remove("ending");
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadBreakAlarmSchedule();
+    loadActiveBreakTimer();
+});
+
 // =========================================================
 // SYNC PLATFORM -> OUTBOUND CALL
 // =========================================================
@@ -3714,7 +4077,8 @@ function openCitySearchFromCaseInfo() {
 const MODAL_CLOSE_FNS = {
     caseInfoModal: closeCaseInfoModal,
     resolvedNotesModal: closeResolvedNotesModal,
-    pusoReportModal: closePusoReportModal
+    pusoReportModal: closePusoReportModal,
+    breakAlarmModal: closeBreakAlarmModal
 };
 
 document.addEventListener("click", function(event) {
@@ -4079,3 +4443,5 @@ document.getElementById("businessSearch").addEventListener(
     "input",
     searchBusinessZones
 );
+
+
