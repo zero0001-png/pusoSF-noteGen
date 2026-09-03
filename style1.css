@@ -40,6 +40,9 @@ html {
     --glass-field-bg: rgba(255, 255, 255, 0.95);
     --glass-field-border: rgba(15, 23, 42, 0.14);
     --glass-field-text: #0f172a;
+
+    /* ---- Break-timer glow (light): warm amber, matches the "Break" label ---- */
+    --break-glow-rgb: 217, 119, 6;
 }
 
 /* This project toggles dark mode via the "dark" class on <body> */
@@ -71,6 +74,9 @@ body.dark {
     --glass-field-bg: rgba(9, 10, 14, 0.75);
     --glass-field-border: rgba(255, 255, 255, 0.12);
     --glass-field-text: #f1f5f9;
+
+    /* ---- Break-timer glow (dark): brighter amber, matches the "Break" label ---- */
+    --break-glow-rgb: 251, 191, 36;
 }
 
 textarea {
@@ -1573,6 +1579,348 @@ body.dark .case-search-button:hover {
 
     .case-info-full {
         grid-column: auto;
+    }
+}
+
+/* =========================================================
+   BREAK & MEETING ALARM — BELL BUTTON
+   ========================================================= */
+.premium-alarm-btn {
+    position: relative;
+}
+
+.alarm-btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    color: #475569;
+    transition:
+        color 0.15s ease,
+        transform 0.15s ease,
+        filter 0.15s ease;
+}
+
+.premium-alarm-btn:hover .alarm-btn-icon {
+    color: #d97706;
+    transform: rotate(-12deg) scale(1.1);
+    filter: drop-shadow(0 0 5px rgba(217, 119, 6, 0.45));
+}
+
+body.dark .alarm-btn-icon {
+    color: #94a3b8;
+}
+
+body.dark .premium-alarm-btn:hover .alarm-btn-icon {
+    color: #fbbf24;
+    filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.55));
+}
+
+.alarm-active-dot {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f59e0b;
+    box-shadow: 0 0 0 2px var(--glass-bg-strong);
+    animation: alarm-dot-pulse 1.6s ease-in-out infinite;
+}
+
+.alarm-active-dot[hidden] {
+    display: none;
+}
+
+@keyframes alarm-dot-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.55; transform: scale(0.8); }
+}
+
+/* =========================================================
+   BREAK & MEETING ALARM — MODAL FIELDS
+   ========================================================= */
+.break-alarm-field label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.break-alarm-duration {
+    font-size: 11px;
+    font-weight: 400;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+body.dark .break-alarm-duration {
+    color: #94a3b8;
+}
+
+.break-alarm-field input[type="time"] {
+    color-scheme: light;
+}
+
+body.dark .break-alarm-field input[type="time"] {
+    color-scheme: dark;
+}
+
+.break-alarm-status {
+    grid-column: 1 / -1;
+    margin-top: var(--field-stack);
+    font-size: 12px;
+    font-weight: 700;
+    color: #10b981;
+}
+
+body.dark .break-alarm-status {
+    color: #34d399;
+}
+
+.break-alarm-permission-row {
+    grid-column: 1 / -1;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--glass-field-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.break-alarm-permission-text {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.5;
+    flex: 1;
+    min-width: 200px;
+}
+
+.break-alarm-permission-text.warn {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.break-alarm-permission-text.ok {
+    color: #10b981;
+    font-weight: 600;
+}
+
+body.dark .break-alarm-permission-text {
+    color: #94a3b8;
+}
+
+body.dark .break-alarm-permission-text.warn {
+    color: #f87171;
+}
+
+body.dark .break-alarm-permission-text.ok {
+    color: #34d399;
+}
+
+.break-alarm-permission-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.break-alarm-permission-btn {
+    border: 1px solid #38bdf8;
+    border-radius: 999px;
+    background: #e0f2fe;
+    color: #0369a1;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 7px 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.12s;
+}
+
+.break-alarm-permission-btn:hover {
+    background: #38bdf8;
+    color: #ffffff;
+}
+
+body.dark .break-alarm-permission-btn {
+    background: #082f49;
+    color: #7dd3fc;
+    border-color: #38bdf8;
+}
+
+body.dark .break-alarm-permission-btn:hover {
+    background: #38bdf8;
+    color: #082f49;
+}
+
+/* =========================================================
+   BREAK & MEETING ALARM — CENTERED ACTIVE TIMER
+   ========================================================= */
+.active-timer-widget {
+    position: fixed;
+    top: 33px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.94);
+    z-index: 5000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    min-width: 240px;
+    padding: 22px 32px;
+    border-radius: 20px;
+    background: var(--glass-modal-bg);
+    -webkit-backdrop-filter: blur(36px) saturate(220%);
+    backdrop-filter: blur(36px) saturate(220%);
+    border: 1px solid var(--glass-border);
+    box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.28),
+        0 2px 0 var(--glass-highlight) inset;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0.1s linear 0.2s;
+
+    /* --- snake-glow border additions --- */
+    overflow: hidden;
+    isolation: isolate;
+}
+
+/* Slow amber "snake" of light that continuously travels around the border —
+   color matches the Break label / theme, and reads clearly in both modes */
+.active-timer-widget::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 3px;
+    background: conic-gradient(
+        from var(--snake-angle, 0deg),
+        rgba(var(--break-glow-rgb), 0) 0%,
+        rgba(var(--break-glow-rgb), 0) 55%,
+        rgba(var(--break-glow-rgb), 0.5) 70%,
+        rgba(var(--break-glow-rgb), 0.95) 85%,
+        rgba(255, 235, 205, 0.95) 90%,
+        rgba(var(--break-glow-rgb), 0.95) 95%,
+        rgba(var(--break-glow-rgb), 0.5) 100%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 1;
+    animation: snake-glow-spin 9s linear infinite;
+}
+
+/* Soft trailing glow that sits just outside the widget, following the same head */
+.active-timer-widget::after {
+    content: "";
+    position: absolute;
+    inset: -18px;
+    border-radius: inherit;
+    padding: 18px;
+    background: conic-gradient(
+        from var(--snake-angle, 0deg),
+        rgba(var(--break-glow-rgb), 0) 0%,
+        rgba(var(--break-glow-rgb), 0) 60%,
+        rgba(var(--break-glow-rgb), 0.45) 80%,
+        rgba(var(--break-glow-rgb), 0.8) 90%,
+        rgba(var(--break-glow-rgb), 0.45) 100%
+    );
+    filter: blur(14px);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.9;
+    animation: snake-glow-spin 9s linear infinite;
+}
+
+@keyframes snake-glow-spin { to { --snake-angle: 360deg; } }
+
+@property --snake-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+.active-timer-widget.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) scale(1);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.active-timer-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: #d97706;
+}
+
+body.dark .active-timer-label {
+    color: #fbbf24;
+}
+
+.active-timer-clock {
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #0f172a;
+    font-feature-settings: "tnum" on, "lnum" on;
+}
+
+body.dark .active-timer-clock {
+    color: #f8fafc;
+}
+
+.active-timer-widget.ending .active-timer-clock {
+    color: #ef4444;
+    animation: alarm-dot-pulse 1s ease-in-out infinite;
+}
+
+.active-timer-stop {
+    margin-top: 2px;
+    border: 1px solid var(--glass-border);
+    border-radius: 999px;
+    background: var(--glass-bg-strong);
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.active-timer-stop:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+body.dark .active-timer-stop {
+    color: #cbd5e1;
+}
+
+@media (max-width: 480px) {
+    .active-timer-widget {
+        top: 132px;
+        min-width: 200px;
+        padding: 18px 22px;
+    }
+    .active-timer-clock {
+        font-size: 32px;
     }
 }
 
