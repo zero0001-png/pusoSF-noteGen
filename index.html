@@ -1678,6 +1678,36 @@ body.dark .break-alarm-field input[type="time"] {
     color-scheme: dark;
 }
 
+.break-alarm-field {
+    position: relative;
+    padding-left: 12px;
+    border-left: 3px solid transparent;
+    border-radius: 4px;
+}
+
+/* ---- Training row: start time + custom HH:MM duration side by side ---- */
+.break-alarm-training-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.break-alarm-training-row input[type="time"] {
+    flex: 1;
+    min-width: 0;
+}
+
+.break-alarm-training-duration {
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+.break-alarm-training-duration.field-missing {
+    border-color: #ef4444 !important;
+}
+
 .break-alarm-status {
     grid-column: 1 / -1;
     margin-top: var(--field-stack);
@@ -3370,7 +3400,7 @@ body.dark .dock-btn::before {
             <div class="section-heading">
                 <div class="section-heading-line"></div>
                 <div>
-                    <h2>Break &amp; Meeting Alarms</h2>
+                    <h2>Break, Meeting &amp; Training Alarms</h2>
                     <span>Set start times — each one alarms and runs its own countdown</span>
                 </div>
             </div>
@@ -3394,9 +3424,33 @@ body.dark .dock-btn::before {
                 <input type="time" id="breakAlarmTime_break2">
             </div>
 
-            <div class="case-info-field break-alarm-field">
-                <label for="breakAlarmTime_meeting">Meeting/Coaching: <span class="break-alarm-duration">30 min</span></label>
+            <div class="case-info-field break-alarm-field break-alarm-field-coaching">
+                <label for="breakAlarmTime_coaching">Coaching: <span class="break-alarm-duration">30 min</span></label>
+                <input type="time" id="breakAlarmTime_coaching">
+            </div>
+
+            <div class="case-info-field break-alarm-field break-alarm-field-meeting">
+                <label for="breakAlarmTime_meeting">Meeting: <span class="break-alarm-duration">30 min</span></label>
                 <input type="time" id="breakAlarmTime_meeting">
+            </div>
+
+            <div class="case-info-field break-alarm-field break-alarm-field-training">
+                <label for="breakAlarmTime_training">Training: <span class="break-alarm-duration">30 min</span></label>
+                <div class="break-alarm-training-row">
+                    <input type="time" id="breakAlarmTime_training">
+                    <select id="breakAlarmDuration_training" class="break-alarm-training-duration">
+                        <option value="00:30">30 mins</option>
+                        <option value="01:00">1 hour</option>
+                        <option value="01:30">1 hour 30 mins</option>
+                        <option value="02:00">2 hours</option>
+                        <option value="02:30">2 hours 30 mins</option>
+                        <option value="03:00">3 hours</option>
+                        <option value="03:30">3 hours 30 mins</option>
+                        <option value="04:00">4 hours</option>
+                        <option value="04:30">4 hours 30 mins</option>
+                        <option value="05:00">5 hours</option>
+                    </select>
+                </div>
             </div>
 
             <div class="break-alarm-status" id="breakAlarmStatus">No alarms scheduled yet</div>
@@ -3609,11 +3663,48 @@ const BREAK_ALARM_TYPES = [
     { id: "break1", label: "1st Break", duration: 15 * 60 },
     { id: "lunch", label: "Lunch", duration: 60 * 60 },
     { id: "break2", label: "2nd Break", duration: 15 * 60 },
-    { id: "meeting", label: "Meeting/Coaching", duration: 30 * 60 }
+    { id: "coaching", label: "Coaching", duration: 30 * 60 },
+    { id: "meeting", label: "Meeting", duration: 30 * 60 },
+    { id: "training", label: "Training", duration: 30 * 60, customDuration: true }
 ];
 
 const BREAK_ALARM_STORAGE_KEY = "breakAlarmSchedule";
+const BREAK_ALARM_DURATIONS_KEY = "breakAlarmCustomDurations";
 const BREAK_ALARM_RUN_KEY = "breakAlarmRunningTimer";
+
+let breakAlarmCustomDurations = {}; // { training: "01:30" }
+
+// Parses "HH:MM" into whole seconds. Returns null if not a valid duration.
+function parseHHMMToSeconds(value) {
+    if (!value) return null;
+    const match = /^(\d{1,2}):([0-5]\d)$/.exec(value.trim());
+    if (!match) return null;
+
+    const hours = parseInt(match[1], 10);
+    const minutes = parseInt(match[2], 10);
+    const totalSeconds = (hours * 60 + minutes) * 60;
+
+    return totalSeconds > 0 ? totalSeconds : null;
+}
+
+// Resolves the effective duration (seconds) for an alarm type, honoring
+// custom HH:MM durations (e.g. Training) with a fallback to the default.
+function getBreakAlarmDuration(type) {
+    if (!type.customDuration) return type.duration;
+
+    const custom = parseHHMMToSeconds(breakAlarmCustomDurations[type.id]);
+    return custom !== null ? custom : type.duration;
+}
+
+function formatSecondsAsDurationLabel(totalSeconds) {
+    const totalMinutes = Math.round(totalSeconds / 60);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    if (hours > 0 && minutes > 0) return hours + "h " + minutes + "m";
+    if (hours > 0) return hours + "h";
+    return minutes + " min";
+}
 
 let breakAlarmSchedule = {};    // { break1: "13:00", lunch: "14:00", ... }
 let breakAlarmFiredToday = {};  // { break1: "Thu Sep 03 2026", ... }
@@ -3632,6 +3723,13 @@ function openBreakAlarmModal() {
         const input = document.getElementById("breakAlarmTime_" + type.id);
         if (input) input.value = breakAlarmSchedule[type.id] || "";
     });
+
+    const trainingDurationInput = document.getElementById("breakAlarmDuration_training");
+    if (trainingDurationInput) {
+        trainingDurationInput.value = breakAlarmCustomDurations.training || "00:30";
+    }
+    updateTrainingDurationLabel();
+
     updateBreakAlarmStatus();
     refreshBreakAlarmPermissionUI();
 
@@ -3642,7 +3740,23 @@ function closeBreakAlarmModal() {
     document.getElementById("breakAlarmModal").classList.remove("show");
 }
 
+// Keeps the "Training: <duration>" badge in sync with whatever the user
+// picks from the duration dropdown, falling back to the 30-min default.
+function updateTrainingDurationLabel() {
+    const labelEl = document.querySelector("#breakAlarmModal .break-alarm-field-training .break-alarm-duration");
+    if (!labelEl) return;
+
+    const input = document.getElementById("breakAlarmDuration_training");
+    const rawValue = input ? input.value.trim() : "";
+    const parsedSeconds = parseHHMMToSeconds(rawValue);
+
+    labelEl.textContent = parsedSeconds !== null ? formatSecondsAsDurationLabel(parsedSeconds) : "30 min";
+}
+
 function saveBreakAlarms() {
+    const trainingDurationInput = document.getElementById("breakAlarmDuration_training");
+    const trainingDurationRaw = trainingDurationInput ? trainingDurationInput.value.trim() : "00:30";
+
     const newSchedule = {};
 
     BREAK_ALARM_TYPES.forEach(type => {
@@ -3653,7 +3767,9 @@ function saveBreakAlarms() {
 
     breakAlarmSchedule = newSchedule;
     breakAlarmFiredToday = {};
+    breakAlarmCustomDurations.training = trainingDurationRaw;
     persistBreakAlarmSchedule();
+    persistBreakAlarmCustomDurations();
     updateBreakAlarmStatus();
     updateBreakAlarmActiveDot();
     startBreakAlarmWatcher();
@@ -3664,12 +3780,20 @@ function saveBreakAlarms() {
 function clearBreakAlarms() {
     breakAlarmSchedule = {};
     breakAlarmFiredToday = {};
+    breakAlarmCustomDurations = {};
     persistBreakAlarmSchedule();
+    persistBreakAlarmCustomDurations();
 
     BREAK_ALARM_TYPES.forEach(type => {
         const input = document.getElementById("breakAlarmTime_" + type.id);
         if (input) input.value = "";
     });
+
+    const trainingDurationInput = document.getElementById("breakAlarmDuration_training");
+    if (trainingDurationInput) {
+        trainingDurationInput.value = "00:30";
+    }
+    updateTrainingDurationLabel();
 
     updateBreakAlarmStatus();
     updateBreakAlarmActiveDot();
@@ -3681,12 +3805,25 @@ function persistBreakAlarmSchedule() {
     } catch (e) {}
 }
 
+function persistBreakAlarmCustomDurations() {
+    try {
+        localStorage.setItem(BREAK_ALARM_DURATIONS_KEY, JSON.stringify(breakAlarmCustomDurations));
+    } catch (e) {}
+}
+
 function loadBreakAlarmSchedule() {
     try {
         const saved = localStorage.getItem(BREAK_ALARM_STORAGE_KEY);
         breakAlarmSchedule = saved ? JSON.parse(saved) : {};
     } catch (e) {
         breakAlarmSchedule = {};
+    }
+
+    try {
+        const savedDurations = localStorage.getItem(BREAK_ALARM_DURATIONS_KEY);
+        breakAlarmCustomDurations = savedDurations ? JSON.parse(savedDurations) : {};
+    } catch (e) {
+        breakAlarmCustomDurations = {};
     }
 
     updateBreakAlarmActiveDot();
@@ -3800,16 +3937,18 @@ function checkBreakAlarms() {
 function fireBreakAlarm(type) {
     playBreakAlarmBeep();
 
+    const effectiveDuration = getBreakAlarmDuration(type);
+
     if ("Notification" in window && Notification.permission === "granted") {
         try {
             new Notification(type.label + " starting", {
-                body: "Timer running for " + Math.round(type.duration / 60) + " minutes.",
+                body: "Timer running for " + Math.round(effectiveDuration / 60) + " minutes.",
                 requireInteraction: true
             });
         } catch (e) {}
     }
 
-    startActiveBreakTimer(type);
+    startActiveBreakTimer(type, effectiveDuration);
 }
 
 function playBreakAlarmBeep() {
@@ -3843,12 +3982,14 @@ function playBreakAlarmBeep() {
     } catch (e) {}
 }
 
-function startActiveBreakTimer(type) {
+function startActiveBreakTimer(type, durationOverrideSeconds) {
+    const duration = durationOverrideSeconds || getBreakAlarmDuration(type);
+
     activeBreakTimer = {
         id: type.id,
         label: type.label,
-        duration: type.duration,
-        endsAt: Date.now() + type.duration * 1000
+        duration: duration,
+        endsAt: Date.now() + duration * 1000
     };
     persistActiveBreakTimer();
     renderActiveBreakTimer();
@@ -3962,6 +4103,13 @@ function stopActiveBreakTimer() {
 document.addEventListener("DOMContentLoaded", () => {
     loadBreakAlarmSchedule();
     loadActiveBreakTimer();
+
+    const trainingDurationInput = document.getElementById("breakAlarmDuration_training");
+    if (trainingDurationInput) {
+        trainingDurationInput.addEventListener("change", () => {
+            updateTrainingDurationLabel();
+        });
+    }
 });
 
 // =========================================================
