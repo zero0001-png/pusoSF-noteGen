@@ -49,7 +49,7 @@ html {
     --modal-backdrop: rgba(148, 163, 184, 0.35);
     --glass-modal-bg: rgba(255, 255, 255, 0.82);
     --glass-field-bg: rgba(255, 255, 255, 0.95);
-    --glass-field-border: rgba(15, 23, 42, 0.14);
+    --glass-field-border: rgba(15, 23, 42, 0.32);
     --glass-field-text: #0f172a;
 
     /* ---- Break-timer glow (light): warm amber, matches the "Break" label ---- */
@@ -509,7 +509,7 @@ textarea {
     width: 100%;
     padding: 10px 12px;
     border-radius: 8px;
-    border: 1px solid rgba(148, 163, 184, 0.55);
+    border: 1px solid rgba(100, 116, 139, 0.75);
     font-size: 13px;
     outline: none;
     background: #ffffff;
@@ -592,7 +592,7 @@ input[readonly],
 textarea[readonly] {
     background-color: #f0f0f0;
     color: #6b7280;
-    border-color: #e0e0e0;
+    border-color: #b0b8c4;
     cursor: default;
     opacity: 0.95;
 }
@@ -761,14 +761,43 @@ button.action.copied {
     transition: transform 0.18s cubic-bezier(.4, 0, .2, 1);
 }
 
-/* idle hover wiggle */
-button.action:hover .action-icon {
-    animation: iconWiggle 0.3s ease;
+/* idle hover — COPY buttons: icon "peels" forward like duplicating a
+   sheet, leaving a brief ghost outline behind it */
+button.action:not(.action-clear):hover .action-icon {
+    animation: iconCopyPeel 0.38s ease;
 }
-@keyframes iconWiggle {
+@keyframes iconCopyPeel {
+    0%   { transform: translate(0, 0) scale(1); filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0)); }
+    45%  { transform: translate(-2.5px, -2.5px) scale(1.08); filter: drop-shadow(2.5px 2.5px 0 rgba(255, 255, 255, 0.55)); }
+    100% { transform: translate(0, 0) scale(1); filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0)); }
+}
+
+/* idle hover — CLEAR buttons: icon shakes itself out, like dusting
+   the fields clean */
+button.action.action-clear:hover .action-icon {
+    animation: iconClearShake 0.42s ease;
+}
+@keyframes iconClearShake {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    20%      { transform: translate(-3px, 0) rotate(-10deg); }
+    40%      { transform: translate(3px, 0) rotate(10deg); }
+    60%      { transform: translate(-2px, 0) rotate(-6deg); }
+    80%      { transform: translate(2px, 0) rotate(6deg); }
+}
+
+/* idle hover — SAVE & SET ALARMS: bell swings like it's actually
+   ringing, rather than the generic wiggle */
+#breakAlarmSaveBtn:hover .action-icon {
+    animation: iconBellRing 0.5s ease;
+    transform-origin: top center;
+}
+@keyframes iconBellRing {
     0%, 100% { transform: rotate(0deg); }
-    25%      { transform: rotate(-12deg) scale(1.1); }
-    75%      { transform: rotate(12deg) scale(1.1); }
+    15%      { transform: rotate(-16deg); }
+    32%      { transform: rotate(13deg); }
+    48%      { transform: rotate(-9deg); }
+    64%      { transform: rotate(6deg); }
+    80%      { transform: rotate(-3deg); }
 }
 
 /* press feedback */
@@ -1536,6 +1565,21 @@ body.dark .case-search-button:hover {
     color: #082f49;
 }
 
+.search-btn-icon {
+    display: inline-block;
+}
+
+.case-search-button:hover .search-btn-icon {
+    animation: iconSearchScan 0.6s ease;
+}
+@keyframes iconSearchScan {
+    0%   { transform: rotate(0deg) scale(1) translate(0, 0); }
+    25%  { transform: rotate(-14deg) scale(1.1) translate(-1px, -1px); }
+    50%  { transform: rotate(0deg) scale(1.15) translate(1px, 1px); }
+    75%  { transform: rotate(10deg) scale(1.1) translate(-1px, 1px); }
+    100% { transform: rotate(0deg) scale(1) translate(0, 0); }
+}
+
 /* =========================================================
    SELECTED FIELD FEEDBACK
    ========================================================= */
@@ -1622,8 +1666,17 @@ body.dark .case-search-button:hover {
 
 .premium-alarm-btn:hover .alarm-btn-icon {
     color: #d97706;
-    transform: rotate(-12deg) scale(1.1);
     filter: drop-shadow(0 0 5px rgba(217, 119, 6, 0.45));
+    animation: alarmBellRing 0.5s ease;
+    transform-origin: top center;
+}
+@keyframes alarmBellRing {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    15%      { transform: rotate(-16deg) scale(1.08); }
+    32%      { transform: rotate(13deg) scale(1.08); }
+    48%      { transform: rotate(-9deg) scale(1.08); }
+    64%      { transform: rotate(6deg) scale(1.08); }
+    80%      { transform: rotate(-3deg) scale(1.04); }
 }
 
 body.dark .alarm-btn-icon {
@@ -2138,7 +2191,9 @@ body.dark .active-timer-stop {
 }
 
 /* =========================================================
-   CLIENT ENDORSEMENT
+   CLIENT ENDORSEMENT — liquid glass segmented toggle
+   (same interaction pattern as the Outbound Call toggle,
+   restyled with a frosted, animated sliding "blob")
    ========================================================= */
 
 .client-endorsement-field {
@@ -2149,39 +2204,151 @@ body.dark .active-timer-stop {
 
 .client-endorsement-field > label {
     margin-top: 10px;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     font-size: 15px;
     font-weight: 600;
 }
 
 .client-endorsement-options {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    min-height: 38px;
+    position: relative;
+    display: inline-flex;
+    width: fit-content;
+    min-width: 168px;
+    padding: 4px;
+    border-radius: 13px;
+    isolation: isolate;
+
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.5),
+        inset 0 -1px 3px rgba(0, 0, 0, 0.06),
+        0 6px 18px rgba(15, 23, 42, 0.08);
+    transition: box-shadow 0.25s ease;
 }
 
-.client-endorsement-options label {
+/* the liquid "blob" that glides between Yes / No */
+.client-endorsement-options::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    top: 4px;
+    left: 4px;
+    width: calc(50% - 4px);
+    height: calc(100% - 8px);
+    border-radius: 10px;
+
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.88), rgba(16, 163, 116, 0.88));
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.55),
+        inset 0 -6px 10px rgba(0, 0, 0, 0.08),
+        0 2px 6px rgba(0, 0, 0, 0.12);
+
+    transition:
+        transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+        background 0.35s ease,
+        box-shadow 0.35s ease,
+        border-radius 0.4s ease;
+}
+
+/* liquid squash-and-stretch while the blob is mid-flight */
+.client-endorsement-options:active::before {
+    border-radius: 14px;
+}
+
+.client-endorsement-options:has(input[value="No"]:checked)::before {
+    transform: translateX(100%);
+    background: linear-gradient(135deg, rgba(248, 113, 113, 0.9), rgba(220, 38, 38, 0.88));
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.55),
+        inset 0 -6px 10px rgba(0, 0, 0, 0.08),
+        0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.client-endorsement-options .ce-option {
+    position: relative;
+    z-index: 1;
+    flex: 1 1 50%;
     display: inline-flex !important;
     flex-direction: row !important;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     margin: 0 !important;
-    padding: 0;
-    font-size: 15px;
-    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
     white-space: nowrap;
     cursor: pointer;
+    color: #6b7684;
+    transition: color 0.2s ease, transform 0.15s ease;
 }
 
-.client-endorsement-options input[type="radio"] {
-    width: 18px !important;
-    height: 18px !important;
-    min-width: 18px;
+.client-endorsement-options .ce-option:hover {
+    color: #3d4652;
+}
+
+.client-endorsement-options .ce-option:active {
+    transform: scale(0.97);
+}
+
+.client-endorsement-options .ce-option:has(input:checked) {
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.client-endorsement-options .ce-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
     margin: 0;
-    padding: 0;
-    cursor: pointer;
-    accent-color: #38bdf8;
+}
+
+/* check / cross glyph, mirrors the outbound call icon treatment */
+.client-endorsement-options .ce-option span::before {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 13px;
+    background-size: 13px 13px;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0;
+    margin-right: 0;
+    vertical-align: -2px;
+    transition: width 0.2s ease, margin-right 0.2s ease, opacity 0.2s ease;
+}
+
+.client-endorsement-options .ce-option:has(input[value="Yes"]:checked) span::before {
+    width: 13px;
+    margin-right: 6px;
+    opacity: 1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+.client-endorsement-options .ce-option:has(input[value="No"]:checked) span::before {
+    width: 13px;
+    margin-right: 6px;
+    opacity: 1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E");
+}
+
+body.dark .client-endorsement-options .ce-option {
+    color: #b6bfca;
+}
+
+body.dark .client-endorsement-options .ce-option:hover {
+    color: #f1f5f9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .client-endorsement-options::before {
+        transition: none;
+    }
 }
 
 /* =========================================================
@@ -2190,7 +2357,7 @@ body.dark .active-timer-stop {
 
 @media (max-width: 700px) {
     .client-endorsement-options {
-        gap: 14px;
+        width: 100%;
     }
 }
 
@@ -2692,6 +2859,36 @@ body.dark .action-dock {
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
 }
 
+/* FUSE Notes — report icon flashes like it's crackling with a fresh report */
+.dock-btn:hover .dock-icon-fuse {
+    animation: dockFlash 0.5s ease;
+}
+@keyframes dockFlash {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35)) brightness(1); }
+    30%      { transform: scale(1.06); filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4)) brightness(1.4); }
+    60%      { transform: scale(0.97); filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35)) brightness(1); }
+}
+
+/* Email Escalation — envelope darts up and away like it's being sent */
+.dock-btn:hover .dock-icon-mail {
+    animation: dockSend 0.45s ease;
+}
+@keyframes dockSend {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    40%  { transform: translate(4px, -4px) rotate(10deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+/* Resolved Case Notes — checkmark pops like ticking something off */
+.dock-btn:hover .dock-icon-check {
+    animation: dockCheckPop 0.4s cubic-bezier(.34, 1.56, .64, 1);
+}
+@keyframes dockCheckPop {
+    0%   { transform: scale(1) rotate(0deg); }
+    50%  { transform: scale(1.22) rotate(-8deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
 /* tooltip */
 .dock-btn::before {
     content: attr(data-label);
@@ -3125,7 +3322,7 @@ body.dark .dock-btn::before {
 
         <!-- PUSO ADVOCATE REPORT -->
         <button type="button" class="dock-btn" data-label="FUSE Notes" onclick="openPusoReportModal()">
-    <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg class="dock-icon-fuse" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="17" cy="17" r="17" fill="url(#pusoGrad)"/>
         <circle cx="17" cy="17" r="17" fill="url(#pusoGloss)"/>
         <g transform="translate(7,27) scale(0.0208333)">
@@ -3146,7 +3343,7 @@ body.dark .dock-btn::before {
 
         <!-- EMAIL ESCALATION -->
         <button type="button" class="dock-btn" data-label="Email Escalation" onclick="openCaseInfoModal()">
-            <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="dock-icon-mail" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="17" cy="17" r="17" fill="url(#mailGrad)"/>
                 <circle cx="17" cy="17" r="17" fill="url(#mailGloss)"/>
                 <g transform="translate(7,27) scale(0.0208333)">
@@ -3167,7 +3364,7 @@ body.dark .dock-btn::before {
 
         <!-- RESOLVED CASE NOTES -->
         <button type="button" class="dock-btn" data-label="Resolved Case Notes" onclick="openResolvedNotesModal()">
-            <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="dock-icon-check" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="17" cy="17" r="17" fill="url(#checkGrad)"/>
                 <circle cx="17" cy="17" r="17" fill="url(#checkGloss)"/>
                 <g transform="translate(7,27) scale(0.0208333)">
@@ -3340,7 +3537,7 @@ body.dark .dock-btn::before {
 
             <div class="case-info-full">
                 <button type="button" class="case-search-button" onclick="openCitySearchFromCaseInfo()">
-                    🔎 Search City / Exchange Code
+                    <span class="search-btn-icon" aria-hidden="true">🔎</span> Search City / Exchange Code
                 </button>
             </div>
 
@@ -3348,11 +3545,11 @@ body.dark .dock-btn::before {
             <div class="case-info-field client-endorsement-field">
                 <label>Client Endorsement?</label>
                 <div class="client-endorsement-options">
-                    <label>
+                    <label class="ce-option">
                         <input type="radio" name="clientEndorsement" value="Yes">
                         <span>Yes</span>
                     </label>
-                    <label>
+                    <label class="ce-option">
                         <input type="radio" name="clientEndorsement" value="No" checked data-default="true">
                         <span>No</span>
                     </label>
