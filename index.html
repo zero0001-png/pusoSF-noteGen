@@ -1295,22 +1295,22 @@ body.dark button.action.action-escalate:hover {
     visibility: hidden;
     pointer-events: none;
     transition:
-        opacity 0.15s ease,
-        backdrop-filter 0.18s ease,
-        -webkit-backdrop-filter 0.18s ease,
-        visibility 0.1s linear 0.15s;
+        opacity 0.1s ease,
+        backdrop-filter 0.13s ease,
+        -webkit-backdrop-filter 0.13s ease,
+        visibility 0.1s linear 0.1s;
 }
 
 .case-info-modal.show {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    -webkit-backdrop-filter: blur(10px) saturate(140%);
-    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(1.5px) saturate(115%);
+    backdrop-filter: blur(1.5px) saturate(115%);
     transition:
-        opacity 0.15s ease,
-        backdrop-filter 0.18s ease,
-        -webkit-backdrop-filter 0.18s ease;
+        opacity 0.1s ease,
+        backdrop-filter 0.13s ease,
+        -webkit-backdrop-filter 0.13s ease;
 }
 
 .case-info-modal-content {
@@ -1330,12 +1330,14 @@ body.dark button.action.action-escalate:hover {
         0 24px 70px rgba(0, 0, 0, 0.25),
         0 2px 0 var(--glass-highlight) inset,
         0 0 0 1px rgba(255, 255, 255, 0.05) inset;
-    transform: translateY(18px) scale(0.96);
+    transform: translateY(10px) scale(0.5);
+    filter: blur(16px) saturate(160%);
     opacity: 0;
     transition:
-        transform 0.21s cubic-bezier(0.16, 1, 0.3, 1),
-        opacity 0.15s ease,
-        background 0.24s ease;
+        transform 0.16s cubic-bezier(0.4, 0, 0.7, 1),
+        filter 0.13s ease,
+        opacity 0.1s ease,
+        background 0.16s ease;
 }
 
 /* Content sits above the sheen overlay */
@@ -1365,7 +1367,12 @@ body.dark .case-info-modal-content::before {
 
 .case-info-modal.show .case-info-modal-content {
     transform: translateY(0) scale(1);
+    filter: blur(0px) saturate(100%);
     opacity: 1;
+    transition:
+        transform 0.3s cubic-bezier(0.2, 1.7, 0.4, 1),
+        filter 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.14s ease;
 }
 
 body.dark .case-info-modal-content {
@@ -1647,6 +1654,133 @@ body.dark .premium-alarm-btn:hover .alarm-btn-icon {
 @keyframes alarm-dot-pulse {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.55; transform: scale(0.8); }
+}
+
+/* =========================================================
+   BREAK & MEETING ALARM — POPOVER
+   Anchored under the bell button instead of centered on
+   screen, with an iOS "liquid glass" open/close animation:
+   the panel condenses toward the button (scaled down,
+   heavily blurred) when hidden, and springs open with a
+   soft overshoot when shown. Background gets only a subtle
+   blur, since this reads as a popover, not a full modal.
+   ========================================================= */
+#breakAlarmModal {
+    align-items: flex-start;
+    justify-content: flex-start;
+    background: rgba(15, 23, 42, 0.05);
+    -webkit-backdrop-filter: blur(0px);
+    backdrop-filter: blur(0px);
+    padding: 0;
+    transition:
+        opacity 0.1s ease,
+        backdrop-filter 0.16s ease,
+        -webkit-backdrop-filter 0.16s ease,
+        visibility 0.1s linear 0.12s;
+}
+
+#breakAlarmModal.show {
+    -webkit-backdrop-filter: blur(1.5px) saturate(115%);
+    backdrop-filter: blur(1.5px) saturate(115%);
+    transition:
+        opacity 0.1s ease,
+        backdrop-filter 0.18s ease,
+        -webkit-backdrop-filter 0.18s ease;
+}
+
+body.dark #breakAlarmModal {
+    background: rgba(2, 6, 23, 0.15);
+}
+
+#breakAlarmModal .case-info-modal-content {
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 0;
+    width: min(640px, calc(100vw - 24px));
+    max-height: min(82vh, 700px);
+    border-radius: 22px;
+    transform-origin: 82% -12px;
+    transform: scale(0.32) translateY(-14px);
+    filter: blur(16px) saturate(160%);
+    opacity: 0;
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.22),
+        0 2px 0 var(--glass-highlight) inset,
+        0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+    transition:
+        transform 0.16s cubic-bezier(0.4, 0, 0.7, 1),
+        filter 0.13s ease,
+        opacity 0.1s ease;
+}
+
+#breakAlarmModal.show .case-info-modal-content {
+    transform: scale(1) translateY(0);
+    filter: blur(0px) saturate(100%);
+    opacity: 1;
+    transition:
+        transform 0.3s cubic-bezier(0.2, 1.7, 0.4, 1),
+        filter 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.14s ease;
+}
+
+/* Small "tail" pointing back up at the bell button, made from
+   the same glass material so it reads as one continuous piece. */
+#breakAlarmModal .case-info-modal-content::after {
+    content: "";
+    position: absolute;
+    top: -8px;
+    right: var(--arrow-right, 26px);
+    width: 16px;
+    height: 16px;
+    z-index: 0;
+    background: var(--glass-modal-bg);
+    border-left: 1px solid var(--glass-border);
+    border-top: 1px solid var(--glass-border);
+    border-radius: 4px 0 0 0;
+    transform: rotate(45deg);
+    -webkit-backdrop-filter: blur(36px) saturate(220%);
+    backdrop-filter: blur(36px) saturate(220%);
+}
+
+@media (max-width: 700px) {
+    #breakAlarmModal .case-info-modal-content {
+        width: calc(100vw - 24px);
+        max-height: 85vh;
+    }
+}
+
+/* Equal-sized boxes for each alarm field, with enough width for
+   the native time input to show its value uncompressed. */
+#breakAlarmModal .case-info-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 18px;
+}
+
+#breakAlarmModal .break-alarm-field {
+    background: var(--glass-field-bg);
+    border: 1px solid var(--glass-field-border);
+    border-radius: 14px;
+    padding: 10px 14px 12px;
+    min-height: 82px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#breakAlarmModal .break-alarm-field label {
+    margin-top: 0;
+}
+
+#breakAlarmModal .break-alarm-field input[type="time"],
+#breakAlarmModal .break-alarm-training-row input[type="time"] {
+    min-width: 0;
+    font-size: 15px;
+    padding: 8px 10px;
+}
+
+#breakAlarmModal .break-alarm-training-duration {
+    font-size: 12px;
 }
 
 /* =========================================================
@@ -3718,6 +3852,41 @@ function pad2(n) {
     return String(n).padStart(2, "0");
 }
 
+// Anchors the alarm popover's glass panel directly under the
+// bell button (right-aligned to it, clamped to the viewport),
+// and points its transform-origin + tail arrow back at the
+// button so the open/close animation reads as emerging from it.
+function positionAlarmPopover() {
+    const btn = document.getElementById("breakAlarmBtn");
+    const content = document.querySelector("#breakAlarmModal .case-info-modal-content");
+    if (!btn || !content) return;
+
+    const rect = btn.getBoundingClientRect();
+    const gap = 10;
+    const margin = 12;
+    const popoverWidth = content.offsetWidth;
+    const viewportW = window.innerWidth;
+    const viewportH = window.innerHeight;
+
+    let left = rect.right - popoverWidth;
+    left = Math.max(margin, Math.min(left, viewportW - popoverWidth - margin));
+
+    let top = rect.bottom + gap;
+    top = Math.min(top, Math.max(margin, viewportH - margin - 160));
+
+    content.style.left = left + "px";
+    content.style.top = top + "px";
+
+    const buttonCenterX = rect.left + rect.width / 2;
+    const arrowRight = Math.max(16, (left + popoverWidth) - buttonCenterX - 8);
+    content.style.setProperty("--arrow-right", arrowRight + "px");
+
+    const originX = popoverWidth
+        ? Math.min(96, Math.max(4, ((buttonCenterX - left) / popoverWidth) * 100))
+        : 82;
+    content.style.transformOrigin = originX + "% -12px";
+}
+
 function openBreakAlarmModal() {
     BREAK_ALARM_TYPES.forEach(type => {
         const input = document.getElementById("breakAlarmTime_" + type.id);
@@ -3733,12 +3902,20 @@ function openBreakAlarmModal() {
     updateBreakAlarmStatus();
     refreshBreakAlarmPermissionUI();
 
+    positionAlarmPopover();
     document.getElementById("breakAlarmModal").classList.add("show");
 }
 
 function closeBreakAlarmModal() {
     document.getElementById("breakAlarmModal").classList.remove("show");
 }
+
+window.addEventListener("resize", function() {
+    const modal = document.getElementById("breakAlarmModal");
+    if (modal && modal.classList.contains("show")) {
+        positionAlarmPopover();
+    }
+});
 
 // Keeps the "Training: <duration>" badge in sync with whatever the user
 // picks from the duration dropdown, falling back to the 30-min default.
