@@ -2933,7 +2933,7 @@ body.dark .dock-btn::before {
     position: fixed;
     top: 50%;
     right: 0;
-    z-index: 6500;
+    z-index: 10500;
     transform: translateY(-50%);
 
     display: flex;
@@ -3045,6 +3045,7 @@ body.dark .side-notepad-tab:hover {
    edge and slides it in horizontally instead of scaling it from
    the center. ---- */
 .side-notepad-modal {
+    z-index: 10500;
     align-items: stretch;
     justify-content: flex-end;
     padding: 0;
@@ -5173,8 +5174,11 @@ document.addEventListener("DOMContentLoaded", () => {
 const FORM_STORAGE_PREFIX = "form_";
 
 function getSaveableFields() {
+    // #sideNotepadText is excluded on purpose \u2014 the notepad is a separate
+    // scratchpad with its own save/load/clear logic, and shouldn't be
+    // wiped by Reset or touched by the case form's autosave.
     return document.querySelectorAll(
-        "input[id]:not([readonly]), select[id], textarea[id]:not([readonly])"
+        "input[id]:not([readonly]), select[id], textarea[id]:not([readonly]):not(#sideNotepadText)"
     );
 }
 
