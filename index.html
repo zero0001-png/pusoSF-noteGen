@@ -2919,9 +2919,286 @@ body.dark .dock-btn::before {
     display: flex;
 }
 
+
+/* =========================================================
+   SIDE NOTEPAD — FREE-TEXT SCRATCHPAD
+   A tab docked to the right edge of the viewport that opens a
+   slide-in glass drawer. Reuses the app's glass/blur language,
+   the same spring easing as the other modals, and the same
+   conic-gradient hover glow as the header's premium-toggle
+   buttons. The textarea inside is intentionally plain — no
+   rich text, no formatting controls, no toolbar.
+   ========================================================= */
+.side-notepad-tab {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    z-index: 6500;
+    transform: translateY(-50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    padding: 16px 10px;
+    border: 1px solid var(--glass-border);
+    border-right: none;
+    border-radius: 14px 0 0 14px;
+
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+
+    color: #475569;
+    cursor: pointer;
+    box-shadow:
+        -6px 6px 20px rgba(15, 23, 42, 0.12),
+        inset 0 1px 0 var(--glass-highlight);
+
+    overflow: hidden;
+    isolation: isolate;
+
+    transition:
+        transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+        opacity 0.2s ease,
+        background 0.12s ease,
+        border-color 0.12s ease,
+        box-shadow 0.12s ease,
+        color 0.12s ease;
+}
+
+.side-notepad-tab:hover {
+    transform: translateY(-50%) translateX(-4px);
+    color: #0f172a;
+}
+
+.side-notepad-tab:active {
+    transform: translateY(-50%) translateX(-2px) scale(0.97);
+}
+
+.side-notepad-tab.is-hidden {
+    opacity: 0;
+    transform: translateY(-50%) translateX(24px);
+    pointer-events: none;
+}
+
+body.dark .side-notepad-tab {
+    color: #94a3b8;
+}
+
+body.dark .side-notepad-tab:hover {
+    color: #f1f5f9;
+}
+
+/* conic-gradient hover glow — same mechanism as .premium-toggle::before */
+.side-notepad-tab::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+        from var(--angle, 0deg),
+        rgba(56,189,248,0) 0%,
+        rgba(56,189,248,0.6) 15%,
+        rgba(99,102,241,0.6) 35%,
+        rgba(56,189,248,0) 55%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.12s ease;
+    z-index: -1;
+    animation: spin-border 1.125s linear infinite paused;
+}
+
+.side-notepad-tab:hover::before {
+    opacity: 1;
+    animation-play-state: running;
+}
+
+.side-notepad-tab-icon {
+    display: flex;
+    width: 18px;
+    height: 18px;
+}
+
+.side-notepad-tab-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.side-notepad-tab-label {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* ---- Drawer: reuses .case-info-modal's show/hide, click-outside
+   and Escape-key plumbing, but docks the panel flush to the right
+   edge and slides it in horizontally instead of scaling it from
+   the center. ---- */
+.side-notepad-modal {
+    align-items: stretch;
+    justify-content: flex-end;
+    padding: 0;
+}
+
+.side-notepad-content {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    width: min(400px, 100vw);
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 20px 0 0 20px;
+    border: 1px solid var(--glass-border);
+    border-right: none;
+
+    background: var(--glass-modal-bg);
+    -webkit-backdrop-filter: blur(36px) saturate(220%);
+    backdrop-filter: blur(36px) saturate(220%);
+
+    padding: 20px;
+    box-shadow:
+        -24px 0 70px rgba(0, 0, 0, 0.22),
+        0 2px 0 var(--glass-highlight) inset,
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+
+    transform: translateX(100%);
+    filter: blur(16px) saturate(160%);
+    opacity: 0;
+    transition:
+        transform 0.16s cubic-bezier(0.4, 0, 0.7, 1),
+        filter 0.13s ease,
+        opacity 0.1s ease;
+}
+
+.side-notepad-modal.show .side-notepad-content {
+    transform: translateX(0);
+    filter: blur(0px) saturate(100%);
+    opacity: 1;
+    transition:
+        transform 0.32s cubic-bezier(0.2, 1, 0.4, 1),
+        filter 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.14s ease;
+}
+
+body.dark .side-notepad-content {
+    box-shadow:
+        -24px 0 70px rgba(0, 0, 0, 0.65),
+        0 2px 0 var(--glass-highlight) inset,
+        0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+}
+
+/* Soft diagonal light sheen, matching the other glass modals */
+.side-notepad-content::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background:
+        radial-gradient(500px 220px at 15% -10%, rgba(255, 255, 255, 0.35), transparent 60%),
+        radial-gradient(420px 260px at 100% 110%, rgba(99, 102, 241, 0.10), transparent 60%);
+    opacity: 0.9;
+}
+
+body.dark .side-notepad-content::before {
+    background:
+        radial-gradient(500px 220px at 15% -10%, rgba(255, 255, 255, 0.06), transparent 60%),
+        radial-gradient(420px 260px at 100% 110%, rgba(56, 189, 248, 0.10), transparent 60%);
+}
+
+.side-notepad-content > * {
+    position: relative;
+    z-index: 1;
+}
+
+.side-notepad-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--glass-field-border);
+    flex-shrink: 0;
+}
+
+.side-notepad-header h2 {
+    margin: 0 0 2px;
+    font-size: 16px;
+}
+
+.side-notepad-header span {
+    font-size: 12px;
+    color: #64748b;
+}
+
+body.dark .side-notepad-header span {
+    color: #94a3b8;
+}
+
+.side-notepad-textarea {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    resize: none;
+    border: 1px solid var(--glass-field-border);
+    border-radius: var(--field-radius);
+    background: var(--glass-field-bg);
+    color: var(--glass-field-text);
+    padding: 14px;
+    font-size: 14px;
+    line-height: 1.6;
+    /* free text only — no formatting controls of any kind */
+}
+
+.side-notepad-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 12px;
+    flex-shrink: 0;
+}
+
+.side-notepad-status {
+    font-size: 11px;
+    font-weight: 600;
+    color: #10b981;
+    transition: opacity 0.2s ease;
+}
+
+body.dark .side-notepad-status {
+    color: #34d399;
+}
+
+@media (max-width: 700px) {
+    .side-notepad-content {
+        width: 100vw;
+        border-radius: 0;
+        border-right: 1px solid var(--glass-border);
+    }
+    .side-notepad-tab {
+        padding: 12px 8px;
+    }
+}
+
 </style>
 
-</head>
+</head
 
 
 <body>
@@ -3382,6 +3659,55 @@ body.dark .dock-btn::before {
                 </defs>
             </svg>
         </button>
+
+    </div>
+</div>
+
+<!-- =========================================================
+     SIDE NOTEPAD — free-text scratchpad (no rich text/formatting)
+     ========================================================= -->
+
+<button
+    type="button"
+    class="side-notepad-tab"
+    id="sideNotepadTab"
+    onclick="toggleSideNotepad()"
+    aria-label="Open notepad"
+    aria-haspopup="true"
+    aria-expanded="false"
+>
+    <span class="side-notepad-tab-icon" aria-hidden="true">
+        <svg viewBox="0 -960 960 960" fill="currentColor"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm655-584-56-56 56 56Z"/></svg>
+    </span>
+    <span class="side-notepad-tab-label">Notepad</span>
+</button>
+
+<div id="sideNotepadModal" class="case-info-modal side-notepad-modal">
+    <div class="side-notepad-content">
+
+        <div class="side-notepad-header">
+            <div>
+                <h2>Notepad</h2>
+                <span>Plain-text scratchpad — not part of the case report</span>
+            </div>
+            <button type="button" class="case-info-close" onclick="closeSideNotepad()" aria-label="Close">×</button>
+        </div>
+
+        <textarea
+            class="side-notepad-textarea"
+            id="sideNotepadText"
+            placeholder="Jot anything down here…"
+            spellcheck="false"
+            aria-label="Scratchpad notes"
+        ></textarea>
+
+        <div class="side-notepad-footer">
+            <span class="side-notepad-status" id="sideNotepadStatus">&nbsp;</span>
+            <button type="button" class="action action-clear" onclick="clearSideNotepad()">
+                <svg class="action-icon" viewBox="0 -960 960 960" width="14" height="14" fill="currentColor" style="vertical-align:-2px"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
+                Clear
+            </button>
+        </div>
 
     </div>
 </div>
@@ -8099,7 +8425,8 @@ const MODAL_CLOSE_FNS = {
     caseInfoModal: closeCaseInfoModal,
     resolvedNotesModal: closeResolvedNotesModal,
     pusoReportModal: closePusoReportModal,
-    breakAlarmModal: closeBreakAlarmModal
+    breakAlarmModal: closeBreakAlarmModal,
+    sideNotepadModal: closeSideNotepad
 };
 
 document.addEventListener("click", function(event) {
@@ -8465,6 +8792,84 @@ document.getElementById("businessSearch").addEventListener(
     searchBusinessZones
 );
 
+
+
+
+/* =========================================================
+   SIDE NOTEPAD — free-text scratchpad
+   Plain textarea only: no rich text, no formatting commands.
+   Autosaves to localStorage as the user types, same pattern
+   used for the rest of the form's autosave.
+   ========================================================= */
+
+const SIDE_NOTEPAD_STORAGE_KEY = "sideNotepad_text";
+let sideNotepadSaveTimeout;
+
+function loadSideNotepad() {
+    const saved = localStorage.getItem(SIDE_NOTEPAD_STORAGE_KEY);
+    const textarea = document.getElementById("sideNotepadText");
+    if (textarea && saved !== null) {
+        textarea.value = saved;
+    }
+}
+
+function flashSideNotepadStatus(message) {
+    const status = document.getElementById("sideNotepadStatus");
+    if (!status) return;
+    status.textContent = message;
+    clearTimeout(status._fadeTimeout);
+    status._fadeTimeout = setTimeout(() => {
+        status.textContent = "\u00a0";
+    }, 1400);
+}
+
+function openSideNotepad() {
+    document.getElementById("sideNotepadModal").classList.add("show");
+    const tab = document.getElementById("sideNotepadTab");
+    tab.classList.add("is-hidden");
+    tab.setAttribute("aria-expanded", "true");
+    setTimeout(() => {
+        const textarea = document.getElementById("sideNotepadText");
+        if (textarea) textarea.focus();
+    }, 200);
+}
+
+function closeSideNotepad() {
+    document.getElementById("sideNotepadModal").classList.remove("show");
+    const tab = document.getElementById("sideNotepadTab");
+    tab.classList.remove("is-hidden");
+    tab.setAttribute("aria-expanded", "false");
+}
+
+function toggleSideNotepad() {
+    const modal = document.getElementById("sideNotepadModal");
+    if (modal.classList.contains("show")) {
+        closeSideNotepad();
+    } else {
+        openSideNotepad();
+    }
+}
+
+function clearSideNotepad() {
+    const textarea = document.getElementById("sideNotepadText");
+    if (!textarea) return;
+    if (textarea.value && !confirm("Clear all notepad text?")) return;
+    textarea.value = "";
+    localStorage.removeItem(SIDE_NOTEPAD_STORAGE_KEY);
+    flashSideNotepadStatus("Cleared");
+    textarea.focus();
+}
+
+loadSideNotepad();
+
+document.getElementById("sideNotepadText").addEventListener("input", function() {
+    clearTimeout(sideNotepadSaveTimeout);
+    const value = this.value;
+    sideNotepadSaveTimeout = setTimeout(() => {
+        localStorage.setItem(SIDE_NOTEPAD_STORAGE_KEY, value);
+        flashSideNotepadStatus("Saved");
+    }, 400);
+});
 
 </script>
 
