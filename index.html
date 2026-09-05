@@ -4662,8 +4662,8 @@ function fireBreakAlarm(type) {
 
     if ("Notification" in window && Notification.permission === "granted") {
         try {
-            new Notification(type.label + " starting", {
-                body: "Timer running for " + Math.round(effectiveDuration / 60) + " minutes.",
+            new Notification("HOY! mag " + type.label + " ka muna!", {
+                body: "Wag pa-OB, babawas yan sa sahod mo \ud83e\udd23",
                 requireInteraction: true
             });
         } catch (e) {}
@@ -4787,8 +4787,8 @@ function finishActiveBreakTimer() {
 
     if ("Notification" in window && Notification.permission === "granted") {
         try {
-            new Notification(finishedLabel + " ended", {
-                body: "Time's up.",
+            new Notification("Hayss! Tapos na " + finishedLabel + " mo.", {
+                body: "Oras na para magpanggap ulit \ud83d\ude0e",
                 requireInteraction: true
             });
         } catch (e) {}
