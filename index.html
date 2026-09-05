@@ -243,10 +243,10 @@ body.dark input[type="date"]::-webkit-calendar-picker-indicator {
     padding: 1px;
     background: conic-gradient(
         from var(--angle, 0deg),
-        rgba(56,189,248,0) 0%,
-        rgba(56,189,248,0.6) 15%,
-        rgba(99,102,241,0.6) 35%,
-        rgba(56,189,248,0) 55%
+        rgba(99,102,241,0) 0%,
+        rgba(129,140,248,0.75) 18%,
+        rgba(99,102,241,0.95) 35%,
+        rgba(99,102,241,0) 55%
     );
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
@@ -257,6 +257,18 @@ body.dark input[type="date"]::-webkit-calendar-picker-indicator {
     animation: spin-border 1.125s linear infinite paused;
 }
 
+/* Dark mode: ring switches to the same amber the moon icon glows
+   with on hover, instead of staying indigo */
+body.dark .premium-toggle::before {
+    background: conic-gradient(
+        from var(--angle, 0deg),
+        rgba(251,191,36,0) 0%,
+        rgba(251,191,36,0.75) 18%,
+        rgba(251,191,36,0.95) 35%,
+        rgba(251,191,36,0) 55%
+    );
+}
+
 .premium-toggle:hover::before {
     opacity: 1;
     animation-play-state: running;
@@ -264,14 +276,22 @@ body.dark input[type="date"]::-webkit-calendar-picker-indicator {
 
 .premium-toggle:hover {
     transform: translateY(-0.5px);
+    border-color: #a5b4fc;
 
     box-shadow:
         0 5px 14px rgba(15, 23, 42, 0.11),
+        0 0 0 3px rgba(99, 102, 241, 0.12),
         inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 .premium-toggle:active {
     transform: translateY(0) scale(0.97);
+}
+
+/* Click feedback — same pop as the Reset and alarm buttons,
+   triggered in JS right after the mode actually switches */
+.premium-toggle.pressed {
+    animation: premiumPop 0.28s ease;
 }
 
 @keyframes spin-border { to { --angle: 360deg; } }
@@ -368,11 +388,12 @@ body.dark .premium-toggle {
 }
 
 body.dark .premium-toggle:hover {
-    border-color: #3b4558;
+    border-color: rgba(251, 191, 36, 0.55);
 
     box-shadow:
         0 8px 22px rgba(0, 0, 0, 0.5),
-        0 0 18px rgba(56, 189, 248, 0.06);
+        0 0 0 3px rgba(251, 191, 36, 0.14),
+        0 0 18px rgba(251, 191, 36, 0.12);
 }
 
 /* =========================================================
@@ -673,9 +694,9 @@ button.action {
         0 4px 10px rgba(29, 78, 216, 0.25),
         inset 0 1px 0 rgba(255, 255, 255, 0.15);
     transition:
-        transform 0.12s ease,
-        box-shadow 0.18s ease,
-        background 0.18s ease;
+        transform 0.08s ease,
+        box-shadow 0.1s ease,
+        background 0.1s ease;
 }
 
 /* Shine sweep — same technique as .premium-reset */
@@ -693,7 +714,7 @@ button.action::before {
         transparent
     );
     transform: skewX(-20deg);
-    transition: left 0.3s ease;
+    transition: left 0.15s ease;
 }
 
 button.action:hover {
@@ -745,7 +766,7 @@ button.action.copied {
     box-shadow:
         0 8px 20px rgba(16, 185, 129, 0.35),
         inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-    animation: actionPop 0.21s ease;
+    animation: actionPop 0.14s ease;
 }
 @keyframes actionPop {
     0%   { transform: scale(1); }
@@ -758,13 +779,13 @@ button.action.copied {
    ========================================================= */
 .action-icon {
     display: inline-block;
-    transition: transform 0.18s cubic-bezier(.4, 0, .2, 1);
+    transition: transform 0.1s cubic-bezier(.4, 0, .2, 1);
 }
 
 /* idle hover — COPY buttons: icon "peels" forward like duplicating a
    sheet, leaving a brief ghost outline behind it */
 button.action:not(.action-clear):hover .action-icon {
-    animation: iconCopyPeel 0.38s ease;
+    animation: iconCopyPeel 0.2s ease;
 }
 @keyframes iconCopyPeel {
     0%   { transform: translate(0, 0) scale(1); filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0)); }
@@ -807,7 +828,7 @@ button.action:active .action-icon {
 
 /* success — icon flips over like a card, swaps to a checkmark */
 button.action.copied .action-icon {
-    animation: iconFlip 0.24s ease forwards;
+    animation: iconFlip 0.14s ease forwards;
 }
 @keyframes iconFlip {
     0%   { transform: rotateY(0deg) scale(1); }
@@ -1651,23 +1672,58 @@ body.dark .case-search-button:hover {
     position: relative;
 }
 
+/* Ring + hover glow recolored to the same warm amber as the bell
+   icon itself (mirrors how .premium-reset's ring matches its red
+   icon), replacing the generic blue/indigo ring shared by the
+   plain premium-toggle buttons. */
+.premium-toggle.premium-alarm-btn::before {
+    background: conic-gradient(
+        from var(--angle, 0deg),
+        rgba(var(--break-glow-rgb), 0) 0%,
+        rgba(var(--break-glow-rgb), 0.75) 18%,
+        rgba(var(--break-glow-rgb), 0.95) 35%,
+        rgba(var(--break-glow-rgb), 0) 55%
+    );
+}
+
+.premium-alarm-btn:hover {
+    border-color: rgba(var(--break-glow-rgb), 0.7);
+    box-shadow:
+        0 5px 14px rgba(15, 23, 42, 0.11),
+        0 0 0 3px rgba(var(--break-glow-rgb), 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+body.dark .premium-alarm-btn:hover {
+    border-color: rgba(var(--break-glow-rgb), 0.6);
+    box-shadow:
+        0 8px 22px rgba(0, 0, 0, 0.5),
+        0 0 18px rgba(var(--break-glow-rgb), 0.22);
+}
+
+/* Click feedback — same quick pop used on the Reset button,
+   triggered in JS the moment the alarm popover opens */
+.premium-alarm-btn.pressed {
+    animation: premiumPop 0.28s ease;
+}
+
 .alarm-btn-icon {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 20px;
     height: 20px;
-    color: #475569;
+    color: rgba(var(--break-glow-rgb), 0.8);
     transition:
-        color 0.15s ease,
-        transform 0.15s ease,
-        filter 0.15s ease;
+        color 0.1s ease,
+        transform 0.1s ease,
+        filter 0.1s ease;
 }
 
 .premium-alarm-btn:hover .alarm-btn-icon {
-    color: #d97706;
-    filter: drop-shadow(0 0 5px rgba(217, 119, 6, 0.45));
-    animation: alarmBellRing 0.5s ease;
+    color: rgb(var(--break-glow-rgb));
+    filter: drop-shadow(0 0 5px rgba(var(--break-glow-rgb), 0.5));
+    animation: alarmBellRing 0.32s ease;
     transform-origin: top center;
 }
 @keyframes alarmBellRing {
@@ -1677,15 +1733,6 @@ body.dark .case-search-button:hover {
     48%      { transform: rotate(-9deg) scale(1.08); }
     64%      { transform: rotate(6deg) scale(1.08); }
     80%      { transform: rotate(-3deg) scale(1.04); }
-}
-
-body.dark .alarm-btn-icon {
-    color: #94a3b8;
-}
-
-body.dark .premium-alarm-btn:hover .alarm-btn-icon {
-    color: #fbbf24;
-    filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.55));
 }
 
 .alarm-active-dot {
@@ -2480,11 +2527,11 @@ body.dark .section-heading span {
         0 4px 10px rgba(15, 23, 42, 0.08),
         inset 0 1px 0 var(--glass-highlight);
     transition:
-        transform 0.12s ease,
-        box-shadow 0.18s ease,
-        border-color 0.18s ease,
-        background 0.18s ease,
-        color 0.18s ease;
+        transform 0.08s ease,
+        box-shadow 0.1s ease,
+        border-color 0.1s ease,
+        background 0.1s ease,
+        color 0.1s ease;
 }
 
 /* Shine effect */
@@ -2502,11 +2549,12 @@ body.dark .section-heading span {
         transparent
     );
     transform: skewX(-20deg);
-    transition: left 0.3s ease;
+    transition: left 0.15s ease;
 }
 
-/* Animated glass border ring — shares the spin-border keyframe/--angle
-   property declared once in the PREMIUM DARK MODE TOGGLE section above */
+/* Animated glass border ring — red-toned to read as the "clear /
+   destructive" action, echoing the icon's red hover tint instead of
+   the unrelated blue used on other premium-toggle buttons */
 .premium-reset::after {
     content: "";
     position: absolute;
@@ -2516,15 +2564,15 @@ body.dark .section-heading span {
     background: conic-gradient(
         from var(--angle, 0deg),
         rgba(239,68,68,0) 0%,
-        rgba(239,68,68,0.6) 15%,
-        rgba(56,189,248,0.6) 35%,
+        rgba(239,68,68,0.75) 18%,
+        rgba(248,113,113,0.9) 35%,
         rgba(239,68,68,0) 55%
     );
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     opacity: 0;
-    transition: opacity 0.21s ease;
+    transition: opacity 0.12s ease;
     z-index: -1;
     animation: spin-border 1.8s linear infinite paused;
 }
@@ -2537,11 +2585,11 @@ body.dark .section-heading span {
 /* Hover */
 .premium-reset:hover {
     transform: translateY(-2px);
-    border-color: #94a3b8;
+    border-color: #f87171;
     color: #0f172a;
     box-shadow:
         0 8px 20px rgba(15, 23, 42, 0.14),
-        0 0 0 3px rgba(56, 189, 248, 0.08),
+        0 0 0 3px rgba(239, 68, 68, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
@@ -2563,19 +2611,28 @@ body.dark .section-heading span {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 18px;
-    height: 18px;
-    font-size: 16px;
+    width: 20px;
+    height: 20px;
     line-height: 1;
     color: #64748b;
     transition:
-        transform 0.3s cubic-bezier(.4, 0, .2, 1),
-        color 0.15s ease;
+        transform 0.15s cubic-bezier(.4, 0, .2, 1),
+        color 0.1s ease;
+}
+
+.reset-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
 }
 
 .premium-reset:hover .reset-icon {
-    transform: rotate(-180deg);
+    transform: rotate(-70deg);
     color: #ef4444;
+}
+
+.premium-reset.confirmed .reset-icon {
+    color: #ffffff;
 }
 
 /* =========================================================
@@ -2590,11 +2647,11 @@ body.dark .premium-reset {
 }
 
 body.dark .premium-reset:hover {
-    border-color: #475569;
+    border-color: #f87171;
     color: #f8fafc;
     box-shadow:
         0 8px 24px rgba(0, 0, 0, 0.45),
-        0 0 18px rgba(56, 189, 248, 0.08);
+        0 0 18px rgba(248, 113, 113, 0.18);
 }
 
 body.dark .premium-reset .reset-icon {
@@ -2605,12 +2662,18 @@ body.dark .premium-reset:hover .reset-icon {
     color: #f87171;
 }
 
+body.dark .premium-reset.confirmed .reset-icon {
+    color: #ffffff;
+}
+
 /* =========================================================
-   RESETTING ANIMATION
+   RESETTING ANIMATION — spins the icon a full turn the moment
+   Reset is clicked (triggered in JS by toggling this class
+   directly on the icon, so it fires every click even back-to-back)
    ========================================================= */
 
-.premium-reset.resetting .reset-icon {
-    animation: resetSpin 0.293s ease;
+.reset-icon.resetting {
+    animation: resetSpin 0.36s cubic-bezier(.34, 1.56, .64, 1);
 }
 
 @keyframes resetSpin {
@@ -2618,8 +2681,8 @@ body.dark .premium-reset:hover .reset-icon {
         transform: rotate(0deg) scale(1);
     }
 
-    50% {
-        transform: rotate(-180deg) scale(1.15);
+    60% {
+        transform: rotate(-390deg) scale(1.18);
     }
 
     100% {
@@ -2627,8 +2690,25 @@ body.dark .premium-reset:hover .reset-icon {
     }
 }
 
+/* Confirmed — a quick pop on the whole pill so the green success
+   state reads as a distinct beat rather than an instant color swap.
+   Shared with the alarm and dark-mode-toggle buttons below. */
+.premium-reset.confirmed {
+    animation: premiumPop 0.28s ease;
+}
+
+@keyframes premiumPop {
+    0%   { transform: scale(1); }
+    45%  { transform: scale(1.07); }
+    100% { transform: scale(1); }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .premium-reset::after {
+        animation: none !important;
+    }
+    .reset-icon.resetting,
+    .premium-reset.confirmed {
         animation: none !important;
     }
 }
@@ -2931,7 +3011,7 @@ body.dark .dock-btn::before {
    ========================================================= */
 .side-notepad-tab {
     position: fixed;
-    top: 50%;
+    top: 34%;
     right: 0;
     z-index: 10500;
     transform: translateY(-50%);
@@ -2939,12 +3019,12 @@ body.dark .dock-btn::before {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 
-    padding: 16px 10px;
+    padding: 13px 7px;
     border: 1px solid var(--glass-border);
     border-right: none;
-    border-radius: 14px 0 0 14px;
+    border-radius: 12px 0 0 12px;
 
     background: var(--glass-bg-strong);
     -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
@@ -2960,17 +3040,20 @@ body.dark .dock-btn::before {
     isolation: isolate;
 
     transition:
-        transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-        opacity 0.2s ease,
-        background 0.12s ease,
-        border-color 0.12s ease,
-        box-shadow 0.12s ease,
-        color 0.12s ease;
+        transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1),
+        opacity 0.12s ease,
+        background 0.08s ease,
+        border-color 0.08s ease,
+        box-shadow 0.14s ease,
+        color 0.14s ease;
 }
 
 .side-notepad-tab:hover {
     transform: translateY(-50%) translateX(-4px);
-    color: #0f172a;
+    color: #ffffff;
+    box-shadow:
+        -6px 6px 26px rgba(99, 102, 241, 0.38),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .side-notepad-tab:active {
@@ -2988,41 +3071,40 @@ body.dark .side-notepad-tab {
 }
 
 body.dark .side-notepad-tab:hover {
-    color: #f1f5f9;
+    color: #ffffff;
+    box-shadow:
+        -6px 6px 26px rgba(56, 189, 248, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-/* conic-gradient hover glow — same mechanism as .premium-toggle::before */
+/* Color-fill hover animation — a solid tint rises up from the
+   bottom to fill the tab, swapping in for the old spin glow.
+   Indigo in light mode (matches the app's premium accent),
+   sky blue in dark mode (reads brighter against dark glass). */
 .side-notepad-tab::before {
     content: "";
     position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    padding: 1px;
-    background: conic-gradient(
-        from var(--angle, 0deg),
-        rgba(56,189,248,0) 0%,
-        rgba(56,189,248,0.6) 15%,
-        rgba(99,102,241,0.6) 35%,
-        rgba(56,189,248,0) 55%
-    );
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0;
-    transition: opacity 0.12s ease;
+    inset: 0;
     z-index: -1;
-    animation: spin-border 1.125s linear infinite paused;
+    border-radius: inherit;
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.18s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .side-notepad-tab:hover::before {
-    opacity: 1;
-    animation-play-state: running;
+    transform: scaleY(1);
+}
+
+body.dark .side-notepad-tab::before {
+    background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
 }
 
 .side-notepad-tab-icon {
     display: flex;
-    width: 18px;
-    height: 18px;
+    width: 15px;
+    height: 15px;
 }
 
 .side-notepad-tab-icon svg {
@@ -3033,12 +3115,13 @@ body.dark .side-notepad-tab:hover {
 .side-notepad-tab-label {
     writing-mode: vertical-rl;
     transform: rotate(180deg);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.6px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
     white-space: nowrap;
 }
+
 
 /* ---- Drawer: reuses .case-info-modal's show/hide, click-outside
    and Escape-key plumbing, but docks the panel flush to the right
@@ -3079,9 +3162,9 @@ body.dark .side-notepad-tab:hover {
     filter: blur(16px) saturate(160%);
     opacity: 0;
     transition:
-        transform 0.16s cubic-bezier(0.4, 0, 0.7, 1),
-        filter 0.13s ease,
-        opacity 0.1s ease;
+        transform 0.1s cubic-bezier(0.4, 0, 0.7, 1),
+        filter 0.08s ease,
+        opacity 0.07s ease;
 }
 
 .side-notepad-modal.show .side-notepad-content {
@@ -3089,9 +3172,9 @@ body.dark .side-notepad-tab:hover {
     filter: blur(0px) saturate(100%);
     opacity: 1;
     transition:
-        transform 0.32s cubic-bezier(0.2, 1, 0.4, 1),
-        filter 0.2s cubic-bezier(0.22, 1, 0.36, 1),
-        opacity 0.14s ease;
+        transform 0.18s cubic-bezier(0.2, 1, 0.4, 1),
+        filter 0.12s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.09s ease;
 }
 
 body.dark .side-notepad-content {
@@ -3193,14 +3276,13 @@ body.dark .side-notepad-status {
         border-right: 1px solid var(--glass-border);
     }
     .side-notepad-tab {
-        padding: 12px 8px;
+        padding: 10px 6px;
     }
 }
 
 </style>
 
-</head
-
+</head>
 
 <body>
 
@@ -3212,10 +3294,10 @@ body.dark .side-notepad-status {
             <button
                 type="button"
                 class="premium-reset"
-                onclick="resetAll(); showConfirm(this, '✓ Reset')"
+                onclick="handleResetAll(this)"
                 aria-label="Reset all fields"
             >
-                <span class="reset-icon">↻</span>
+                <span class="reset-icon" id="resetIcon"><svg viewBox="0 -960 960 960" width="16" height="16" fill="currentColor"><path d="M451-122q-123-10-207-101t-84-216q0-77 35.5-145T295-695l43 43q-56 33-87 90.5T220-439q0 100 66 173t165 84v60Zm60 0v-60q100-12 165-84.5T741-439q0-109-75.5-184.5T481-699h-20l60 60-43 43-133-133 133-133 43 43-60 60h20q134 0 227 93.5T801-439q0 125-83.5 216T511-122Z"/></svg></span>
                 <span class="reset-text">Reset</span>
             </button>
 
@@ -4430,6 +4512,15 @@ function positionAlarmPopover() {
 }
 
 function openBreakAlarmModal() {
+    const btn = document.getElementById("breakAlarmBtn");
+    if (btn) {
+        btn.classList.remove("pressed");
+        void btn.offsetWidth; // restart the pop even on rapid re-clicks
+        btn.classList.add("pressed");
+        clearTimeout(btn._pressedTimeout);
+        btn._pressedTimeout = setTimeout(() => btn.classList.remove("pressed"), 280);
+    }
+
     BREAK_ALARM_TYPES.forEach(type => {
         const input = document.getElementById("breakAlarmTime_" + type.id);
         if (input) input.value = breakAlarmSchedule[type.id] || "";
@@ -4897,6 +4988,37 @@ function showConfirm(btn, message) {
     btn._confirmTimeout = setTimeout(() => {
         btn.classList.remove('confirmed');
         btn.innerHTML = btn.dataset.originalHtml;
+    }, 1200);
+}
+
+/* Reset button: spins the icon and flips it to a checkmark without
+   nuking the button's markup the way the generic showConfirm() does
+   (that's fine for plain-text copy buttons, but here it would kill
+   the icon span the spin animation depends on for next time). */
+function handleResetAll(btn) {
+    resetAll();
+
+    const icon = btn.querySelector('.reset-icon');
+
+    if (icon) {
+        if (!icon.dataset.originalHtml) {
+            icon.dataset.originalHtml = icon.innerHTML;
+        }
+        icon.classList.remove('resetting');
+        void icon.offsetWidth; // restart the animation even on rapid re-clicks
+        icon.classList.add('resetting');
+        icon.innerHTML = '✓';
+    }
+
+    btn.classList.add('confirmed');
+
+    clearTimeout(btn._confirmTimeout);
+    btn._confirmTimeout = setTimeout(() => {
+        btn.classList.remove('confirmed');
+        if (icon) {
+            icon.classList.remove('resetting');
+            icon.innerHTML = icon.dataset.originalHtml;
+        }
     }, 1200);
 }
 
@@ -6299,6 +6421,15 @@ function toggleDarkMode() {
     localStorage.setItem("dark", isDark);
 
     updateDarkModeToggle();
+
+    const btn = document.getElementById("darkModeToggle");
+    if (btn) {
+        btn.classList.remove("pressed");
+        void btn.offsetWidth; // restart the pop even on rapid re-clicks
+        btn.classList.add("pressed");
+        clearTimeout(btn._pressedTimeout);
+        btn._pressedTimeout = setTimeout(() => btn.classList.remove("pressed"), 280);
+    }
 }
 
 if (localStorage.getItem("dark") === "true") {
@@ -8835,7 +8966,7 @@ function openSideNotepad() {
     setTimeout(() => {
         const textarea = document.getElementById("sideNotepadText");
         if (textarea) textarea.focus();
-    }, 200);
+    }, 100);
 }
 
 function closeSideNotepad() {
