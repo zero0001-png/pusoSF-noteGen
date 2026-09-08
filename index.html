@@ -1030,6 +1030,8 @@ body.dark .business-search-clear-btn:hover {
     color: #64748b;
     display: inline-flex;
     align-items: center;
+    align-self: flex-start;
+    width: fit-content;
     gap: 5px;
     padding: 4px 10px;
     border-radius: 999px;
@@ -3859,6 +3861,7 @@ body.dark .side-notepad-status {
 
                 <label>Platform</label>
                 <select id="platform">
+                    <option value="-- Select One --">-- Select One --</option>
                     <option value="Facebook">Facebook</option>
                     <option value="Threads">Threads</option>
                     <option value="Instagram">Instagram</option>
@@ -3881,11 +3884,12 @@ body.dark .side-notepad-status {
                             <option>React to Post / Comment</option>
                             <option>Hide Negative / Sensitive Comment</option>
                             <option>Edit Comment</option>
+                            <option>Delete Comment</option>
                         </select>
                     </div>
 
                     <div class="input-container">
-                        <label for="persona">Persona Used</label>
+                        <label for="persona" id="personaLabel">Persona Used</label>
                         <select id="persona">
                             <option value="">-- Select One--</option>
                             <option>PLDT Cares</option>
@@ -3964,17 +3968,20 @@ body.dark .side-notepad-status {
 
                 <!-- ACTIONS -->
                 <div id="actionContainer" style="display:none;">
-                    <label>Actions Done</label>
+                    <label id="actionsDoneLabel">Actions Done</label>
                     <textarea id="actionsDone"></textarea>
                 </div>
 
                 <!-- COMMENT -->
                 <div class="form-group" id="commentContainer">
-                    <label>Comment / Message Sent</label>
+                    <label id="commentTextLabel">Comment / Message Sent</label>
                     <textarea
                         id="commentText"
                         placeholder="Comment/Message to customer..."
                     ></textarea>
+                    <div id="commentTextHint" style="display:none;color:#dc2626;font-size:11px;margin-top:4px;">
+                        Screenshot the deleted comment. On SF, go to your Case Notes &gt; Comment &gt; Upload the screenshot.
+                    </div>
                 </div>
 
                 <!-- ENGAGEMENT OUTPUT -->
@@ -5268,7 +5275,13 @@ document.addEventListener("DOMContentLoaded", () => {
 // SYNC PLATFORM -> OUTBOUND CALL
 // =========================================================
 
+// Guards against Platform->Outbound and Outbound->Platform sync
+// triggering each other in a loop / clobbering a manual selection.
+let isSyncingOutboundPlatform = false;
+
 function syncPlatformToOutboundCall() {
+    if (isSyncingOutboundPlatform) return;
+
     const platformEl = document.getElementById("platform");
     if (!platformEl) return;
 
@@ -5278,6 +5291,8 @@ function syncPlatformToOutboundCall() {
     const noRadio = document.querySelector(
         'input[name="outboundCall"][value="No"]'
     );
+
+    isSyncingOutboundPlatform = true;
 
     if (platformEl.value === " ") {
         if (yesRadio && !yesRadio.checked) {
@@ -5290,6 +5305,8 @@ function syncPlatformToOutboundCall() {
             toggleOutboundCall();
         }
     }
+
+    isSyncingOutboundPlatform = false;
 }
 
 document.getElementById("platform").addEventListener("change", () => {
@@ -5553,6 +5570,23 @@ function toggleOutboundCall() {
         cosmoId.classList.remove("field-missing");
         aniCbr.classList.remove("field-missing");
     }
+
+    // Outbound Call -> Platform sync (skip if this run was itself
+    // triggered by a Platform change, to avoid clobbering it)
+    if (!isSyncingOutboundPlatform) {
+        const platformEl = document.getElementById("platform");
+        if (platformEl) {
+            isSyncingOutboundPlatform = true;
+            if (selected.value === "No") {
+                platformEl.value = "-- Select One --";
+            } else if (selected.value === "Yes") {
+                platformEl.value = " ";
+            }
+            platformEl.dispatchEvent(new Event("change"));
+            isSyncingOutboundPlatform = false;
+        }
+    }
+
     // Sync everything
     syncOutboundCallToAllSections();
 }
@@ -5698,6 +5732,7 @@ function updatePersonaDropdown() {
     const platform = document.getElementById("platform").value.trim();
     const personaSelect = document.getElementById("persona");
     const engagementSelect = document.getElementById("engagementType");
+    const personaLabelEl = document.getElementById("personaLabel");
     const savedPersona = localStorage.getItem(
         FORM_STORAGE_PREFIX + "persona"
     );
@@ -5707,11 +5742,14 @@ function updatePersonaDropdown() {
 
     /* CLIENT ENDORSEMENT */
     if (platform === "Client Endorsement") {
+        if (personaLabelEl) {
+            personaLabelEl.textContent = "Endorsement Made Via";
+        }
+
         [
             "-- Select One --",
-            "Sent Email",
-            "Sent DM",
-            "Conduct Callback"
+            "Send Email Endorsement",
+            "Outbound Call"
         ].forEach(e => {
             const opt = document.createElement("option");
             opt.value = e;
@@ -5721,19 +5759,8 @@ function updatePersonaDropdown() {
 
         const personas = [
             "   ",
-            "PLDT Cares",
-            "Sabrina Del Valle",
-            "Andrew Chavez",
-            "Lily Miller",
-            "Peter Delos Reyes",
-            "Amelia Gala",
-            "Dennis Castillo",
-            "Jas Santos",
-            "Samantha Smith",
-            "Nikki Perez",
-            "Camilla Ester",
-            "Mari Elle",
-            "Anya Cortes"
+            "Telegram",
+            "MS Teams"
         ];
 
         personas.forEach(p => {
@@ -5748,6 +5775,10 @@ function updatePersonaDropdown() {
         }
 
         return;
+    }
+
+    if (personaLabelEl) {
+        personaLabelEl.textContent = "Persona Used";
     }
 
     /* CALLBACK ONLY */
@@ -5773,7 +5804,8 @@ function updatePersonaDropdown() {
             "Sent DM",
             "React to Post / Comment",
             "Hide Negative / Sensitive Comment",
-            "Edit Comment"
+            "Edit Comment",
+            "Delete Comment"
         ];
 
         allEngagements.forEach(e => {
@@ -6376,7 +6408,8 @@ function generateEngagement() {
         "Comment on Post (Reroute to PLDT Channels)",
         "Comment on Post (Invite to DM)",
         "Sent DM",
-        "Edit Comment"
+        "Edit Comment",
+        "Delete Comment"
     ].includes(type);
 
     const showActionDone = [
@@ -6387,8 +6420,10 @@ function generateEngagement() {
         "Hide Negative / Sensitive Comment",
         "Sent DM",
         "Edit Comment",
+        "Delete Comment",
         "Conduct Callback",
-        "Sent Email"
+        "Send Email Endorsement",
+        "Outbound Call"
     ].includes(type);
 
     document.getElementById("commentContainer").style.display =
@@ -6396,6 +6431,36 @@ function generateEngagement() {
 
     document.getElementById("actionContainer").style.display =
         showActionDone ? "block" : "none";
+
+    /* ---- Dynamic field labels based on Type of Engagement ---- */
+    const actionsDoneLabelEl = document.getElementById("actionsDoneLabel");
+    const commentTextLabelEl = document.getElementById("commentTextLabel");
+    const commentTextEl = document.getElementById("commentText");
+    const commentTextHintEl = document.getElementById("commentTextHint");
+
+    if (actionsDoneLabelEl) {
+        actionsDoneLabelEl.textContent =
+            type === "Edit Comment" ? "Previous Comment with Actions Done" : "Actions Done";
+    }
+
+    if (commentTextLabelEl) {
+        if (type === "Edit Comment") {
+            commentTextLabelEl.textContent = "New Comment";
+        } else if (type === "Delete Comment") {
+            commentTextLabelEl.textContent = "Deleted Comment";
+        } else {
+            commentTextLabelEl.textContent = "Comment / Message Sent";
+        }
+    }
+
+    if (commentTextEl) {
+        commentTextEl.placeholder = "Comment/Message to customer...";
+    }
+
+    if (commentTextHintEl) {
+        commentTextHintEl.style.display =
+            type === "Delete Comment" ? "block" : "none";
+    }
 
     const outboundCallSelected = document.querySelector(
         'input[name="outboundCall"]:checked'
@@ -6517,10 +6582,16 @@ function generateEngagement() {
     const headerParts = [];
 
     if (platform) {
-        headerParts.push(platform);
+        if (platform === "Client Endorsement") {
+            headerParts.push(
+                persona ? `${platform} from ${persona}` : platform
+            );
+        } else {
+            headerParts.push(platform);
 
-        if (persona) {
-            headerParts.push(`Persona used: ${persona}`);
+            if (persona) {
+                headerParts.push(`Persona used: ${persona}`);
+            }
         }
     }
 
@@ -6549,11 +6620,19 @@ function generateEngagement() {
     let note = headerLines.join("\n");
 
     if (showActionDone && action) {
-        note += `${sectionSep}${type === "Edit Comment" ? "Previous Comment" : "Action Done"}: ${action}`;
+        const actionLabel =
+            type === "Edit Comment" ? "Previous Comment with Actions Done" : "Action Done";
+        note += `${sectionSep}${actionLabel}: ${action}`;
     }
 
     if (showComment && comment) {
-        note += `${sectionSep}${type === "Edit Comment" ? "New Comment" : "Comment"}: ${comment}`;
+        let commentLabel = "Comment";
+        if (type === "Edit Comment") {
+            commentLabel = "New Comment";
+        } else if (type === "Delete Comment") {
+            commentLabel = "Deleted Comment";
+        }
+        note += `${sectionSep}${commentLabel}: ${comment}`;
     }
 
     if (ticket) {
@@ -9276,6 +9355,23 @@ document.getElementById("category").addEventListener("change", () => {
 document.getElementById("promoComplaintSub").addEventListener("change", () => {
     generateIssueNotes();
     saveFormData();
+});
+
+/* Client Endorsement: selecting "Outbound Call" auto-sets Outbound Call to Yes */
+document.getElementById("engagementType").addEventListener("change", () => {
+    const platform = document.getElementById("platform").value.trim();
+    const type = document.getElementById("engagementType").value.trim();
+
+    if (platform === "Client Endorsement" && type === "Outbound Call") {
+        const yesRadio = document.querySelector(
+            'input[name="outboundCall"][value="Yes"]'
+        );
+
+        if (yesRadio && !yesRadio.checked) {
+            yesRadio.checked = true;
+            toggleOutboundCall();
+        }
+    }
 });
 
 /* Normal form fields */
