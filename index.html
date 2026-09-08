@@ -312,6 +312,17 @@ body.dark .premium-toggle::before {
     }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .business-row,
+    .business-search-clear-btn,
+    .business-select-button,
+    .business-count,
+    .business-results-table tbody tr {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
 /* =========================================================
    TOGGLE ICON — single sun/moon icon centered in the circle
    (replaces the old track+knob switch since the reference
@@ -869,24 +880,53 @@ button.action.copied .action-icon {
     box-shadow:
         var(--glass-shadow),
         inset 0 1px 0 var(--glass-highlight);
+    position: relative;
+    overflow: hidden;
+}
+
+/* subtle accent bar along the top edge of the panel */
+.business-search-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+    opacity: 0.6;
 }
 
 .business-search-section h2 {
-    margin: 0 0 15px;
+    grid-area: title;
+    margin: 0;
     color: #38bdf8;
     font-size: 16px;
     font-weight: 700;
     letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.business-search-title-icon {
+    flex-shrink: 0;
+    opacity: 0.9;
 }
 
 .business-search-layout {
     display: grid;
     grid-template-columns: 280px 1fr;
-    gap: 15px;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+        "title  table"
+        "search table";
+    column-gap: 15px;
+    row-gap: 15px;
     align-items: start;
 }
 
 .business-search-box {
+    grid-area: search;
     display: flex;
     flex-direction: column;
 }
@@ -895,8 +935,84 @@ button.action.copied .action-icon {
     margin-top: 0;
 }
 
+/* ---- input wrapper: search icon + clear button ---- */
+.business-search-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.business-search-input-icon {
+    position: absolute;
+    left: 13px;
+    z-index: 2;
+    color: #0f172a;
+    pointer-events: none;
+    transition: color 0.15s ease;
+}
+
+body.dark .business-search-input-icon {
+    color: #f8fafc;
+}
+
 .business-search-box input {
     height: 42px;
+    padding-left: 38px;
+    padding-right: 34px;
+    transition:
+        border-color 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+        background 0.15s ease;
+}
+
+.business-search-box input:focus ~ .business-search-input-icon,
+.business-search-input-wrap:focus-within .business-search-input-icon {
+    color: #38bdf8;
+}
+
+.business-search-clear-btn {
+    position: absolute;
+    right: 6px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #94a3b8;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.6) rotate(-45deg);
+    transition:
+        opacity 0.12s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1),
+        background 0.12s ease,
+        color 0.12s ease;
+}
+
+.business-search-clear-btn.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1) rotate(0deg);
+}
+
+.business-search-clear-btn:hover {
+    background: rgba(56, 189, 248, 0.15);
+    color: #0ea5e9;
+}
+
+.business-search-clear-btn:active {
+    transform: scale(0.85);
+}
+
+body.dark .business-search-clear-btn:hover {
+    background: rgba(56, 189, 248, 0.2);
+    color: #7dd3fc;
 }
 
 .business-search-hint {
@@ -906,16 +1022,97 @@ button.action.copied .action-icon {
     line-height: 1.4;
 }
 
+/* ---- results counter: highlighted pill, snaps on update ---- */
+.business-count {
+    margin-top: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #64748b;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(100, 116, 139, 0.12);
+    border: 1px solid rgba(100, 116, 139, 0.18);
+    transition:
+        background 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+        color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+body.dark .business-count {
+    color: #94a3b8;
+    background: rgba(148, 163, 184, 0.12);
+    border-color: rgba(148, 163, 184, 0.18);
+}
+
+.business-count.has-results {
+    background: rgba(56, 189, 248, 0.15);
+    border-color: rgba(56, 189, 248, 0.4);
+    color: #0369a1;
+}
+
+body.dark .business-count.has-results {
+    background: rgba(56, 189, 248, 0.18);
+    border-color: rgba(56, 189, 248, 0.45);
+    color: #7dd3fc;
+}
+
+.business-count.is-empty {
+    background: rgba(248, 113, 113, 0.14);
+    border-color: rgba(248, 113, 113, 0.35);
+    color: #b91c1c;
+}
+
+body.dark .business-count.is-empty {
+    background: rgba(248, 113, 113, 0.16);
+    border-color: rgba(248, 113, 113, 0.4);
+    color: #fca5a5;
+}
+
+@keyframes businessCountPulse {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.business-count.is-pulsing {
+    animation: businessCountPulse 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ---- results table shell ---- */
 .business-results-container {
+    grid-area: table;
     width: 100%;
     overflow-x: auto;
     border: 1px solid var(--glass-border);
-    border-radius: 8px;
-    max-height: 350px;
+    border-radius: 10px;
+    min-height: 170px;
+    max-height: 400px;
     overflow-y: auto;
     background: var(--glass-bg-strong);
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
+    box-shadow: inset 0 1px 0 var(--glass-highlight);
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    transition: min-height 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.business-results-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.business-results-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.business-results-container::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
 }
 
 .business-results-table {
@@ -936,7 +1133,9 @@ button.action.copied .action-icon {
     padding: 10px 12px;
     font-size: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    box-shadow: inset 0 -1px 0 var(--glass-border);
 }
 
 .business-results-table td {
@@ -955,24 +1154,57 @@ body.dark .business-results-table td {
     color: #e2e8f0;
 }
 
+/* ---- row entrance + hover/tap feel ---- */
+@keyframes businessRowIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.business-row {
+    animation: businessRowIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.business-results-table tbody tr {
+    position: relative;
+    transition: background 0.1s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.1s ease;
+}
+
 .business-results-table tbody tr:hover {
-    background: rgba(56, 189, 248, 0.08);
+    background: rgba(56, 189, 248, 0.09);
+    box-shadow: inset 3px 0 0 #38bdf8;
+}
+
+body.dark .business-results-table tbody tr:hover {
+    background: rgba(56, 189, 248, 0.07);
+}
+
+/* fade the old rows out fast before the new set animates in */
+#businessResults.is-refreshing .business-row {
+    animation: none;
+    opacity: 0.4;
+    transition: opacity 0.06s ease;
 }
 
 .business-empty {
     text-align: center;
     color: #94a3b8;
-    padding: 25px !important;
+    padding: 26px !important;
 }
 
-.business-count {
-    margin-top: 7px;
-    font-size: 10px;
-    color: #64748b;
+.business-empty-icon {
+    display: block;
+    margin: 0 auto 8px;
+    opacity: 0.45;
 }
 
-body.dark .business-count {
-    color: #94a3b8;
+body.dark .business-empty-icon {
+    opacity: 0.35;
 }
 
 .business-highlight {
@@ -992,36 +1224,88 @@ body.dark .business-count {
 }
 
 .business-select-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    overflow: hidden;
+    isolation: isolate;
     border: 1px solid #38bdf8;
-    border-radius: 6px;
-    padding: 6px 12px;
-    background: #e0f2fe;
-    color: #0369a1;
+    border-radius: 999px;
+    padding: 6px 14px 6px 10px;
+    background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+    color: #0f172a;
     font-family: inherit;
     font-size: 11px;
     font-weight: 700;
+    letter-spacing: 0.2px;
     cursor: pointer;
-    transition: background 0.12s, color 0.12s, transform 0.1s;
+    transition:
+        background 0.12s cubic-bezier(0.16, 1, 0.3, 1),
+        color 0.12s cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 0.12s ease,
+        transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.15s ease;
+}
+
+.business-select-icon {
+    flex-shrink: 0;
+    transform: scale(0.8);
+    opacity: 0.8;
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.12s ease;
+}
+
+.business-select-button:hover .business-select-icon {
+    transform: scale(1);
+    opacity: 1;
 }
 
 .business-select-button:hover {
-    background: #38bdf8;
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
     color: #ffffff;
+    border-color: #0ea5e9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
 }
 
-.business-select-button:active {
-    transform: scale(0.96);
+.business-select-button:active,
+.business-select-button.is-picked {
+    transform: scale(0.9);
+    box-shadow: 0 1px 4px rgba(56, 189, 248, 0.35);
+}
+
+/* quick radial ripple fired on click, layered above the button's own background */
+.business-select-button::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0) 70%);
+    opacity: 0;
+    transform: scale(0.3);
+    pointer-events: none;
+}
+
+.business-select-button.is-picked::after {
+    animation: businessSelectRipple 0.38s ease-out;
+}
+
+@keyframes businessSelectRipple {
+    0% { opacity: 0.6; transform: scale(0.3); }
+    100% { opacity: 0; transform: scale(1.9); }
 }
 
 body.dark .business-select-button {
-    background: #082f49;
+    background: linear-gradient(135deg, #082f49, #0c3a5c);
     border-color: #38bdf8;
-    color: #7dd3fc;
+    color: #f8fafc;
 }
 
 body.dark .business-select-button:hover {
-    background: #38bdf8;
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
     color: #082f49;
+    border-color: #7dd3fc;
 }
 
 /* =========================================================
@@ -1638,10 +1922,20 @@ body.dark .case-search-button:hover {
 
     .business-search-layout {
         grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        grid-template-areas:
+            "title"
+            "search"
+            "table";
     }
 
     .business-search-box {
         width: 100%;
+    }
+
+    .business-results-container {
+        min-height: 150px;
+        max-height: 340px;
     }
 }
 
@@ -4267,18 +4561,35 @@ body.dark .side-notepad-status {
      CITY / REGION CODE SEARCH
      ========================================================= -->
 <div class="business-search-section">
-    <h2>City / Region Code Search</h2>
-
     <div class="business-search-layout">
+        <h2>
+            <svg class="business-search-title-icon" viewBox="0 -960 960 960" width="17" height="17" fill="currentColor"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>
+            City / Region Code Search
+        </h2>
+
         <div class="business-search-box">
             <label for="businessSearch">Search</label>
 
-            <input
-                type="text"
-                id="businessSearch"
-                placeholder="Type e.g. PARA, BGO, Baguio..."
-                autocomplete="off"
-            >
+            <div class="business-search-input-wrap">
+                <svg class="business-search-input-icon" viewBox="0 -960 960 960" width="16" height="16" fill="currentColor"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>
+
+                <input
+                    type="text"
+                    id="businessSearch"
+                    placeholder="Type e.g. PARA, BGO, Baguio..."
+                    autocomplete="off"
+                >
+
+                <button
+                    type="button"
+                    id="businessSearchClear"
+                    class="business-search-clear-btn"
+                    aria-label="Clear search"
+                    onclick="clearBusinessSearch()"
+                >
+                    <svg viewBox="0 -960 960 960" width="13" height="13" fill="currentColor"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+                </button>
+            </div>
 
             <div class="business-search-hint">
                 Search is flexible. Any word or partial text found in
@@ -4304,7 +4615,8 @@ body.dark .side-notepad-status {
                 <tbody id="businessResults">
                     <tr>
                         <td colspan="4" class="business-empty">
-                            Type something in the search box.
+                            <svg class="business-empty-icon" viewBox="0 -960 960 960" width="22" height="22" fill="currentColor"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>
+                            <span>Type something in the search box.</span>
                         </td>
                     </tr>
                 </tbody>
@@ -8295,19 +8607,37 @@ function searchBusinessZones() {
 
     const resultsBody = document.getElementById("businessResults");
     const countEl = document.getElementById("businessCount");
+    const clearBtn = document.getElementById("businessSearchClear");
 
-    resultsBody.innerHTML = "";
+    if (clearBtn) {
+        clearBtn.classList.toggle("is-visible", searchInput.length > 0);
+    }
+
+    const emptyIcon = `<svg class="business-empty-icon" viewBox="0 -960 960 960" width="22" height="22" fill="currentColor"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>`;
+
+    const setBusinessCount = (text, state) => {
+        countEl.textContent = text;
+        countEl.classList.remove("has-results", "is-empty", "is-pulsing");
+        if (state) countEl.classList.add(state);
+        /* force reflow so the pulse animation restarts on every update */
+        void countEl.offsetWidth;
+        countEl.classList.add("is-pulsing");
+    };
+
+    resultsBody.classList.add("is-refreshing");
 
     if (!searchInput) {
         resultsBody.innerHTML = `
-            <tr>
+            <tr class="business-row">
                 <td colspan="4" class="business-empty">
-                    Type something in the search box.
+                    ${emptyIcon}
+                    <span>Type something in the search box.</span>
                 </td>
             </tr>
         `;
 
-        countEl.textContent = "0 results";
+        setBusinessCount("0 results", null);
+        requestAnimationFrame(() => resultsBody.classList.remove("is-refreshing"));
         return;
     }
 
@@ -8319,19 +8649,26 @@ function searchBusinessZones() {
 
     if (results.length === 0) {
         resultsBody.innerHTML = `
-            <tr>
+            <tr class="business-row">
                 <td colspan="4" class="business-empty">
-                    No matching records found.
+                    ${emptyIcon}
+                    <span>No matching records found.</span>
                 </td>
             </tr>
         `;
 
-        countEl.textContent = "0 results";
+        setBusinessCount("0 results", "is-empty");
+        requestAnimationFrame(() => resultsBody.classList.remove("is-refreshing"));
         return;
     }
 
-    results.forEach(row => {
+    resultsBody.innerHTML = "";
+
+    results.forEach((row, index) => {
         const tr = document.createElement("tr");
+        tr.className = "business-row";
+        /* Snappy stagger, capped so long lists don't feel sluggish */
+        tr.style.animationDelay = `${Math.min(index, 14) * 16}ms`;
 
         const businessZone = row[0];
         const cityExchange = row[1];
@@ -8352,6 +8689,7 @@ function searchBusinessZones() {
                     type="button"
                     class="business-select-button"
                 >
+                    <svg class="business-select-icon" viewBox="0 -960 960 960" width="12" height="12" fill="currentColor"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>
                     Select
                 </button>
             </td>
@@ -8360,13 +8698,19 @@ function searchBusinessZones() {
         const selectButton = tr.querySelector(".business-select-button");
 
         selectButton.addEventListener("click", () => {
+            selectButton.classList.remove("is-picked");
+            void selectButton.offsetWidth; /* restart the ripple even on rapid re-clicks */
+            selectButton.classList.add("is-picked");
+            setTimeout(() => selectButton.classList.remove("is-picked"), 400);
+
             selectBusinessZone(businessZone, cityExchange);
         });
 
         resultsBody.appendChild(tr);
     });
 
-    countEl.textContent = `${results.length} result${results.length === 1 ? "" : "s"}`;
+    setBusinessCount(`${results.length} result${results.length === 1 ? "" : "s"}`, "has-results");
+    requestAnimationFrame(() => resultsBody.classList.remove("is-refreshing"));
 }
 
 
