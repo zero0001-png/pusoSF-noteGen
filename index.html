@@ -3881,10 +3881,8 @@ body.dark .side-notepad-status {
                             <option>Comment on Post (Reroute to PLDT Channels)</option>
                             <option>Comment on Post (Invite to DM)</option>
                             <option>Sent DM</option>
-                            <option>React to Post / Comment</option>
                             <option>Hide Negative / Sensitive Comment</option>
                             <option>Edit Comment</option>
-                            <option>Delete Comment</option>
                         </select>
                     </div>
 
@@ -5802,10 +5800,8 @@ function updatePersonaDropdown() {
             "Comment on Post (Reroute to PLDT Channels)",
             "Comment on Post (Invite to DM)",
             "Sent DM",
-            "React to Post / Comment",
             "Hide Negative / Sensitive Comment",
-            "Edit Comment",
-            "Delete Comment"
+            "Edit Comment"
         ];
 
         allEngagements.forEach(e => {
@@ -6408,19 +6404,16 @@ function generateEngagement() {
         "Comment on Post (Reroute to PLDT Channels)",
         "Comment on Post (Invite to DM)",
         "Sent DM",
-        "Edit Comment",
-        "Delete Comment"
+        "Edit Comment"
     ].includes(type);
 
     const showActionDone = [
         "Comment on Post (with Resolution)",
         "Comment on Post (Reroute to PLDT Channels)",
         "Comment on Post (Invite to DM)",
-        "React to Post / Comment",
         "Hide Negative / Sensitive Comment",
         "Sent DM",
         "Edit Comment",
-        "Delete Comment",
         "Conduct Callback",
         "Send Email Endorsement",
         "Outbound Call"
@@ -6446,8 +6439,6 @@ function generateEngagement() {
     if (commentTextLabelEl) {
         if (type === "Edit Comment") {
             commentTextLabelEl.textContent = "New Comment";
-        } else if (type === "Delete Comment") {
-            commentTextLabelEl.textContent = "Deleted Comment";
         } else {
             commentTextLabelEl.textContent = "Comment / Message Sent";
         }
@@ -6458,8 +6449,7 @@ function generateEngagement() {
     }
 
     if (commentTextHintEl) {
-        commentTextHintEl.style.display =
-            type === "Delete Comment" ? "block" : "none";
+        commentTextHintEl.style.display = "none";
     }
 
     const outboundCallSelected = document.querySelector(
@@ -6629,8 +6619,6 @@ function generateEngagement() {
         let commentLabel = "Comment";
         if (type === "Edit Comment") {
             commentLabel = "New Comment";
-        } else if (type === "Delete Comment") {
-            commentLabel = "Deleted Comment";
         }
         note += `${sectionSep}${commentLabel}: ${comment}`;
     }
