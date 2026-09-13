@@ -5925,9 +5925,9 @@ function updateCategoryFields(isInitialLoad = false) {
             "Report Trouble - SIC/INTERMITTENT",
             "Report Trouble - IPTV",
             "Report Trouble - VAS (Defective Unit / Content Issue)",
-            "Bantay Kable (164)",
-            "Follow Up Repair (OFSC)",
+			"Follow Up Repair (OFSC)",
             "Follow Up Repair (Outage)",
+            "Bantay Kable (164)",
             "Modem Requests (Super Admin / Local GUI / Change WiFi UN/PW)",
             "Service Restoration (Customer Confirmed)",
             "Service Restoration (Unconfirmed)"
@@ -5954,11 +5954,16 @@ function updateCategoryFields(isInitialLoad = false) {
             "Upgrade / Downgrade",
             "Disconnection",
             "Reconnection",
-            "Account / Billing Concerns",
+            "Account Concerns",
+			"Billing Concerns",
             "myHome Concerns",
             "Bill Dispute / Rebate",
             "Refund",
             "VAS Activation (HBO Max / Netflix / Viu)",
+			"VAS Delivery (Follow Up)",
+			"Inmove",
+			"Wire Re-Route",
+			"Change Ownership",
             "Others"
         ].forEach(o => {
             const opt = document.createElement("option");
