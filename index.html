@@ -5919,14 +5919,15 @@ function updateCategoryFields(isInitialLoad = false) {
         ticketContainer.style.display = "block";
 
         [
-            "Report Trouble - NIC",
-            "Report Trouble - NDT",
+            
             "Report Trouble - NIC/NDT",
+			"Report Trouble - NIC",
+            "Report Trouble - NDT",
             "Report Trouble - SIC/INTERMITTENT",
-            "Report Trouble - IPTV",
-            "Report Trouble - VAS (Defective Unit / Content Issue)",
 			"Follow Up Repair (OFSC)",
             "Follow Up Repair (Outage)",
+            "Report Trouble - IPTV",
+            "Report Trouble - VAS (Defective Unit / Content Issue)",
             "Bantay Kable (164)",
             "Modem Requests (Super Admin / Local GUI / Change WiFi UN/PW)",
             "Service Restoration (Customer Confirmed)",
@@ -5954,10 +5955,11 @@ function updateCategoryFields(isInitialLoad = false) {
             "Upgrade / Downgrade",
             "Disconnection",
             "Reconnection",
-            "Account Concerns",
-			"Billing Concerns",
+            "Account / Billing Concerns",
+			"Payment Concerns",
             "myHome Concerns",
-            "Bill Dispute / Rebate",
+            "Bill Dispute",
+			"Rebate",
             "Refund",
             "VAS Activation (HBO Max / Netflix / Viu)",
 			"VAS Delivery (Follow Up)",
@@ -6013,7 +6015,7 @@ function updateCategoryFields(isInitialLoad = false) {
             "Delivery Courier Service",
             "Hotline Agent",
             "Sales / Field Agent",
-            "Chat Support Agent",
+            "Social Media Agent",
             "SSC Personnel",
             "Technician",
             "Customer Service Complaints",
@@ -6037,6 +6039,7 @@ function updateCategoryFields(isInitialLoad = false) {
             "Product / Service Dissatisfaction",
             "Profanity / Abusive Language",
             "Repetitive Negative Comments",
+			"Spamming",
             "Trolling"
         ].forEach(o => {
             const opt = document.createElement("option");
@@ -6058,8 +6061,8 @@ function updateCategoryFields(isInitialLoad = false) {
             "Legal Action",
             "Regulatory Complaint (NTC, DTI, etc.)",
             "Executive / Government Escalation",
-            "Physical Threats",
-            "Public / Social Media Backlash"
+			"Physical Threats (Personnel/Facility/Property)",
+            "Public / Social Media Escalation"
         ].forEach(o => {
             const opt = document.createElement("option");
             opt.value = o;
@@ -6078,9 +6081,8 @@ function updateCategoryFields(isInitialLoad = false) {
             " ",
             "Positive Experience",
             "Product / Brand Promotion",
-            "Success Story/Testimonial",
+            "Success Story / Testimonial",
             "Brand Defense",
-            "Brand Recommendation",
             "Product / Service Satisfaction",
             "Loyalty & Retention"
         ].forEach(o => {
