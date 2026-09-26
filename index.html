@@ -51,11 +51,12 @@ html {
        overlay (matching the app's own panel tones) instead of
        airbeta1's dark tint, and the card/fields stay bright enough
        to read as white glass rather than gray ---- */
-    --modal-backdrop: rgba(148, 163, 184, 0.38);
-    --glass-modal-bg: rgba(255, 255, 255, 0.72);
-    --glass-field-bg: rgba(255, 255, 255, 0.68);
-    --glass-field-border: rgba(15, 23, 42, 0.32);
+    --modal-backdrop: rgba(148, 163, 184, 0.26);
+    --glass-modal-bg: rgba(255, 255, 255, 0.42);
+    --glass-field-bg: rgba(255, 255, 255, 0.64);
+    --glass-field-border: rgba(15, 23, 42, 0.46);
     --glass-field-text: #0f172a;
+    --glass-modal-blur: 7px;
 
     /* ---- Editable-field glass (light): the actual frosted look for
        text areas, dropdowns and date inputs — separate from
@@ -96,11 +97,12 @@ body.dark {
        reuses the panel's own translucent glass-bg instead of a near-opaque
        modal color; overlay is the same neutral dark tint as light mode
        (airbeta1 doesn't vary its overlay by theme) ---- */
-    --modal-backdrop: rgba(10, 12, 16, 0.45);
-    --glass-modal-bg: rgba(21, 23, 30, 0.55);
-    --glass-field-bg: rgba(9, 10, 14, 0.5);
-    --glass-field-border: rgba(255, 255, 255, 0.12);
+    --modal-backdrop: rgba(10, 12, 16, 0.32);
+    --glass-modal-bg: rgba(21, 23, 30, 0.34);
+    --glass-field-bg: rgba(9, 10, 14, 0.58);
+    --glass-field-border: rgba(255, 255, 255, 0.26);
     --glass-field-text: #f1f5f9;
+    --glass-modal-blur: 7px;
 
     /* ---- Editable-field glass (dark) ---- */
     --glass-input-bg: rgba(15, 17, 23, 0.4);
@@ -1662,8 +1664,8 @@ body.dark button.action.action-escalate:hover {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
     transition:
         opacity 0.08s ease,
         backdrop-filter 0.1s ease,
@@ -1677,9 +1679,11 @@ body.dark button.action.action-escalate:hover {
     overflow-y: auto;
     width: min(900px, 100%);
     max-height: 90vh;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
     background: var(--glass-modal-bg);
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
-    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    -webkit-backdrop-filter: blur(var(--glass-modal-blur)) saturate(160%);
+    backdrop-filter: blur(var(--glass-modal-blur)) saturate(160%);
     border: 1px solid var(--glass-border);
     border-radius: 16px;
     padding: 24px;
@@ -1695,6 +1699,28 @@ body.dark button.action.action-escalate:hover {
         filter 0.08s ease,
         opacity 0.07s ease,
         background 0.09s ease;
+}
+
+/* Scrollbar for the modal body — same pill-thumb style used
+   elsewhere in the app (see textarea / business-results-container) */
+.case-info-modal-content::-webkit-scrollbar {
+    width: 10px;
+}
+
+.case-info-modal-content::-webkit-scrollbar-track {
+    background: var(--scrollbar-track) !important;
+    margin: 6px 0;
+}
+
+.case-info-modal-content::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb) !important;
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+.case-info-modal-content::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover) !important;
 }
 
 /* Content sits above the sheen overlay */
@@ -1831,8 +1857,8 @@ body.dark .case-info-field label {
 .case-info-field textarea {
     width: 100%;
     background: var(--glass-field-bg);
-    -webkit-backdrop-filter: blur(18px) saturate(180%);
-    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass-modal-blur)) saturate(180%);
+    backdrop-filter: blur(var(--glass-modal-blur)) saturate(180%);
     border: 1px solid var(--glass-field-border);
     color: var(--glass-field-text);
     box-shadow:
@@ -2134,8 +2160,8 @@ body.dark .premium-alarm-btn:hover .alarm-btn-icon {
 }
 
 #breakAlarmModal.show {
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
     transition:
         opacity 0.07s ease,
         backdrop-filter 0.1s ease,
@@ -2193,8 +2219,8 @@ body.dark #breakAlarmModal {
     border-top: 1px solid var(--glass-border);
     border-radius: 4px 0 0 0;
     transform: rotate(45deg);
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
-    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    -webkit-backdrop-filter: blur(var(--glass-modal-blur)) saturate(160%);
+    backdrop-filter: blur(var(--glass-modal-blur)) saturate(160%);
 }
 
 @media (max-width: 700px) {
@@ -3509,8 +3535,8 @@ body.dark .side-notepad-tab::before {
     border-right: none;
 
     background: var(--glass-modal-bg);
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
-    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    -webkit-backdrop-filter: blur(var(--glass-modal-blur)) saturate(160%);
+    backdrop-filter: blur(var(--glass-modal-blur)) saturate(160%);
 
     padding: 20px;
     box-shadow:
@@ -3602,8 +3628,8 @@ body.dark .side-notepad-header span {
     border: 1px solid var(--glass-field-border);
     border-radius: var(--field-radius);
     background: var(--glass-field-bg);
-    -webkit-backdrop-filter: blur(18px) saturate(180%);
-    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass-modal-blur)) saturate(180%);
+    backdrop-filter: blur(var(--glass-modal-blur)) saturate(180%);
     color: var(--glass-field-text);
     padding: 14px;
     font-size: 14px;
