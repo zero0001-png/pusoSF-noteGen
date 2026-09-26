@@ -45,12 +45,25 @@ html {
     #e9edf3;
 
 
-    /* ---- Modal-specific glass (light): lighter, more opaque than panel glass ---- */
-    --modal-backdrop: rgba(148, 163, 184, 0.35);
-    --glass-modal-bg: rgba(255, 255, 255, 0.82);
-    --glass-field-bg: rgba(255, 255, 255, 0.95);
+    /* ---- Modal-specific glass (light): a dark overlay tint showing
+       through a translucent white card reads as muddy gray and wipes
+       out label contrast, so light mode keeps a light, cool-toned
+       overlay (matching the app's own panel tones) instead of
+       airbeta1's dark tint, and the card/fields stay bright enough
+       to read as white glass rather than gray ---- */
+    --modal-backdrop: rgba(148, 163, 184, 0.38);
+    --glass-modal-bg: rgba(255, 255, 255, 0.72);
+    --glass-field-bg: rgba(255, 255, 255, 0.68);
     --glass-field-border: rgba(15, 23, 42, 0.32);
     --glass-field-text: #0f172a;
+
+    /* ---- Editable-field glass (light): the actual frosted look for
+       text areas, dropdowns and date inputs — separate from
+       --glass-field-bg so opacity/blur can be tuned without touching
+       the (still fairly solid) modal chrome above ---- */
+    --glass-input-bg: rgba(255, 255, 255, 0.42);
+    --glass-input-blur: 20px;
+    --glass-input-highlight: rgba(255, 255, 255, 0.9);
 
     /* ---- Break-timer glow (light): warm amber, matches the "Break" label ---- */
     --break-glow-rgb: 217, 119, 6;
@@ -79,12 +92,20 @@ body.dark {
   #020202;
 
 
-    /* ---- Modal-specific glass (dark): richer + more opaque than panel glass, darker fields for contrast ---- */
-    --modal-backdrop: rgba(2, 6, 15, 0.55);
-    --glass-modal-bg: rgba(22, 24, 32, 0.86);
-    --glass-field-bg: rgba(9, 10, 14, 0.75);
+    /* ---- Modal-specific glass (dark): ported from airbeta1's modal — box
+       reuses the panel's own translucent glass-bg instead of a near-opaque
+       modal color; overlay is the same neutral dark tint as light mode
+       (airbeta1 doesn't vary its overlay by theme) ---- */
+    --modal-backdrop: rgba(10, 12, 16, 0.45);
+    --glass-modal-bg: rgba(21, 23, 30, 0.55);
+    --glass-field-bg: rgba(9, 10, 14, 0.5);
     --glass-field-border: rgba(255, 255, 255, 0.12);
     --glass-field-text: #f1f5f9;
+
+    /* ---- Editable-field glass (dark) ---- */
+    --glass-input-bg: rgba(15, 17, 23, 0.4);
+    --glass-input-blur: 20px;
+    --glass-input-highlight: rgba(255, 255, 255, 0.1);
 
     /* ---- Break-timer glow (dark): brighter amber, matches the "Break" label ---- */
     --break-glow-rgb: 251, 191, 36;
@@ -156,7 +177,7 @@ input[type="date"] {
 
 body.dark input[type="date"] {
     color: #f8fafc;
-    background-color: var(--glass-bg-strong);
+    background-color: var(--glass-input-bg);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 12px center;
@@ -544,13 +565,13 @@ textarea {
     border: 1px solid rgba(100, 116, 139, 0.75);
     font-size: 13px;
     outline: none;
-    background: #ffffff;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    background: var(--glass-input-bg);
+    -webkit-backdrop-filter: blur(var(--glass-input-blur)) saturate(180%);
+    backdrop-filter: blur(var(--glass-input-blur)) saturate(180%);
     color: #1e293b;
     box-shadow:
         0 1px 3px rgba(15, 23, 42, 0.07),
-        inset 0 1px 0 var(--glass-highlight);
+        inset 0 1px 0 var(--glass-input-highlight);
     transition: all 0.12s;
 }
 
@@ -558,16 +579,16 @@ input:focus,
 select:focus,
 textarea:focus {
     border-color: #38bdf8;
-    box-shadow: inset 0 1px 0 var(--glass-highlight), 0 0 0 1px #38bdf8;
+    box-shadow: inset 0 1px 0 var(--glass-input-highlight), 0 0 0 1px #38bdf8;
 }
 
 body.dark input,
 body.dark select,
 body.dark textarea {
-    background: var(--glass-bg-strong);
+    background: var(--glass-input-bg);
     border-color: var(--glass-border);
     color: #d3d9e0;
-    box-shadow: inset 0 1px 0 var(--glass-highlight);
+    box-shadow: inset 0 1px 0 var(--glass-input-highlight);
 }
 
 body.dark input:focus,
@@ -668,7 +689,7 @@ body.dark input[type="date"]::-webkit-datetime-edit-year-field {
 }
 
 body.dark select {
-    background-color: var(--glass-bg-strong);
+    background-color: var(--glass-input-bg);
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238b95a3'><path d='M1 4l5 5 5-5H1z'/></svg>");
     background-repeat: no-repeat;
     background-position: calc(100% - 14px) center;
@@ -1641,8 +1662,8 @@ body.dark button.action.action-escalate:hover {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    -webkit-backdrop-filter: blur(1.5px) saturate(115%);
-    backdrop-filter: blur(1.5px) saturate(115%);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     transition:
         opacity 0.08s ease,
         backdrop-filter 0.1s ease,
@@ -1657,8 +1678,8 @@ body.dark button.action.action-escalate:hover {
     width: min(900px, 100%);
     max-height: 90vh;
     background: var(--glass-modal-bg);
-    -webkit-backdrop-filter: blur(36px) saturate(220%);
-    backdrop-filter: blur(36px) saturate(220%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
     border: 1px solid var(--glass-border);
     border-radius: 16px;
     padding: 24px;
@@ -1798,6 +1819,11 @@ body.dark .case-info-close:hover {
 .case-info-field label {
     margin-top: var(--field-stack);
     margin-bottom: var(--field-gap);
+    color: #475569;
+}
+
+body.dark .case-info-field label {
+    color: #94a3b8;
 }
 
 .case-info-field input,
@@ -1805,11 +1831,21 @@ body.dark .case-info-close:hover {
 .case-info-field textarea {
     width: 100%;
     background: var(--glass-field-bg);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    backdrop-filter: blur(18px) saturate(180%);
     border: 1px solid var(--glass-field-border);
     color: var(--glass-field-text);
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+body.dark .case-info-field input,
+body.dark .case-info-field select,
+body.dark .case-info-field textarea {
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .case-info-field input:focus,
@@ -2098,8 +2134,8 @@ body.dark .premium-alarm-btn:hover .alarm-btn-icon {
 }
 
 #breakAlarmModal.show {
-    -webkit-backdrop-filter: blur(1.5px) saturate(115%);
-    backdrop-filter: blur(1.5px) saturate(115%);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     transition:
         opacity 0.07s ease,
         backdrop-filter 0.1s ease,
@@ -2157,8 +2193,8 @@ body.dark #breakAlarmModal {
     border-top: 1px solid var(--glass-border);
     border-radius: 4px 0 0 0;
     transform: rotate(45deg);
-    -webkit-backdrop-filter: blur(36px) saturate(220%);
-    backdrop-filter: blur(36px) saturate(220%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
 }
 
 @media (max-width: 700px) {
@@ -2367,8 +2403,8 @@ body.dark .break-alarm-permission-btn:hover {
     padding: 22px 32px;
     border-radius: 20px;
     background: var(--glass-modal-bg);
-    -webkit-backdrop-filter: blur(36px) saturate(220%);
-    backdrop-filter: blur(36px) saturate(220%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
     border: 1px solid var(--glass-border);
     box-shadow:
         0 24px 70px rgba(0, 0, 0, 0.28),
@@ -3473,8 +3509,8 @@ body.dark .side-notepad-tab::before {
     border-right: none;
 
     background: var(--glass-modal-bg);
-    -webkit-backdrop-filter: blur(36px) saturate(220%);
-    backdrop-filter: blur(36px) saturate(220%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
 
     padding: 20px;
     box-shadow:
@@ -3566,11 +3602,22 @@ body.dark .side-notepad-header span {
     border: 1px solid var(--glass-field-border);
     border-radius: var(--field-radius);
     background: var(--glass-field-bg);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    backdrop-filter: blur(18px) saturate(180%);
     color: var(--glass-field-text);
     padding: 14px;
     font-size: 14px;
     line-height: 1.6;
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
     /* free text only — no formatting controls of any kind */
+}
+
+body.dark .side-notepad-textarea {
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .side-notepad-footer {
