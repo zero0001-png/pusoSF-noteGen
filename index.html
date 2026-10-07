@@ -6289,10 +6289,6 @@ if (outboundCall && outboundCall.value === "Yes") {
             headerParts.push(sub);
         }
 
-        if (ticket) {
-            headerParts.push(`SO: ${ticket}`);
-        }
-
         ftExtra.style.display = "none";
 
     } else if (
@@ -6372,70 +6368,68 @@ if (outboundCall && outboundCall.value === "Yes") {
     // ==========================================
     // BUILD FINAL OUTPUT
     // ==========================================
+    // Layout (each section separated by exactly one blank line):
+    //
+    //   Header [+ Outbound Call lines directly underneath]
+    //
+    //   Post Date: ...
+    //   Group: ...            <- only when Group is not blank
+    //
+    //   WOCAS: ...
+    //
+    //   URL: ...
+    //
+    //   FT: ...
 
-    const outputLines = [];
+    const sections = [];
 
-    // ------------------------------------------
-    // Header
-    // ------------------------------------------
-
-    if (header) {
-        outputLines.push(header);
+    // Header (+ Outbound Call lines stay attached to the header)
+    // Billing/Aftersales: SO goes on its own line right under the header
+    const soLine = (category === "Billing/Aftersales Issues" && ticket) ? `SO: ${ticket}` : "";
+    const headerSection = [header, soLine, outboundBlock].filter(Boolean).join("\n");
+    if (headerSection) {
+        sections.push(headerSection);
     }
 
-    // ------------------------------------------
-    // Outbound Call
-    // ------------------------------------------
-
-    if (outboundBlock) {
-        outputLines.push(outboundBlock);
-    }
-
-    // ------------------------------------------
-    // Blank line before Post Date
-    // ------------------------------------------
-
-if (postDate || customerGroup) {
-    const postInfoParts = [];
+    // Post Date / Group (Group hidden when blank)
+    const postInfoLines = [];
 
     if (postDate) {
-        postInfoParts.push(`Post Date: ${postDate}`);
+        postInfoLines.push(`Post Date: ${postDate}`);
     }
 
     if (customerGroup) {
-        postInfoParts.push(`Group: ${customerGroup}`);
+        postInfoLines.push(`Group: ${customerGroup}`);
     }
 
-    outputLines.push("");
-    outputLines.push(postInfoParts.join(" | "));
-}
+    if (postInfoLines.length) {
+        sections.push(postInfoLines.join("\n"));
+    }
 
-
-    // ------------------------------------------
     // WOCAS
-    // ------------------------------------------
-
     if (wocas) {
-        outputLines.push(`WOCAS: ${wocas}`);
+        sections.push(`WOCAS: ${wocas}`);
     }
 
-    // ------------------------------------------
     // URL
-    // ------------------------------------------
-
     if (url) {
-        outputLines.push("");
-        outputLines.push(`URL: ${url}`);
+        sections.push(`URL: ${url}`);
     }
 
-    // ------------------------------------------
     // FT
-    // ------------------------------------------
-
     if (ftBlock) {
-        outputLines.push("");
-        outputLines.push(ftBlock);
+        sections.push(ftBlock);
     }
+
+    // Strip trailing spaces on every line and make sure no more than
+    // one blank line ever appears in a row.
+    const finalNote = sections
+        .join("\n\n")
+        .split("\n")
+        .map(line => line.replace(/\s+$/g, ""))
+        .join("\n")
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
 
     // ==========================================
     // OUTPUT
@@ -6443,8 +6437,7 @@ if (postDate || customerGroup) {
 
     document.getElementById("subjectOutput").value = category;
 
-    document.getElementById("issueOutput").value =
-        outputLines.join("\n").trim();
+    document.getElementById("issueOutput").value = finalNote;
 }
 
 
