@@ -2159,6 +2159,27 @@ body.dark .alarm-active-dot {
     display: none;
 }
 
+/* Subtle glow on the bell icon while an alarm is active, slowly
+   "breathing" (glow only, the icon itself never changes size).
+   :where() keeps specificity at zero for the :has() part, so on hover
+   the stronger glow + bell-ring wiggle defined above take over. */
+.premium-alarm-btn:where(:has(.alarm-active-dot:not([hidden]))) .alarm-btn-icon {
+    color: rgb(var(--break-glow-rgb));
+    filter: drop-shadow(0 0 4px rgba(var(--break-glow-rgb), 0.4));
+    animation: alarm-icon-breathe 3.6s ease-in-out infinite;
+}
+
+@keyframes alarm-icon-breathe {
+    0%, 100% { filter: drop-shadow(0 0 3px rgba(var(--break-glow-rgb), 0.25)); }
+    50%      { filter: drop-shadow(0 0 6px rgba(var(--break-glow-rgb), 0.6)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .premium-alarm-btn:where(:has(.alarm-active-dot:not([hidden]))) .alarm-btn-icon {
+        animation: none;
+    }
+}
+
 @keyframes alarm-snake-spin { to { --alarm-snake-angle: 360deg; } }
 
 @property --alarm-snake-angle {
@@ -5212,8 +5233,8 @@ function fireBreakAlarm(type) {
 
     if ("Notification" in window && Notification.permission === "granted") {
         try {
-            new Notification("HOY! mag " + type.label + " ka muna!", {
-                body: "Wag pa-OB, babawas yan sa sahod mo \ud83e\udd23",
+            new Notification(type.label + "!", {
+                body: "Enjoy your " + type.label.toLowerCase() + ".",
                 requireInteraction: true
             });
         } catch (e) {}
@@ -5337,8 +5358,8 @@ function finishActiveBreakTimer() {
 
     if ("Notification" in window && Notification.permission === "granted") {
         try {
-            new Notification("Hayss! Tapos na " + finishedLabel + " mo.", {
-                body: "Oras na para magpanggap ulit \ud83d\ude0e",
+            new Notification(finishedLabel + " ended!", {
+                body: "All good things come to an end.",
                 requireInteraction: true
             });
         } catch (e) {}
