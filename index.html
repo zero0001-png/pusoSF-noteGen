@@ -146,6 +146,135 @@ textarea::-webkit-resizer {
 }
 
 /* =========================================================
+   DROPDOWN SCROLLBAR — matches the textarea scrollbar
+   Native <select> popups are drawn by the OS, so browsers that support
+   customizable selects (Chrome/Edge 135+) get a styled popup below;
+   everything else keeps the native popup (with thin scrollbar colours).
+   ========================================================= */
+select {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+select::-webkit-scrollbar {
+    width: 10px;
+}
+
+select::-webkit-scrollbar-track {
+    background: var(--scrollbar-track) !important;
+    margin: 6px 0;
+}
+
+select::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb) !important;
+    border-radius: 999px;
+    border: 2px solid var(--bg-input);
+    background-clip: padding-box;
+}
+
+select::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover) !important;
+}
+
+@supports (appearance: base-select) {
+    html select,
+    html select::picker(select) {
+        appearance: base-select;
+    }
+
+    html select::picker-icon {
+        display: none; /* keep the existing arrow */
+    }
+
+    /* Customizable selects size to their content, so an empty or short
+       select (e.g. Persona Used) shrinks. Pin them to the input height. */
+    html select {
+        box-sizing: border-box;
+        width: 100%;
+        min-height: 38px;
+        align-items: center;
+    }
+
+    select::picker(select) {
+        box-sizing: border-box;
+        background: var(--dropdown-bg, var(--bg-input));
+        color: #1e293b;
+        border: 1px solid rgba(100, 116, 139, 0.75);
+        border-radius: 8px;
+        padding: 6px 4px;
+        margin-top: 4px;
+        max-height: 300px;
+        overflow-y: auto;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
+        scrollbar-width: thin;
+        scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    }
+
+    select::picker(select)::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    select::picker(select)::-webkit-scrollbar-track {
+        background: var(--scrollbar-track) !important;
+        margin: 6px 0;
+    }
+
+    select::picker(select)::-webkit-scrollbar-thumb {
+        background: var(--scrollbar-thumb) !important;
+        border-radius: 999px;
+        border: 2px solid var(--dropdown-bg, var(--bg-input));
+        background-clip: padding-box;
+    }
+
+    select::picker(select)::-webkit-scrollbar-thumb:hover {
+        background: var(--scrollbar-thumb-hover) !important;
+    }
+
+    select option {
+        padding: 7px 10px;
+        border-radius: 6px;
+        font-size: 13px;
+        background: transparent;
+        color: #1e293b;
+    }
+
+    select option::checkmark {
+        display: none;
+    }
+
+    select option:hover,
+    select option:focus-visible {
+        background: rgba(56, 189, 248, 0.16);
+    }
+
+    select option:checked {
+        background: rgba(56, 189, 248, 0.26);
+        font-weight: 600;
+    }
+
+    body.dark select::picker(select) {
+        --dropdown-bg: #0b0c0f;
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #d3d9e0;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    html body.dark select option {
+        background: transparent;
+        color: #d3d9e0;
+    }
+
+    html body.dark select option:hover,
+    html body.dark select option:focus-visible {
+        background: rgba(241, 245, 249, 0.1);
+    }
+
+    html body.dark select option:checked {
+        background: rgba(241, 245, 249, 0.18);
+    }
+}
+
+/* =========================================================
    FONT
    ========================================================= */
 * {
