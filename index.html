@@ -1978,6 +1978,183 @@ body.dark button.action.action-escalate:hover {
 }
 
 /* =========================================================
+   LIGHT MODE — buttons (same treatment as dark mode)
+   Muted blue action buttons, indigo-outline Search/Select, Yes = green border,
+   No = red border. Dark-mode rules below override these.
+   ========================================================= */
+/* Action buttons (main form, modal, copy, escalate): muted blue glass with a
+   soft blue border — same look as dark mode. Clear + green "copied" excluded. */
+html button.action:not(.action-clear):not(.copied),
+html button.action.action-copy:not(.copied),
+html .case-info-actions button.action.action-copy:not(.copied),
+html button.action.action-escalate:not(.copied) {
+    background: linear-gradient(
+        135deg,
+        rgba(59, 130, 246, 0.90) 0%,
+        rgba(37, 99, 235, 0.82) 100%
+    );
+    color: #ffffff;
+    border: 1px solid rgba(147, 197, 253, 0.55);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow:
+        0 4px 14px rgba(37, 99, 235, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+html button.action:not(.action-clear):not(.copied):hover,
+html button.action.action-copy:not(.copied):hover,
+html .case-info-actions button.action.action-copy:not(.copied):hover,
+html button.action.action-escalate:not(.copied):hover {
+    background: linear-gradient(
+        135deg,
+        rgba(59, 130, 246, 1) 0%,
+        rgba(37, 99, 235, 0.92) 100%
+    );
+    border-color: rgba(147, 197, 253, 0.75);
+    color: #ffffff;
+    box-shadow:
+        0 8px 22px rgba(37, 99, 235, 0.35),
+        0 0 16px rgba(56, 189, 248, 0.20),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* Copy buttons (light mode): muted slate that warms to a soft blue on hover */
+html button.action.action-copy:not(.copied),
+html .case-info-actions button.action.action-copy:not(.copied) {
+    background: #2D405A;
+    color: #f1f5f9;
+    border-color: rgba(148, 163, 184, 0.45);
+    box-shadow:
+        0 4px 14px rgba(30, 41, 59, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+html button.action.action-copy:not(.copied):hover,
+html .case-info-actions button.action.action-copy:not(.copied):hover {
+    background: #3B5998;
+    color: #ffffff;
+    border-color: rgba(147, 170, 220, 0.60);
+    box-shadow:
+        0 8px 22px rgba(59, 89, 152, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.20);
+}
+
+html .case-search-button,
+html .business-select-button {
+    background: #f5f6ff;
+    color: #4338ca;
+    border: 1px solid rgba(99, 102, 241, 0.55);
+    box-shadow: none;
+}
+html .case-search-button:hover,
+html .business-select-button:hover {
+    background: rgba(99, 102, 241, 0.12);
+    color: #3730a3;
+    border-color: #6366f1;
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.18);
+}
+
+/* Yes / No selected (light): soft tint, darker border + icon, clear contrast */
+html .segmented-option:has(input[value="Yes"]:checked) {
+    background: #dcfce7;
+    color: #166534;
+    border-color: #15803d;
+    box-shadow: inset 0 0 0 1px rgba(21, 128, 61, 0.15);
+}
+html .segmented-option:has(input[value="No"]:checked) {
+    background: #fee2e2;
+    color: #991b1b;
+    border-color: #b91c1c;
+    box-shadow: inset 0 0 0 1px rgba(185, 28, 28, 0.15);
+}
+body:not(.dark) .segmented-option:has(input[value="Yes"]:checked) span::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2315803d' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='23 7 23 1 17 1'%3E%3C/polyline%3E%3Cline x1='16' y1='8' x2='23' y2='1'%3E%3C/line%3E%3Cpath d='M21 16.42v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.11 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 16.42z'%3E%3C/path%3E%3C/svg%3E");
+}
+body:not(.dark) .segmented-option:has(input[value="No"]:checked) span::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23b91c1c' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='1 7 1 1 7 1'%3E%3C/polyline%3E%3Cline x1='8' y1='8' x2='1' y2='1'%3E%3C/line%3E%3Cpath d='M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+/* =========================================================
+   DARK MODE — buttons
+   Action buttons (main form, modal, copy, escalate): muted blue glass with a
+   soft blue border. Search + Select buttons: indigo outline accent.
+   Yes/No: selected option gets a green (Yes) / red (No) border.
+   The Clear ghost button and the green "copied" flash keep their own look.
+   ========================================================= */
+body.dark button.action:not(.action-clear):not(.copied),
+body.dark button.action.action-copy:not(.copied),
+body.dark .case-info-actions button.action.action-copy:not(.copied),
+body.dark button.action.action-escalate:not(.copied) {
+    background: linear-gradient(
+        135deg,
+        rgba(59, 130, 246, 0.62) 0%,
+        rgba(37, 99, 235, 0.50) 100%
+    );
+    color: #ffffff;
+    border: 1px solid rgba(147, 197, 253, 0.40);
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.40),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+body.dark button.action:not(.action-clear):not(.copied):hover,
+body.dark button.action.action-copy:not(.copied):hover,
+body.dark .case-info-actions button.action.action-copy:not(.copied):hover,
+body.dark button.action.action-escalate:not(.copied):hover {
+    background: linear-gradient(
+        135deg,
+        rgba(59, 130, 246, 0.80) 0%,
+        rgba(37, 99, 235, 0.68) 100%
+    );
+    border-color: rgba(147, 197, 253, 0.55);
+    color: #ffffff;
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.50),
+        0 0 18px rgba(56, 189, 248, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+body.dark button.action:not(.action-clear):not(.copied):focus-visible,
+body.dark button.action.action-copy:not(.copied):focus-visible,
+body.dark .case-info-actions button.action.action-copy:not(.copied):focus-visible,
+body.dark button.action.action-escalate:not(.copied):focus-visible {
+    box-shadow:
+        0 0 0 2px #0d0e12,
+        0 0 0 4px #38bdf8,
+        0 8px 20px rgba(56, 189, 248, 0.3);
+}
+
+/* ---------- ACCENT (indigo outline): Search + Select ---------- */
+html body.dark .case-search-button,
+html body.dark .business-select-button {
+    background: #15171f;
+    color: #c7c2f5;
+    border: 1px solid rgba(99, 102, 241, 0.55);
+    box-shadow: none;
+}
+html body.dark .case-search-button:hover,
+html body.dark .business-select-button:hover {
+    background: rgba(99, 102, 241, 0.16);
+    color: #e0e7ff;
+    border-color: #818cf8;
+    box-shadow: 0 0 14px rgba(99, 102, 241, 0.22);
+}
+
+/* ---------- Yes / No selected (dark): soft tint, green / red border ---------- */
+body.dark .segmented-option:has(input[value="Yes"]:checked) {
+    background: rgba(34, 197, 94, 0.14);
+    color: #bbf7d0;
+    border-color: #22c55e;
+    box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.18);
+}
+body.dark .segmented-option:has(input[value="No"]:checked) {
+    background: rgba(239, 68, 68, 0.14);
+    color: #fecaca;
+    border-color: #ef4444;
+    box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.18);
+}
+
+/* =========================================================
    CASE INFORMATION MODAL
    ========================================================= */
 .case-info-modal {
