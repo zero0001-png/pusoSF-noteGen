@@ -809,6 +809,173 @@ button.action.copied {
 }
 
 /* =========================================================
+   COPY BUTTONS - frosted glass at rest, tinted blue glass on hover
+   ========================================================= */
+button.action.action-copy {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.92) 0%,
+        rgba(219, 234, 254, 0.60) 100%
+    );
+    color: #334155;
+    border: 1px solid rgba(37, 99, 235, 0.38);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    backdrop-filter: blur(12px) saturate(180%);
+    box-shadow:
+        0 6px 18px rgba(31, 38, 135, 0.20),
+        0 1px 3px rgba(15, 23, 42, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 1),
+        inset 0 -1px 0 rgba(37, 99, 235, 0.12);
+}
+button.action.action-copy::before {
+    /* soft glass glint instead of the hard shine sweep */
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.55),
+        transparent
+    );
+}
+button.action.action-copy:hover {
+    background: linear-gradient(
+        135deg,
+        rgba(59, 130, 246, 0.88) 0%,
+        rgba(29, 78, 216, 0.80) 100%
+    );
+    border-color: rgba(29, 78, 216, 0.55);
+    color: #ffffff;
+    box-shadow:
+        0 8px 22px rgba(37, 99, 235, 0.32),
+        0 0 0 3px rgba(56, 189, 248, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+button.action.action-copy:active {
+    box-shadow:
+        0 3px 8px rgba(37, 99, 235, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+button.action.action-copy:focus-visible {
+    outline: none;
+    box-shadow:
+        0 0 0 2px #f4f6f9,
+        0 0 0 4px #38bdf8,
+        inset 0 1px 0 var(--glass-input-highlight);
+}
+button.action.action-copy.copied {
+    color: #ffffff;
+    border-color: rgba(5, 150, 105, 0.5);
+}
+
+body.dark button.action.action-copy {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.10) 0%,
+        rgba(255, 255, 255, 0.03) 100%
+    );
+    color: #cbd5e1;
+    border-color: rgba(255, 255, 255, 0.14);
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.40),
+        inset 0 1px 0 rgba(255, 255, 255, 0.10);
+}
+body.dark button.action.action-copy::before {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.18),
+        transparent
+    );
+}
+body.dark button.action.action-copy:hover {
+    background: linear-gradient(
+        135deg,
+        rgba(59, 130, 246, 0.62) 0%,
+        rgba(37, 99, 235, 0.50) 100%
+    );
+    border-color: rgba(147, 197, 253, 0.40);
+    color: #ffffff;
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.50),
+        0 0 18px rgba(56, 189, 248, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+body.dark button.action.action-copy:focus-visible {
+    box-shadow:
+        0 0 0 2px #0d0e12,
+        0 0 0 4px #38bdf8,
+        inset 0 1px 0 rgba(255, 255, 255, 0.10);
+}
+body.dark button.action.action-copy.copied {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* =========================================================
+   MODAL COPY BUTTONS - solid blue primary action (glass stays elsewhere)
+   ========================================================= */
+.case-info-actions button.action.action-copy,
+body.dark .case-info-actions button.action.action-copy {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: #ffffff;
+    border: 1px solid transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow:
+        0 4px 10px rgba(29, 78, 216, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+body.dark .case-info-actions button.action.action-copy {
+    box-shadow:
+        0 4px 14px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.case-info-actions button.action.action-copy::before,
+body.dark .case-info-actions button.action.action-copy::before {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.35),
+        transparent
+    );
+}
+.case-info-actions button.action.action-copy:hover,
+body.dark .case-info-actions button.action.action-copy:hover {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border-color: transparent;
+    color: #ffffff;
+    box-shadow:
+        0 8px 20px rgba(29, 78, 216, 0.35),
+        0 0 0 3px rgba(56, 189, 248, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+body.dark .case-info-actions button.action.action-copy:hover {
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.5),
+        0 0 18px rgba(56, 189, 248, 0.15);
+}
+.case-info-actions button.action.action-copy:active,
+body.dark .case-info-actions button.action.action-copy:active {
+    box-shadow: 0 3px 8px rgba(29, 78, 216, 0.3);
+}
+.case-info-actions button.action.action-copy:focus-visible {
+    box-shadow:
+        0 0 0 2px #f4f6f9,
+        0 0 0 4px #38bdf8,
+        0 8px 20px rgba(29, 78, 216, 0.3);
+}
+body.dark .case-info-actions button.action.action-copy:focus-visible {
+    box-shadow:
+        0 0 0 2px #0d0e12,
+        0 0 0 4px #38bdf8,
+        0 8px 20px rgba(56, 189, 248, 0.3);
+}
+.case-info-actions button.action.action-copy.copied,
+body.dark .case-info-actions button.action.action-copy.copied {
+    color: #ffffff;
+    border-color: transparent;
+}
+
+/* =========================================================
    BUTTON ICON ANIMATION
    ========================================================= */
 .action-icon {
@@ -3940,7 +4107,7 @@ body.dark .side-notepad-status {
                             style="flex:1;"
                         >
 
-                        <button type="button" class="action nowrap" onclick="copySubject(event); showConfirm(this, '✓ Copied')" style="margin-top:0;padding:10px 14px;white-space:nowrap;">
+                        <button type="button" class="action nowrap action-copy" onclick="copySubject(event); showConfirm(this, '✓ Copied')" style="margin-top:0;padding:10px 14px;white-space:nowrap;">
                             <svg class="action-icon" viewBox="0 -960 960 960" width="14" height="14" fill="currentColor" style="vertical-align:-2px"><path d="M780-160H260q-24 0-42-18t-18-42v-640q0-24 18-42t42-18h348l232 232v468q0 24-18 42t-42 18ZM578-662v-198H260v640h520v-442H578ZM140-40q-24 0-42-18t-18-42v-619h60v619h498v60H140Zm120-820v198-198 640-640Z"/></svg> Copy Subject
                         </button>
 
@@ -3957,7 +4124,7 @@ body.dark .side-notepad-status {
                     ></textarea>
                 </div>
 
-                <button type="button" class="action full" onclick="copyIssue(event); showConfirm(this, '✓ Copied')" style="margin-top:14px;width:100%;">
+                <button type="button" class="action full action-copy" onclick="copyIssue(event); showConfirm(this, '✓ Copied')" style="margin-top:14px;width:100%;">
                     <svg class="action-icon" viewBox="0 -960 960 960" width="14" height="14" fill="currentColor" style="vertical-align:-2px"><path d="M780-160H260q-24 0-42-18t-18-42v-640q0-24 18-42t42-18h348l232 232v468q0 24-18 42t-42 18ZM578-662v-198H260v640h520v-442H578ZM140-40q-24 0-42-18t-18-42v-619h60v619h498v60H140Zm120-820v198-198 640-640Z"/></svg> Copy Description
                 </button>
 
@@ -4126,7 +4293,7 @@ body.dark .side-notepad-status {
                     <textarea id="engagementOutput" readonly></textarea>
                 </div>
 
-                <button type="button" class="action full" onclick="copyEngagement(event); showConfirm(this, '✓ Copied')" style="margin-top:14px;width:100%;">
+                <button type="button" class="action full action-copy" onclick="copyEngagement(event); showConfirm(this, '✓ Copied')" style="margin-top:14px;width:100%;">
                     <svg class="action-icon" viewBox="0 -960 960 960" width="14" height="14" fill="currentColor" style="vertical-align:-2px"><path d="M780-160H260q-24 0-42-18t-18-42v-640q0-24 18-42t42-18h348l232 232v468q0 24-18 42t-42 18ZM578-662v-198H260v640h520v-442H578ZM140-40q-24 0-42-18t-18-42v-619h60v619h498v60H140Zm120-820v198-198 640-640Z"/></svg> Copy Case Comments
                 </button>
 
@@ -4444,7 +4611,7 @@ body.dark .side-notepad-status {
 <button type="button" class="action action-clear" onclick="clearModalFields('caseInfoModal')">
     <svg class="action-icon" viewBox="0 -960 960 960" width="17" height="17" fill="currentColor" style="vertical-align:-3px"><path d="M600-240v-80h160v80H600Zm0-320v-80h280v80H600Zm0 160v-80h240v80H600ZM120-640H80v-80h160v-60h160v60h160v80h-40v360q0 33-23.5 56.5T440-200H200q-33 0-56.5-23.5T120-280v-360Zm80 0v360h240v-360H200Zm0 0v360-360Z"/></svg> Clear
 </button>
-<button type="button" class="action" onclick="copyCaseInformation()">
+<button type="button" class="action action-copy" onclick="copyCaseInformation()">
     <svg class="action-icon" viewBox="0 -960 960 960" width="14" height="14" fill="currentColor" style="vertical-align:-2px"><path d="M780-160H260q-24 0-42-18t-18-42v-640q0-24 18-42t42-18h348l232 232v468q0 24-18 42t-42 18ZM578-662v-198H260v640h520v-442H578ZM140-40q-24 0-42-18t-18-42v-619h60v619h498v60H140Zm120-820v198-198 640-640Z"/></svg> Copy Email Escalation Report
 </button>
         </div>
@@ -4543,7 +4710,7 @@ body.dark .side-notepad-status {
             <button type="button" class="action action-clear" onclick="clearModalFields('resolvedNotesModal')">
                 <svg class="action-icon" viewBox="0 -960 960 960" width="17" height="17" fill="currentColor" style="vertical-align:-3px"><path d="M600-240v-80h160v80H600Zm0-320v-80h280v80H600Zm0 160v-80h240v80H600ZM120-640H80v-80h160v-60h160v60h160v80h-40v360q0 33-23.5 56.5T440-200H200q-33 0-56.5-23.5T120-280v-360Zm80 0v360h240v-360H200Zm0 0v360-360Z"/></svg> Clear
             </button>
-            <button type="button" class="action" onclick="copyResolvedNotes(); showConfirm(this, '✓ Copied')">
+            <button type="button" class="action action-copy" onclick="copyResolvedNotes(); showConfirm(this, '✓ Copied')">
                 <svg class="action-icon" viewBox="0 -960 960 960" width="14" height="14" fill="currentColor" style="vertical-align:-2px"><path d="M780-160H260q-24 0-42-18t-18-42v-640q0-24 18-42t42-18h348l232 232v468q0 24-18 42t-42 18ZM578-662v-198H260v640h520v-442H578ZM140-40q-24 0-42-18t-18-42v-619h60v619h498v60H140Zm120-820v198-198 640-640Z"/></svg> Copy Resolved Case Notes
             </button>
         </div>
@@ -4600,7 +4767,7 @@ body.dark .side-notepad-status {
             <button type="button" class="action action-clear" onclick="clearModalFields('pusoReportModal')">
                 <svg class="action-icon" viewBox="0 -960 960 960" width="17" height="17" fill="currentColor" style="vertical-align:-3px"><path d="M600-240v-80h160v80H600Zm0-320v-80h280v80H600Zm0 160v-80h240v80H600ZM120-640H80v-80h160v-60h160v60h160v80h-40v360q0 33-23.5 56.5T440-200H200q-33 0-56.5-23.5T120-280v-360Zm80 0v360h240v-360H200Zm0 0v360-360Z"/></svg> Clear
             </button>
-            <button type="button" class="action" onclick="copyPusoReport(); showConfirm(this, '✓ Copied')">
+            <button type="button" class="action action-copy" onclick="copyPusoReport(); showConfirm(this, '✓ Copied')">
                 <svg class="action-icon" viewBox="0 -960 960 960" width="14" height="14" fill="currentColor" style="vertical-align:-2px"><path d="M780-160H260q-24 0-42-18t-18-42v-640q0-24 18-42t42-18h348l232 232v468q0 24-18 42t-42 18ZM578-662v-198H260v640h520v-442H578ZM140-40q-24 0-42-18t-18-42v-619h60v619h498v60H140Zm120-820v198-198 640-640Z"/></svg> Copy FUSE Notes
             </button>
         </div>
@@ -6101,6 +6268,8 @@ function updateCategoryFields(isInitialLoad = false) {
 			"Inmove",
 			"Wire Re-Route",
 			"Change Ownership",
+			"Always On",
+			"Migration",
             "Others"
         ].forEach(o => {
             const opt = document.createElement("option");
