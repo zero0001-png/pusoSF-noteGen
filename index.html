@@ -154,6 +154,27 @@ textarea::-webkit-resizer {
 select {
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    /* An empty select (e.g. Persona Used before a platform is picked) has no
+       text line, so it collapses shorter than the others. Pin the height. */
+    box-sizing: border-box;
+    min-height: 38px;
+    line-height: 1.2;
+    /* long option text is simply cut off instead of widening the field */
+    min-width: 0;
+    max-width: 100%;
+    /* reserve room for the arrow and clip the text at the content edge, so it
+       is cut BEFORE the arrow instead of running underneath it */
+    padding-right: 40px;
+    overflow: clip;
+    overflow-clip-margin: content-box;
+    white-space: nowrap;
+    text-overflow: clip;
+}
+
+option {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
 }
 
 select::-webkit-scrollbar {
@@ -176,6 +197,15 @@ select::-webkit-scrollbar-thumb:hover {
     background: var(--scrollbar-thumb-hover) !important;
 }
 
+/* Containers that hold a dropdown must be allowed to shrink, otherwise a long
+   option widens the whole column instead of being cut. */
+.form-row > *,
+.form-group,
+.input-container,
+.case-info-field {
+    min-width: 0;
+}
+
 @supports (appearance: base-select) {
     html select,
     html select::picker(select) {
@@ -191,12 +221,18 @@ select::-webkit-scrollbar-thumb:hover {
     html select {
         box-sizing: border-box;
         width: 100%;
+        padding-right: 40px;
+        overflow: clip;
+        overflow-clip-margin: content-box;
         min-height: 38px;
         align-items: center;
     }
 
     select::picker(select) {
         box-sizing: border-box;
+        width: anchor-size(width);
+        min-width: 0;
+        max-width: anchor-size(width);
         background: var(--dropdown-bg, var(--bg-input));
         color: #1e293b;
         border: 1px solid rgba(100, 116, 139, 0.75);
@@ -231,6 +267,9 @@ select::-webkit-scrollbar-thumb:hover {
     }
 
     select option {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
         padding: 7px 10px;
         border-radius: 6px;
         font-size: 13px;
@@ -739,7 +778,7 @@ select {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b'><path d='M1 4l5 5 5-5H1z'/></svg>");
     background-repeat: no-repeat;
     background-position: calc(100% - 14px) center;
-    padding-right: 36px;
+    padding-right: 40px;
 }
 
 textarea {
@@ -1180,8 +1219,14 @@ button.action.copied .action-icon {
 
 .two-column-row .input-container {
     flex: 1;
+    min-width: 0; /* lets long select text be cut instead of widening the column */
     display: flex;
     flex-direction: column;
+}
+
+/* Type of Engagement + Persona Used always the same height, even when empty */
+#engagementPersonaRow select {
+    height: 38px;
 }
 
 /* =========================================================
