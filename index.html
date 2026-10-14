@@ -591,13 +591,13 @@
                 <label for="caseQueue">FT/SO Queue:</label>
                 <select id="caseQueue" name="caseQueue" onchange="toggleOtherQueue()">
                     <option value="">-- Select Queue --</option>
+					<option value="OTHER">Other - SO Queue/Status</option>
                     <option value="OFSC">OFSC</option>
                     <option value="SDM CHILD">SDM CHILD</option>
                     <option value="SDM">SDM</option>
                     <option value="L2">L2</option>
                     <option value="CCARE OFFBOARD">CCARE OFFBOARD</option>
                     <option value="FM POLL">FM POLL</option>
-                    <option value="OTHER">Other - So Queue/Status</option>
                 </select>
 
                 <div id="otherQueueContainer" style="display:none;margin-top:5px;">
@@ -2203,7 +2203,7 @@ function updatePersonaDropdown() {
             "Comment on Post (Reroute to PLDT Channels)",
             "Comment on Post (Invite to DM)",
             "Sent DM",
-            "Hide Negative / Sensitive Comment",
+            "Hide Comment",
             "Edit Comment"
         ];
 
