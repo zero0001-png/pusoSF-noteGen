@@ -1058,7 +1058,7 @@ function openResolvedNotesModal() {
         document.getElementById('ftIssueType')?.value || '';
     document.getElementById('resolvedFtCause').value =
         document.getElementById('ftCause')?.value || '';
-	
+
 	 toggleResolvedFtCause();
 
     document.getElementById('resolvedNotesModal').classList.add('show');
@@ -1259,15 +1259,21 @@ function positionAlarmPopover() {
     content.style.transformOrigin = originX + "% -12px";
 }
 
+/* Restarts the "pressed" pop animation on a header button, even on rapid re-clicks. */
+function playPressAnimation(id) {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+
+    btn.classList.remove("pressed");
+    void btn.offsetWidth;
+    btn.classList.add("pressed");
+
+    clearTimeout(btn._pressedTimeout);
+    btn._pressedTimeout = setTimeout(() => btn.classList.remove("pressed"), 280);
+}
+
 function openBreakAlarmModal() {
-    const btn = document.getElementById("breakAlarmBtn");
-    if (btn) {
-        btn.classList.remove("pressed");
-        void btn.offsetWidth; // restart the pop even on rapid re-clicks
-        btn.classList.add("pressed");
-        clearTimeout(btn._pressedTimeout);
-        btn._pressedTimeout = setTimeout(() => btn.classList.remove("pressed"), 280);
-    }
+    playPressAnimation("breakAlarmBtn");
 
     BREAK_ALARM_TYPES.forEach(type => {
         const input = document.getElementById("breakAlarmTime_" + type.id);
@@ -1729,8 +1735,6 @@ document.addEventListener("DOMContentLoaded", () => {
     searchBusinessZones();
 });
 
-
-
 function showConfirm(btn, message) {
     if (!btn) return;
 
@@ -1778,29 +1782,6 @@ function handleResetAll(btn) {
             icon.innerHTML = icon.dataset.originalHtml;
         }
     }, 1200);
-}
-
-function validateOutboundCall() {
-    const selected = document.querySelector(
-        'input[name="outboundCall"]:checked'
-    );
-
-    if (!selected) {
-        alert("Please select whether this is an Outbound Call: Yes or No.");
-        return false;
-    }
-
-    if (selected.value === "Yes") {
-        const cosmoId = document.getElementById("outboundCallCosmoId").value.trim();
-        const aniCbr = document.getElementById("outboundCallAniCbr").value.trim();
-
-        if (!cosmoId || !aniCbr) {
-            alert("Please enter the Call/Cosmo ID and ANI/CBR.");
-            return false;
-        }
-    }
-
-    return true;
 }
 
 document.getElementById("ftCreator").addEventListener("change", function () {
@@ -2001,7 +1982,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const outboundCosmoId =
         document.getElementById("outboundCallCosmoId");
 
-
     if (outboundCosmoId) {
 
         outboundCosmoId.addEventListener(
@@ -2022,7 +2002,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // Initial sync
     syncOutboundCallToAllSections();
 });
-
 
 // =========================================================
 // AUTO-SYNC CASE INFORMATION
@@ -2123,7 +2102,6 @@ function showCopyFeedback(buttonElement, originalText) {
         buttonElement.innerHTML = buttonElement.dataset.originalHtml;
     }, 1500);
 }
-
 
 /* =========================================================
    PLATFORM & PERSONA
@@ -2286,7 +2264,6 @@ function updatePersonaDropdown() {
     }
 }
 
-
 /* =========================================================
    CATEGORY
    ========================================================= */
@@ -2322,7 +2299,7 @@ function updateCategoryFields(isInitialLoad = false) {
         ticketContainer.style.display = "block";
 
         [
-            
+
             "Report Trouble - NIC/NDT",
 			"Report Trouble - NIC",
             "Report Trouble - NDT",
@@ -2508,7 +2485,7 @@ function updateCategoryFields(isInitialLoad = false) {
 /* =========================================================
    ISSUE NOTES
    ========================================================= */
-   
+
    const formatDate = (dateString) => {
     if (!dateString) return "";
 
@@ -2585,7 +2562,6 @@ if (outboundCall && outboundCall.value === "Yes") {
 
     outboundBlock = outboundLines.join("\n");
 }
-
 
     // ==========================================
     // HEADER
@@ -2772,10 +2748,6 @@ if (outboundCall && outboundCall.value === "Yes") {
     document.getElementById("issueOutput").value = finalNote;
 }
 
-
-
-
-
 /* =========================================================
    ENGAGEMENT NOTES
    ========================================================= */
@@ -2816,7 +2788,7 @@ function generateEngagement() {
         "Comment on Post (with Resolution)",
         "Comment on Post (Reroute to PLDT Channels)",
         "Comment on Post (Invite to DM)",
-        "Hide Negative / Sensitive Comment",
+        "Hide Comment",
         "Sent DM",
         "Edit Comment",
         "Conduct Callback",
@@ -3064,8 +3036,6 @@ function generateEngagement() {
         note.trim();
 }
 
-
-
 /* =========================================================
    COPY ISSUE
    ========================================================= */
@@ -3140,8 +3110,6 @@ function copyIssue() {
     });
 }
 
-
-
 /* =========================================================
    COPY SUBJECT
    ========================================================= */
@@ -3174,7 +3142,6 @@ function copyEngagement() {
     });
 }
 
-
 /* =========================================================
    UNIVERSAL COPY
    ========================================================= */
@@ -3205,7 +3172,6 @@ function copyText(text) {
     });
 }
 
-
 /* =========================================================
    DARK MODE
    ========================================================= */
@@ -3234,14 +3200,7 @@ function toggleDarkMode() {
 
     updateDarkModeToggle();
 
-    const btn = document.getElementById("darkModeToggle");
-    if (btn) {
-        btn.classList.remove("pressed");
-        void btn.offsetWidth; // restart the pop even on rapid re-clicks
-        btn.classList.add("pressed");
-        clearTimeout(btn._pressedTimeout);
-        btn._pressedTimeout = setTimeout(() => btn.classList.remove("pressed"), 280);
-    }
+    playPressAnimation("darkModeToggle");
 }
 
 if (localStorage.getItem("dark") === "true") {
@@ -5029,24 +4988,11 @@ const businessZoneData = [
 ];
 
 /* =========================================================
-   ESCAPE BUSINESS HTML
-   ========================================================= */
-
-function escapeBusinessHTML(value) {
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-/* =========================================================
    HIGHLIGHT SEARCH
    ========================================================= */
 
 function highlightBusinessText(text, search) {
-    const escapedText = escapeBusinessHTML(text);
+    const escapedText = escapeHtml(text);
 
     if (!search) {
         return escapedText;
@@ -5064,7 +5010,6 @@ function highlightBusinessText(text, search) {
         '<mark class="business-highlight">$1</mark>'
     );
 }
-
 
 /* =========================================================
    SEARCH BUSINESS ZONES
@@ -5185,7 +5130,6 @@ function searchBusinessZones() {
     requestAnimationFrame(() => resultsBody.classList.remove("is-refreshing"));
 }
 
-
 /* =========================================================
    SELECT BUSINESS ZONE / CITY
    ========================================================= */
@@ -5232,7 +5176,6 @@ function selectBusinessZone(businessZone, cityExchange) {
     }
 }
 
-
 /* =========================================================
    CLEAR BUSINESS SEARCH
    ========================================================= */
@@ -5245,7 +5188,6 @@ function clearBusinessSearch() {
         searchBusinessZones();
     }
 }
-
 
 /* =========================================================
    CASE INFORMATION MODAL
@@ -5393,7 +5335,6 @@ function openCitySearchFromCaseInfo() {
     }
 }
 
-
 /* =========================================================
    CLOSE MODAL BY CLICKING OUTSIDE
    (covers every .case-info-modal: caseInfoModal,
@@ -5417,7 +5358,6 @@ document.addEventListener("click", function(event) {
     if (closeFn) closeFn();
 });
 
-
 /* =========================================================
    ESC CLOSES WHICHEVER MODAL IS CURRENTLY OPEN
    ========================================================= */
@@ -5431,7 +5371,6 @@ document.addEventListener("keydown", function(event) {
     const closeFn = MODAL_CLOSE_FNS[openModal.id];
     if (closeFn) closeFn();
 });
-
 
 /* =========================================================
    COPY CASE INFORMATION
@@ -5451,7 +5390,6 @@ function toggleOtherQueue() {
     }
 }
 
-
 function toggleCallbackField() {
     const callback = document.getElementById("caseCallback");
     const callIdContainer = document.getElementById("callIdContainer");
@@ -5465,7 +5403,6 @@ function toggleCallbackField() {
         callId.value = "N/A";
     }
 }
-
 
 function formatCaseDate(dateString) {
     if (!dateString) return "";
@@ -5587,7 +5524,6 @@ function initCaseInfoLiveValidation() {
 }
 
 initCaseInfoLiveValidation();
-
 
 async function copyCaseInformation() {
     const missingFields = validateCaseInformation();
@@ -5722,7 +5658,6 @@ async function copyCaseInformation() {
     }
 }
 
-
 // =========================================================
 // ESCAPE HTML
 // =========================================================
@@ -5787,9 +5722,6 @@ document.getElementById("businessSearch").addEventListener(
     "input",
     searchBusinessZones
 );
-
-
-
 
 /* =========================================================
    SIDE NOTEPAD — free-text scratchpad
