@@ -28,19 +28,11 @@ html {
     --glass-highlight: rgba(255, 255, 255, 0.8);
     --glass-blur: 18px;
 
-    /* ---- Background (light) — clean, muted, professional ---- */
 --ray-bg:
     radial-gradient(1400px 800px at 15% -10%, rgba(148, 163, 184, 0.14), transparent 60%),
     radial-gradient(1200px 800px at 100% 100%, rgba(100, 116, 139, 0.10), transparent 60%),
     #e9edf3;
 
-
-    /* ---- Modal-specific glass (light): a dark overlay tint showing
-       through a translucent white card reads as muddy gray and wipes
-       out label contrast, so light mode keeps a light, cool-toned
-       overlay (matching the app's own panel tones) instead of
-       airbeta1's dark tint, and the card/fields stay bright enough
-       to read as white glass rather than gray ---- */
     --modal-backdrop: rgba(148, 163, 184, 0.26);
     --glass-modal-bg: rgba(255, 255, 255, 0.58);
     --glass-field-bg: rgba(255, 255, 255, 0.82);
@@ -48,27 +40,21 @@ html {
     --glass-field-text: #0f172a;
     --glass-modal-blur: 7px;
 
-    /* ---- Editable-field glass (light): the actual frosted look for
-       text areas, dropdowns and date inputs — separate from
-       --glass-field-bg so opacity/blur can be tuned without touching
-       the (still fairly solid) modal chrome above ---- */
     --glass-input-bg: rgba(255, 255, 255, 0.66);
     --glass-input-blur: 20px;
     --glass-input-highlight: rgba(255, 255, 255, 0.9);
-
-    /* ---- Break-timer glow (light): warm amber, matches the "Break" label ---- */
     --break-glow-rgb: 217, 119, 6;
 }
 
-/* This project toggles dark mode via the "dark" class on <body> */
+
 body.dark {
-    /* ---- Dark mode overrides ---- */
+
     --bg-input: #1a202c;
     --scrollbar-track: transparent;
     --scrollbar-thumb: #4a5568;
     --scrollbar-thumb-hover: #718096;
 
-    /* ---- Glassmorphism surfaces (dark) ---- */
+
     --glass-bg: rgba(21, 23, 30, 0.55);
     --glass-bg-strong: rgba(21, 23, 30, 0.7);
     --glass-border: rgba(255, 255, 255, 0.08);
@@ -82,11 +68,6 @@ body.dark {
   radial-gradient(1200px 800px at 100% 100%, rgba(51, 65, 85, 0.35), transparent 60%),
   #020202;
 
-
-    /* ---- Modal-specific glass (dark): ported from airbeta1's modal — box
-       reuses the panel's own translucent glass-bg instead of a near-opaque
-       modal color; overlay is the same neutral dark tint as light mode
-       (airbeta1 doesn't vary its overlay by theme) ---- */
     --modal-backdrop: rgba(10, 12, 16, 0.32);
     --glass-modal-bg: rgba(21, 23, 30, 0.5);
     --glass-field-bg: rgba(9, 10, 14, 0.8);
@@ -135,25 +116,17 @@ textarea::-webkit-resizer {
     background: var(--scrollbar-track) !important;
 }
 
-/* =========================================================
-   DROPDOWN SCROLLBAR — matches the textarea scrollbar
-   Native <select> popups are drawn by the OS, so browsers that support
-   customizable selects (Chrome/Edge 135+) get a styled popup below;
-   everything else keeps the native popup (with thin scrollbar colours).
-   ========================================================= */
 select {
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-    /* An empty select (e.g. Persona Used before a platform is picked) has no
-       text line, so it collapses shorter than the others. Pin the height. */
+
     box-sizing: border-box;
     min-height: 38px;
     line-height: 1.2;
-    /* long option text is simply cut off instead of widening the field */
+
     min-width: 0;
     max-width: 100%;
-    /* reserve room for the arrow and clip the text at the content edge, so it
-       is cut BEFORE the arrow instead of running underneath it */
+
     padding-right: 40px;
     overflow: clip;
     overflow-clip-margin: content-box;
@@ -187,8 +160,6 @@ select::-webkit-scrollbar-thumb:hover {
     background: var(--scrollbar-thumb-hover) !important;
 }
 
-/* Containers that hold a dropdown must be allowed to shrink, otherwise a long
-   option widens the whole column instead of being cut. */
 .form-row > *,
 .form-group,
 .input-container,
@@ -203,11 +174,10 @@ select::-webkit-scrollbar-thumb:hover {
     }
 
     html select::picker-icon {
-        display: none; /* keep the existing arrow */
+        display: none; 
     }
 
-    /* Customizable selects size to their content, so an empty or short
-       select (e.g. Persona Used) shrinks. Pin them to the input height. */
+
     html select {
         box-sizing: border-box;
         width: 100%;
@@ -380,7 +350,6 @@ body.dark input[type="date"]::-webkit-calendar-picker-indicator {
    ========================================================= */
 
 .premium-toggle {
-    /* now a flex item inside .header-controls instead of absolutely positioned */
     position: relative;
     flex-shrink: 0;
 
@@ -411,7 +380,6 @@ body.dark input[type="date"]::-webkit-calendar-picker-indicator {
         box-shadow 0.12s ease,
         transform 0.15s ease;
 
-    /* --- glass-glow additions --- */
     overflow: hidden;
     isolation: isolate;
 }
@@ -438,8 +406,6 @@ body.dark input[type="date"]::-webkit-calendar-picker-indicator {
     animation: spin-border 1.125s linear infinite paused;
 }
 
-/* Dark mode: ring switches to the same amber the moon icon glows
-   with on hover, instead of staying indigo */
 body.dark .premium-toggle::before {
     background: conic-gradient(
         from var(--angle, 0deg),
@@ -469,8 +435,6 @@ body.dark .premium-toggle::before {
     transform: translateY(0) scale(0.97);
 }
 
-/* Click feedback — same pop as the Reset and alarm buttons,
-   triggered in JS right after the mode actually switches */
 .premium-toggle.pressed {
     animation: premiumPop 0.28s ease;
 }
@@ -505,14 +469,12 @@ body.dark .premium-toggle::before {
 }
 
 /* =========================================================
-   TOGGLE ICON — single sun/moon icon centered in the circle
-   (replaces the old track+knob switch since the reference
-   image shows a compact icon button, not a sliding switch)
+   TOGGLE ICON 
    ========================================================= */
 
 .premium-toggle-track,
 .premium-toggle-knob {
-    display: none; /* switch visuals no longer used in the icon-button layout */
+    display: none; 
 }
 
 .premium-toggle-icon {
@@ -556,14 +518,14 @@ body.dark .premium-icon-light {
     transform: scale(1);
 }
 
-/* Light mode hover — hint at switching to dark, indigo glow + tilt */
+/* Light mode hover  */
 .premium-toggle:hover .premium-icon-dark {
     color: #6366f1;
     filter: drop-shadow(0 0 5px rgba(99, 102, 241, 0.55));
     transform: rotate(-18deg) scale(1.12);
 }
 
-/* Dark mode hover — hint at switching to light, warm amber glow */
+/* Dark mode hover */
 body.dark .premium-toggle:hover .premium-icon-light {
     filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.65));
     transform: rotate(25deg) scale(1.12);
@@ -589,7 +551,7 @@ body.dark .premium-toggle:hover {
 }
 
 /* =========================================================
-   HEADER TITLE — dark pill, left-aligned (matches reference image)
+   HEADER TITLE 
    ========================================================= */
 h1 {
     display: inline-flex;
@@ -1069,7 +1031,7 @@ body.dark button.action.action-copy.copied {
 }
 
 /* =========================================================
-   MODAL COPY BUTTONS - solid blue primary action (glass stays elsewhere)
+   MODAL COPY BUTTONS 
    ========================================================= */
 .case-info-actions button.action.action-copy,
 body.dark .case-info-actions button.action.action-copy {
@@ -1141,8 +1103,6 @@ body.dark .case-info-actions button.action.action-copy.copied {
     transition: transform 0.1s cubic-bezier(.4, 0, .2, 1);
 }
 
-/* idle hover — COPY buttons: icon "peels" forward like duplicating a
-   sheet, leaving a brief ghost outline behind it */
 button.action:not(.action-clear):hover .action-icon {
     animation: iconCopyPeel 0.2s ease;
 }
@@ -1152,8 +1112,6 @@ button.action:not(.action-clear):hover .action-icon {
     100% { transform: translate(0, 0) scale(1); filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0)); }
 }
 
-/* idle hover — CLEAR buttons: icon shakes itself out, like dusting
-   the fields clean */
 button.action.action-clear:hover .action-icon {
     animation: iconClearShake 0.42s ease;
 }
@@ -1165,8 +1123,6 @@ button.action.action-clear:hover .action-icon {
     80%      { transform: translate(2px, 0) rotate(6deg); }
 }
 
-/* idle hover — SAVE & SET ALARMS: bell swings like it's actually
-   ringing, rather than the generic wiggle */
 #breakAlarmSaveBtn:hover .action-icon {
     animation: iconBellRing 0.5s ease;
     transform-origin: top center;
@@ -1180,12 +1136,12 @@ button.action.action-clear:hover .action-icon {
     80%      { transform: rotate(-3deg); }
 }
 
-/* press feedback */
+
 button.action:active .action-icon {
     transform: scale(0.85);
 }
 
-/* success — icon flips over like a card, swaps to a checkmark */
+
 button.action.copied .action-icon {
     animation: iconFlip 0.14s ease forwards;
 }
@@ -1209,12 +1165,11 @@ button.action.copied .action-icon {
 
 .two-column-row .input-container {
     flex: 1;
-    min-width: 0; /* lets long select text be cut instead of widening the column */
+    min-width: 0; 
     display: flex;
     flex-direction: column;
 }
 
-/* Type of Engagement + Persona Used always the same height, even when empty */
 #engagementPersonaRow select {
     height: 38px;
 }
@@ -1238,7 +1193,6 @@ button.action.copied .action-icon {
     overflow: hidden;
 }
 
-/* subtle accent bar along the top edge of the panel */
 .business-search-section::before {
     content: "";
     position: absolute;
@@ -1289,7 +1243,6 @@ button.action.copied .action-icon {
     margin-top: 0;
 }
 
-/* ---- input wrapper: search icon + clear button ---- */
 .business-search-input-wrap {
     position: relative;
     display: flex;
@@ -1376,7 +1329,6 @@ body.dark .business-search-clear-btn:hover {
     line-height: 1.4;
 }
 
-/* ---- results counter: highlighted pill, snaps on update ---- */
 .business-count {
     margin-top: 8px;
     font-size: 10px;
@@ -1437,7 +1389,6 @@ body.dark .business-count.is-empty {
     animation: businessCountPulse 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ---- results table shell ---- */
 .business-results-container {
     grid-area: table;
     width: 100%;
@@ -1510,7 +1461,6 @@ body.dark .business-results-table td {
     color: #e2e8f0;
 }
 
-/* ---- row entrance + hover/tap feel ---- */
 @keyframes businessRowIn {
     from {
         opacity: 0;
@@ -1540,7 +1490,6 @@ body.dark .business-results-table tbody tr:hover {
     background: rgba(56, 189, 248, 0.07);
 }
 
-/* fade the old rows out fast before the new set animates in */
 #businessResults.is-refreshing .business-row {
     animation: none;
     opacity: 0.4;
@@ -1630,7 +1579,6 @@ body.dark .business-empty-icon {
     box-shadow: 0 1px 4px rgba(56, 189, 248, 0.35);
 }
 
-/* quick radial ripple fired on click, layered above the button's own background */
 .business-select-button::after {
     content: "";
     position: absolute;
@@ -1803,7 +1751,6 @@ body.dark .zone-directory-copy-btn.confirmed {
     color: #ffffff;
 }
 
-/* ---- Simple, understated email tags (display only, no per-email action) ---- */
 .zone-directory-emails .zone-directory-email {
     display: inline-flex;
     align-items: center;
@@ -1817,7 +1764,6 @@ body.dark .zone-directory-copy-btn.confirmed {
     border-radius: 4px;
 }
 
-/* Leadership row's email tag, same style but inline with text */
 .zone-directory-leader .zone-directory-email {
     display: inline-flex;
     align-items: center;
@@ -1915,7 +1861,6 @@ body.dark button.action.action-clear:focus-visible {
         0 0 0 4px rgba(248, 113, 113, 0.4);
 }
 
-/* Modal actions row now holds Clear + primary Copy side by side */
 .case-info-actions {
     display: flex;
     justify-content: center;
@@ -1968,12 +1913,8 @@ body.dark button.action.action-escalate:hover {
 }
 
 /* =========================================================
-   LIGHT MODE — buttons (same treatment as dark mode)
-   Muted blue action buttons, indigo-outline Search/Select, Yes = green border,
-   No = red border. Dark-mode rules below override these.
+   LIGHT MODE — buttons 
    ========================================================= */
-/* Action buttons (main form, modal, copy, escalate): muted blue glass with a
-   soft blue border — same look as dark mode. Clear + green "copied" excluded. */
 html button.action:not(.action-clear):not(.copied),
 html button.action.action-copy:not(.copied),
 html .case-info-actions button.action.action-copy:not(.copied),
@@ -2009,7 +1950,6 @@ html button.action.action-escalate:not(.copied):hover {
         inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
-/* Copy buttons (light mode): muted slate that warms to a soft blue on hover */
 html button.action.action-copy:not(.copied),
 html .case-info-actions button.action.action-copy:not(.copied) {
     background: #2D405A;
@@ -2044,7 +1984,6 @@ html .business-select-button:hover {
     box-shadow: 0 0 12px rgba(99, 102, 241, 0.18);
 }
 
-/* Yes / No selected (light): soft tint, darker border + icon, clear contrast */
 html .segmented-option:has(input[value="Yes"]:checked) {
     background: #dcfce7;
     color: #166534;
@@ -2066,10 +2005,6 @@ body:not(.dark) .segmented-option:has(input[value="No"]:checked) span::before {
 
 /* =========================================================
    DARK MODE — buttons
-   Action buttons (main form, modal, copy, escalate): muted blue glass with a
-   soft blue border. Search + Select buttons: indigo outline accent.
-   Yes/No: selected option gets a green (Yes) / red (No) border.
-   The Clear ghost button and the green "copied" flash keep their own look.
    ========================================================= */
 body.dark button.action:not(.action-clear):not(.copied),
 body.dark button.action.action-copy:not(.copied),
@@ -2209,8 +2144,6 @@ body.dark .segmented-option:has(input[value="No"]:checked) {
         background 0.09s ease;
 }
 
-/* Scrollbar for the modal body — same pill-thumb style used
-   elsewhere in the app (see textarea / business-results-container) */
 .case-info-modal-content::-webkit-scrollbar {
     width: 10px;
 }
@@ -2231,13 +2164,11 @@ body.dark .segmented-option:has(input[value="No"]:checked) {
     background: var(--scrollbar-thumb-hover) !important;
 }
 
-/* Content sits above the sheen overlay */
 .case-info-modal-content > * {
     position: relative;
     z-index: 1;
 }
 
-/* Soft diagonal light sheen across the glass, like light catching a pane */
 .case-info-modal-content::before {
     content: "";
     position: absolute;
@@ -2538,10 +2469,6 @@ body.dark .case-search-button:hover {
     position: relative;
 }
 
-/* Ring + hover glow recolored to the same warm amber as the bell
-   icon itself (mirrors how .premium-reset's ring matches its red
-   icon), replacing the generic blue/indigo ring shared by the
-   plain premium-toggle buttons. */
 .premium-toggle.premium-alarm-btn::before {
     background: conic-gradient(
         from var(--angle, 0deg),
@@ -2577,8 +2504,6 @@ body.dark .premium-alarm-btn:hover {
         0 0 18px rgba(226, 232, 240, 0.22);
 }
 
-/* Click feedback — same quick pop used on the Reset button,
-   triggered in JS the moment the alarm popover opens */
 .premium-alarm-btn.pressed {
     animation: premiumPop 0.28s ease;
 }
@@ -2603,9 +2528,6 @@ body.dark .premium-alarm-btn:hover {
     transform-origin: top center;
 }
 
-/* Dark mode: bell icon gets its own silvery-white color,
-   independent of --break-glow-rgb (which still drives the ring/
-   glow/timer elsewhere) so only the icon itself changes. */
 body.dark .alarm-btn-icon {
     color: rgba(226, 232, 240, 0.9);
 }
@@ -2623,14 +2545,8 @@ body.dark .premium-alarm-btn:hover .alarm-btn-icon {
     80%      { transform: rotate(-3deg) scale(1.04); }
 }
 
-/* Ongoing-alarm indicator: a comet-style "snake" of light that
-   circles the bell button's edge (same look as the active timer's
-   border), replacing the old pulsing dot. The element is still
-   toggled via [hidden] from JS. */
+/* Ongoing-alarm indicator */
 .alarm-active-dot {
-    /* Light mode: warm amber tail ending in a deep orange head, so the
-       comet stays visible against the light glass button (a white head
-       would vanish here). */
     --snake-tail: var(--break-glow-rgb);
     --snake-head: 180, 83, 9;
     position: absolute;
@@ -2656,8 +2572,6 @@ body.dark .premium-alarm-btn:hover .alarm-btn-icon {
     animation: alarm-snake-spin 2.4s linear infinite;
 }
 
-/* Dark mode: bright amber tail with a hot white head, which glows
-   nicely against the dark glass. */
 body.dark .alarm-active-dot {
     --snake-head: 255, 251, 235;
     filter: drop-shadow(0 0 3px rgba(var(--break-glow-rgb), 0.55));
@@ -2667,10 +2581,6 @@ body.dark .alarm-active-dot {
     display: none;
 }
 
-/* Subtle glow on the bell icon while an alarm is active, slowly
-   "breathing" (glow only, the icon itself never changes size).
-   :where() keeps specificity at zero for the :has() part, so on hover
-   the stronger glow + bell-ring wiggle defined above take over. */
 .premium-alarm-btn:where(:has(.alarm-active-dot:not([hidden]))) .alarm-btn-icon {
     color: rgb(var(--break-glow-rgb));
     filter: drop-shadow(0 0 4px rgba(var(--break-glow-rgb), 0.4));
@@ -2707,13 +2617,7 @@ body.dark .alarm-active-dot {
 }
 
 /* =========================================================
-   BREAK & MEETING ALARM — POPOVER
-   Anchored under the bell button instead of centered on
-   screen, with an iOS "liquid glass" open/close animation:
-   the panel condenses toward the button (scaled down,
-   heavily blurred) when hidden, and springs open with a
-   soft overshoot when shown. Background gets only a subtle
-   blur, since this reads as a popover, not a full modal.
+   BREAK & MEETING ALARM 
    ========================================================= */
 #breakAlarmModal {
     align-items: flex-start;
@@ -2774,8 +2678,6 @@ body.dark #breakAlarmModal {
         opacity 0.09s ease;
 }
 
-/* Small "tail" pointing back up at the bell button, made from
-   the same glass material so it reads as one continuous piece. */
 #breakAlarmModal .case-info-modal-content::after {
     content: "";
     position: absolute;
@@ -2800,8 +2702,6 @@ body.dark #breakAlarmModal {
     }
 }
 
-/* Equal-sized boxes for each alarm field, with enough width for
-   the native time input to show its value uncompressed. */
 #breakAlarmModal .case-info-grid {
     grid-template-columns: 1fr 1fr;
     gap: 14px 18px;
@@ -2869,7 +2769,6 @@ body.dark .break-alarm-field input[type="time"] {
     border-radius: 4px;
 }
 
-/* ---- Training row: start time + custom HH:MM duration side by side ---- */
 .break-alarm-training-row {
     display: flex;
     align-items: center;
@@ -3014,15 +2913,11 @@ body.dark .break-alarm-permission-btn:hover {
         transform 0.2s ease,
         visibility 0.1s linear 0.2s;
 
-    /* --- snake-glow border additions --- */
     overflow: hidden;
     isolation: isolate;
 }
 
-/* Slow amber "snake" of light that continuously travels around the border —
-   color matches the Break label / theme, and reads clearly in both modes.
-   Redesigned as a tighter comet: a hot white core at the head, a short
-   bright flare behind it, and a longer soft fade-out tail. */
+
 .active-timer-widget::before {
     content: "";
     position: absolute;
@@ -3049,7 +2944,6 @@ body.dark .break-alarm-permission-btn:hover {
     transition: background 0.25s ease;
 }
 
-/* Soft trailing glow that sits just outside the widget, following the same head */
 .active-timer-widget::after {
     content: "";
     position: absolute;
@@ -3075,10 +2969,7 @@ body.dark .break-alarm-permission-btn:hover {
     transition: background 0.25s ease;
 }
 
-/* Last-10-seconds urgency: the comet itself flips red and speeds up,
-   instead of just the digits pulsing. --break-glow-rgb is a custom
-   property, so overriding it here retints both ::before and ::after
-   without touching their gradient definitions. */
+/* Last-10-seconds urgency */
 .active-timer-widget.ending {
     --break-glow-rgb: 239, 68, 68;
 }
@@ -3194,9 +3085,7 @@ body.dark .active-timer-stop {
 }
 
 /* =========================================================
-   CLIENT ENDORSEMENT — liquid glass segmented toggle
-   (same interaction pattern as the Outbound Call toggle,
-   restyled with a frosted, animated sliding "blob")
+   CLIENT ENDORSEMENT 
    ========================================================= */
 
 .client-endorsement-field {
@@ -3311,7 +3200,6 @@ body.dark .active-timer-stop {
     margin: 0;
 }
 
-/* check / cross glyph, mirrors the outbound call icon treatment */
 .client-endorsement-options .ce-option span::before {
     content: "";
     display: inline-block;
@@ -3443,8 +3331,7 @@ body.dark .section-heading span {
     color: #94a3b8;
 }
 
-/* Header divider for the main cards (Subject and Description, Case Comments) — same
-   treatment as the modal header, to tie the two design areas together */
+
 .panel > .section-heading {
     padding-bottom: 16px;
     margin-bottom: 18px;
@@ -3490,7 +3377,6 @@ body.dark .section-heading span {
         color 0.1s ease;
 }
 
-/* Shine effect */
 .premium-reset::before {
     content: "";
     position: absolute;
@@ -3508,9 +3394,6 @@ body.dark .section-heading span {
     transition: left 0.15s ease;
 }
 
-/* Animated glass border ring — red-toned to read as the "clear /
-   destructive" action, echoing the icon's red hover tint instead of
-   the unrelated blue used on other premium-toggle buttons */
 .premium-reset::after {
     content: "";
     position: absolute;
@@ -3553,7 +3436,6 @@ body.dark .section-heading span {
     left: 130%;
 }
 
-/* Click */
 .premium-reset:active {
     transform: translateY(0) scale(0.96);
     box-shadow: 0 3px 8px rgba(15, 23, 42, 0.12);
@@ -3623,9 +3505,7 @@ body.dark .premium-reset.confirmed .reset-icon {
 }
 
 /* =========================================================
-   RESETTING ANIMATION — spins the icon a full turn the moment
-   Reset is clicked (triggered in JS by toggling this class
-   directly on the icon, so it fires every click even back-to-back)
+   RESETTING ANIMATION 
    ========================================================= */
 
 .reset-icon.resetting {
@@ -3646,9 +3526,6 @@ body.dark .premium-reset.confirmed .reset-icon {
     }
 }
 
-/* Confirmed — a quick pop on the whole pill so the green success
-   state reads as a distinct beat rather than an instant color swap.
-   Shared with the alarm and dark-mode-toggle buttons below. */
 .premium-reset.confirmed {
     animation: premiumPop 0.28s ease;
 }
@@ -3684,7 +3561,6 @@ body.dark .premium-reset.confirmed .reset-icon {
     color: #e5393580;
 }
 
-/* For wrapper elements (e.g. radio button groups) that can't take a border nicely */
 div.field-missing,
 .outbound-call-options.field-missing {
     border: 1px solid #e53935 !important;
@@ -3712,7 +3588,7 @@ button.action.confirmed,
 }
 
 /* =========================================================
-   PREMIUM SEGMENTED TOGGLE (replaces radio circles)
+   PREMIUM SEGMENTED TOGGLE 
    ========================================================= */
 .outbound-call-section {
     margin-bottom: 14px;
@@ -3801,7 +3677,7 @@ button.action.confirmed,
     vertical-align: -2px;
 }
 
-/* Yes — green outgoing call, arrow up-right */
+
 .segmented-option:has(input[value="Yes"]:checked) span::before {
     width: 14px;
     margin-right: 7px;
@@ -3809,7 +3685,7 @@ button.action.confirmed,
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='23 7 23 1 17 1'%3E%3C/polyline%3E%3Cline x1='16' y1='8' x2='23' y2='1'%3E%3C/line%3E%3Cpath d='M21 16.42v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.11 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 16.42z'%3E%3C/path%3E%3C/svg%3E");
 }
 
-/* No — red declined call, arrow down-left */
+
 .segmented-option:has(input[value="No"]:checked) span::before {
     width: 14px;
     margin-right: 7px;
@@ -3825,7 +3701,7 @@ button.action.confirmed,
 }
 
 .output {
-    margin-top: auto;   /* was: margin-top: var(--field-stack); flex: 1; */
+    margin-top: auto;  
     display: flex;
     flex-direction: column;
 }
@@ -3895,7 +3771,7 @@ body.dark .action-dock {
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
 }
 
-/* FUSE Notes — report icon flashes like it's crackling with a fresh report */
+
 .dock-btn:hover .dock-icon-fuse {
     animation: dockFlash 0.5s ease;
 }
@@ -3905,7 +3781,7 @@ body.dark .action-dock {
     60%      { transform: scale(0.97); filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35)) brightness(1); }
 }
 
-/* Email Escalation — envelope darts up and away like it's being sent */
+
 .dock-btn:hover .dock-icon-mail {
     animation: dockSend 0.45s ease;
 }
@@ -3915,7 +3791,7 @@ body.dark .action-dock {
     100% { transform: translate(0, 0) rotate(0deg); }
 }
 
-/* Resolved Case Notes — checkmark pops like ticking something off */
+
 .dock-btn:hover .dock-icon-check {
     animation: dockCheckPop 0.4s cubic-bezier(.34, 1.56, .64, 1);
 }
@@ -3925,7 +3801,7 @@ body.dark .action-dock {
     100% { transform: scale(1) rotate(0deg); }
 }
 
-/* tooltip */
+
 .dock-btn::before {
     content: attr(data-label);
     position: absolute;
@@ -3958,12 +3834,6 @@ body.dark .dock-btn::before {
 
 /* =========================================================
    SIDE NOTEPAD — FREE-TEXT SCRATCHPAD
-   A tab docked to the right edge of the viewport that opens a
-   slide-in glass drawer. Reuses the app's glass/blur language,
-   the same spring easing as the other modals, and the same
-   conic-gradient hover glow as the header's premium-toggle
-   buttons. The textarea inside is intentionally plain — no
-   rich text, no formatting controls, no toolbar.
    ========================================================= */
 .side-notepad-tab {
     position: fixed;
@@ -4033,10 +3903,6 @@ body.dark .side-notepad-tab:hover {
         inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-/* Color-fill hover animation — a solid tint rises up from the
-   bottom to fill the tab, swapping in for the old spin glow.
-   Indigo in light mode (matches the app's premium accent),
-   sky blue in dark mode (reads brighter against dark glass). */
 .side-notepad-tab::before {
     content: "";
     position: absolute;
@@ -4079,10 +3945,6 @@ body.dark .side-notepad-tab::before {
 }
 
 
-/* ---- Drawer: reuses .case-info-modal's show/hide, click-outside
-   and Escape-key plumbing, but docks the panel flush to the right
-   edge and slides it in horizontally instead of scaling it from
-   the center. ---- */
 .side-notepad-modal {
     z-index: 10500;
     align-items: stretch;
@@ -4140,7 +4002,7 @@ body.dark .side-notepad-content {
         0 0 0 1px rgba(255, 255, 255, 0.04) inset;
 }
 
-/* Soft diagonal light sheen, matching the other glass modals */
+
 .side-notepad-content::before {
     content: "";
     position: absolute;
