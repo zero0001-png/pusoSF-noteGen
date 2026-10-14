@@ -3184,6 +3184,8 @@ body.dark .section-heading span {
 
 .premium-reset.confirmed .reset-icon {
     color: #ffffff;
+    transform: none;
+    transition: color 0.1s ease;
 }
 
 /* =========================================================
@@ -3217,28 +3219,6 @@ body.dark .premium-reset.confirmed .reset-icon {
     color: #ffffff;
 }
 
-/* =========================================================
-   RESETTING ANIMATION
-   ========================================================= */
-
-.reset-icon.resetting {
-    animation: resetSpin 0.36s cubic-bezier(.34, 1.56, .64, 1);
-}
-
-@keyframes resetSpin {
-    0% {
-        transform: rotate(0deg) scale(1);
-    }
-
-    60% {
-        transform: rotate(-390deg) scale(1.18);
-    }
-
-    100% {
-        transform: rotate(-360deg) scale(1);
-    }
-}
-
 .premium-reset.confirmed {
     animation: premiumPop 0.28s ease;
 }
@@ -3253,7 +3233,6 @@ body.dark .premium-reset.confirmed .reset-icon {
     .premium-reset::after {
         animation: none !important;
     }
-    .reset-icon.resetting,
     .premium-reset.confirmed {
         animation: none !important;
     }
