@@ -1,4 +1,3 @@
-
 html {
     scroll-behavior: smooth;
 }
@@ -46,14 +45,12 @@ html {
     --break-glow-rgb: 217, 119, 6;
 }
 
-
 body.dark {
 
     --bg-input: #1a202c;
     --scrollbar-track: transparent;
     --scrollbar-thumb: #4a5568;
     --scrollbar-thumb-hover: #718096;
-
 
     --glass-bg: rgba(21, 23, 30, 0.55);
     --glass-bg-strong: rgba(21, 23, 30, 0.7);
@@ -126,8 +123,6 @@ select {
 
     min-width: 0;
     max-width: 100%;
-
-    padding-right: 40px;
     overflow: clip;
     overflow-clip-margin: content-box;
     white-space: nowrap;
@@ -174,9 +169,8 @@ select::-webkit-scrollbar-thumb:hover {
     }
 
     html select::picker-icon {
-        display: none; 
+        display: none;
     }
-
 
     html select {
         box-sizing: border-box;
@@ -280,7 +274,7 @@ select::-webkit-scrollbar-thumb:hover {
     box-sizing: border-box;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-feature-settings: "tnum" on, "lnum" on;
-	
+
 }
 /* =========================================================
    BODY & BACKGROUND
@@ -469,13 +463,8 @@ body.dark .premium-toggle::before {
 }
 
 /* =========================================================
-   TOGGLE ICON 
+   TOGGLE ICON
    ========================================================= */
-
-.premium-toggle-track,
-.premium-toggle-knob {
-    display: none; 
-}
 
 .premium-toggle-icon {
     position: static;
@@ -551,7 +540,7 @@ body.dark .premium-toggle:hover {
 }
 
 /* =========================================================
-   HEADER TITLE 
+   HEADER TITLE
    ========================================================= */
 h1 {
     display: inline-flex;
@@ -582,41 +571,6 @@ body.dark h1 {
 /* =========================================================
    TOOLBAR
    ========================================================= */
-.toolbar {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.toolbar button {
-    font-size: 11px;
-    padding: 6px 14px;
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    cursor: pointer;
-    background: var(--glass-bg-strong);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    color: #334155;
-    font-weight: 600;
-    box-shadow: inset 0 1px 0 var(--glass-highlight);
-    transition: all 0.12s;
-}
-
-.toolbar button:hover {
-    background: rgba(56, 189, 248, 0.18);
-    color: #0f172a;
-}
-
-body.dark .toolbar button {
-    color: #cbd5e1;
-}
-
-body.dark .toolbar button:hover {
-    background: rgba(56, 189, 248, 0.12);
-    color: #fff;
-}
 
 /* =========================================================
    LAYOUT
@@ -757,10 +711,7 @@ textarea {
    OUTPUT
    ========================================================= */
 .output {
-    margin-top: var(--field-stack);
     flex: 1;
-    display: flex;
-    flex-direction: column;
 }
 
 input[readonly],
@@ -776,8 +727,7 @@ textarea[readonly] {
     padding: 10px 12px;
 }
 
-.output textarea,
-.report-area textarea {
+.output textarea {
     min-height: 250px;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
     font-size: 14px;
@@ -818,12 +768,10 @@ body.dark select {
     color: #d3d9e0;
 }
 
-
 body.dark select option {
     background: #1a1c1d;
     color: #d3d9e0;
 }
-
 
 /* =========================================================
    BUTTONS
@@ -1031,7 +979,7 @@ body.dark button.action.action-copy.copied {
 }
 
 /* =========================================================
-   MODAL COPY BUTTONS 
+   MODAL COPY BUTTONS
    ========================================================= */
 .case-info-actions button.action.action-copy,
 body.dark .case-info-actions button.action.action-copy {
@@ -1136,11 +1084,9 @@ button.action.action-clear:hover .action-icon {
     80%      { transform: rotate(-3deg); }
 }
 
-
 button.action:active .action-icon {
     transform: scale(0.85);
 }
-
 
 button.action.copied .action-icon {
     animation: iconFlip 0.14s ease forwards;
@@ -1151,7 +1097,6 @@ button.action.copied .action-icon {
     51%  { content: "✓"; }
     100% { transform: rotateY(0deg) scale(1.1); }
 }
-
 
 /* =========================================================
    TWO COLUMN ROW
@@ -1165,7 +1110,7 @@ button.action.copied .action-icon {
 
 .two-column-row .input-container {
     flex: 1;
-    min-width: 0; 
+    min-width: 0;
     display: flex;
     flex-direction: column;
 }
@@ -1615,196 +1560,12 @@ body.dark .business-select-button:hover {
 /* =========================================================
    ZONE EMAIL DIRECTORY BUTTON + MODAL CONTENT
    ========================================================= */
-.zone-directory-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    margin-left: 6px;
-    vertical-align: middle;
-    border: 1px solid #38bdf8;
-    border-radius: 6px;
-    background: #e0f2fe;
-    color: #0369a1;
-    font-size: 11px;
-    line-height: 1;
-    cursor: pointer;
-    transition: background 0.12s, color 0.12s, transform 0.1s;
-}
-
-.zone-directory-btn:hover {
-    background: #38bdf8;
-    color: #ffffff;
-}
-
-.zone-directory-btn:active {
-    transform: scale(0.94);
-}
-
-body.dark .zone-directory-btn {
-    background: #082f49;
-    border-color: #38bdf8;
-    color: #7dd3fc;
-}
-
-body.dark .zone-directory-btn:hover {
-    background: #38bdf8;
-    color: #082f49;
-}
-
-.zone-directory-leader {
-    padding: 10px 12px;
-    border: 1px solid var(--glass-field-border);
-    border-radius: 8px;
-    margin-bottom: 8px;
-    background: var(--glass-field-bg);
-    font-size: 12px;
-    color: var(--glass-field-text);
-    line-height: 1.5;
-}
-
-.zone-directory-leader strong {
-    display: block;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    color: #64748b;
-    margin-bottom: 2px;
-}
-
-.zone-directory-group {
-    border: 1px solid var(--glass-field-border);
-    border-radius: 10px;
-    padding: 12px 14px;
-    margin-bottom: 12px;
-}
-
-.zone-directory-group-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    margin-bottom: 6px;
-}
-
-.zone-directory-group h3 {
-    margin: 0;
-    font-size: 13px;
-    color: #38bdf8;
-}
-
-.zone-directory-brgys {
-    font-size: 11px;
-    color: #64748b;
-    margin-bottom: 8px;
-    line-height: 1.4;
-}
 
 /* ---- Copy-group button ---- */
-.zone-directory-copy-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    flex-shrink: 0;
-    padding: 4px 10px;
-    border: 1px solid #38bdf8;
-    border-radius: 999px;
-    background: #e0f2fe;
-    color: #0369a1;
-    font-size: 11px;
-    font-weight: 600;
-    line-height: 1.2;
-    cursor: pointer;
-    transition: background 0.12s, color 0.12s, transform 0.1s;
-}
-
-.zone-directory-copy-btn:hover {
-    background: #38bdf8;
-    color: #ffffff;
-}
-
-.zone-directory-copy-btn:active {
-    transform: scale(0.94);
-}
-
-.zone-directory-copy-btn.confirmed {
-    background: #22c55e;
-    border-color: #22c55e;
-    color: #ffffff;
-}
-
-body.dark .zone-directory-copy-btn {
-    background: #082f49;
-    border-color: #38bdf8;
-    color: #7dd3fc;
-}
-
-body.dark .zone-directory-copy-btn:hover {
-    background: #38bdf8;
-    color: #082f49;
-}
-
-body.dark .zone-directory-copy-btn.confirmed {
-    background: #16a34a;
-    border-color: #16a34a;
-    color: #ffffff;
-}
-
-.zone-directory-emails .zone-directory-email {
-    display: inline-flex;
-    align-items: center;
-    margin: 3px 6px 3px 0;
-    padding: 3px 8px;
-    font-size: 12px;
-    font-weight: 400;
-    color: #000000;
-    background: #f5f5f0;
-    border: 1px solid #000000;
-    border-radius: 4px;
-}
-
-.zone-directory-leader .zone-directory-email {
-    display: inline-flex;
-    align-items: center;
-    padding: 2px 7px;
-    font-size: 12px;
-    font-weight: 400;
-    color: #000000;
-    background: #f5f5f0;
-    border: 1px solid #000000;
-    border-radius: 4px;
-}
-
-body.dark .zone-directory-group h3 {
-    color: #7dd3fc;
-}
-
-body.dark .zone-directory-emails .zone-directory-email,
-body.dark .zone-directory-leader .zone-directory-email {
-    color: #d4d4d4;
-    background: #2a2a2a;
-    border-color: #6b6b6b;
-}
-
-body.dark .zone-directory-brgys,
-body.dark .zone-directory-leader strong {
-    color: #94a3b8;
-}
 
 /* =========================================================
    CASE INFORMATION BUTTON
    ========================================================= */
-.case-info-trigger {
-    max-width: 1300px;
-    margin: 20px auto 0;
-}
-.case-info-trigger .action {
-    width: 100%;
-    margin-top: 0;
-    padding: 16px;
-    font-size: 14px;
-}
 
 /* =========================================================
    MODAL CLEAR BUTTON — ghost variant
@@ -1870,55 +1631,13 @@ body.dark button.action.action-clear:focus-visible {
 /* =========================================================
    EMAIL ESCALATION BUTTON — DISTINCT PREMIUM STYLE
    ========================================================= */
-button.action.action-escalate {
-    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
-    box-shadow:
-        0 3px 8px rgba(67, 56, 202, 0.22),
-        inset 0 1px 0 rgba(255, 255, 255, 0.18);
-}
-
-button.action.action-escalate:hover {
-    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-    transform: translateY(-2px);
-    box-shadow:
-        0 10px 24px rgba(67, 56, 202, 0.45),
-        0 0 0 4px rgba(99, 102, 241, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.25);
-}
-
-button.action.action-escalate:active {
-    transform: translateY(0) scale(0.97);
-    box-shadow: 0 4px 10px rgba(67, 56, 202, 0.4);
-}
-
-button.action.action-escalate:focus-visible {
-    outline: none;
-    box-shadow:
-        0 0 0 2px #f4f6f9,
-        0 0 0 4px #6366f1,
-        0 8px 20px rgba(67, 56, 202, 0.4);
-}
-
-body.dark button.action.action-escalate {
-    background: linear-gradient(135deg, #4338ca 0%, #3730a3 100%);
-    box-shadow:
-        0 3px 10px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.06);
-}
-body.dark button.action.action-escalate:hover {
-    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
-    box-shadow:
-        0 10px 26px rgba(0, 0, 0, 0.55),
-        0 0 20px rgba(99, 102, 241, 0.25);
-}
 
 /* =========================================================
-   LIGHT MODE — buttons 
+   LIGHT MODE — buttons
    ========================================================= */
 html button.action:not(.action-clear):not(.copied),
 html button.action.action-copy:not(.copied),
-html .case-info-actions button.action.action-copy:not(.copied),
-html button.action.action-escalate:not(.copied) {
+html .case-info-actions button.action.action-copy:not(.copied) {
     background: linear-gradient(
         135deg,
         rgba(59, 130, 246, 0.90) 0%,
@@ -1935,8 +1654,7 @@ html button.action.action-escalate:not(.copied) {
 
 html button.action:not(.action-clear):not(.copied):hover,
 html button.action.action-copy:not(.copied):hover,
-html .case-info-actions button.action.action-copy:not(.copied):hover,
-html button.action.action-escalate:not(.copied):hover {
+html .case-info-actions button.action.action-copy:not(.copied):hover {
     background: linear-gradient(
         135deg,
         rgba(59, 130, 246, 1) 0%,
@@ -2008,8 +1726,7 @@ body:not(.dark) .segmented-option:has(input[value="No"]:checked) span::before {
    ========================================================= */
 body.dark button.action:not(.action-clear):not(.copied),
 body.dark button.action.action-copy:not(.copied),
-body.dark .case-info-actions button.action.action-copy:not(.copied),
-body.dark button.action.action-escalate:not(.copied) {
+body.dark .case-info-actions button.action.action-copy:not(.copied) {
     background: linear-gradient(
         135deg,
         rgba(59, 130, 246, 0.62) 0%,
@@ -2024,8 +1741,7 @@ body.dark button.action.action-escalate:not(.copied) {
 
 body.dark button.action:not(.action-clear):not(.copied):hover,
 body.dark button.action.action-copy:not(.copied):hover,
-body.dark .case-info-actions button.action.action-copy:not(.copied):hover,
-body.dark button.action.action-escalate:not(.copied):hover {
+body.dark .case-info-actions button.action.action-copy:not(.copied):hover {
     background: linear-gradient(
         135deg,
         rgba(59, 130, 246, 0.80) 0%,
@@ -2041,8 +1757,7 @@ body.dark button.action.action-escalate:not(.copied):hover {
 
 body.dark button.action:not(.action-clear):not(.copied):focus-visible,
 body.dark button.action.action-copy:not(.copied):focus-visible,
-body.dark .case-info-actions button.action.action-copy:not(.copied):focus-visible,
-body.dark button.action.action-escalate:not(.copied):focus-visible {
+body.dark .case-info-actions button.action.action-copy:not(.copied):focus-visible {
     box-shadow:
         0 0 0 2px #0d0e12,
         0 0 0 4px #38bdf8,
@@ -2617,7 +2332,7 @@ body.dark .alarm-active-dot {
 }
 
 /* =========================================================
-   BREAK & MEETING ALARM 
+   BREAK & MEETING ALARM
    ========================================================= */
 #breakAlarmModal {
     align-items: flex-start;
@@ -2917,7 +2632,6 @@ body.dark .break-alarm-permission-btn:hover {
     isolation: isolate;
 }
 
-
 .active-timer-widget::before {
     content: "";
     position: absolute;
@@ -3085,7 +2799,7 @@ body.dark .active-timer-stop {
 }
 
 /* =========================================================
-   CLIENT ENDORSEMENT 
+   CLIENT ENDORSEMENT
    ========================================================= */
 
 .client-endorsement-field {
@@ -3292,7 +3006,7 @@ body.dark .client-endorsement-options .ce-option:hover {
 /* =========================================================
    SECTION HEADING - QUOTE STYLE
    ========================================================= */
-   
+
 .section-heading {
     display: flex;
     align-items: flex-start;
@@ -3330,7 +3044,6 @@ body.dark .section-heading h2 {
 body.dark .section-heading span {
     color: #94a3b8;
 }
-
 
 .panel > .section-heading {
     padding-bottom: 16px;
@@ -3505,7 +3218,7 @@ body.dark .premium-reset.confirmed .reset-icon {
 }
 
 /* =========================================================
-   RESETTING ANIMATION 
+   RESETTING ANIMATION
    ========================================================= */
 
 .reset-icon.resetting {
@@ -3561,8 +3274,7 @@ body.dark .premium-reset.confirmed .reset-icon {
     color: #e5393580;
 }
 
-div.field-missing,
-.outbound-call-options.field-missing {
+div.field-missing {
     border: 1px solid #e53935 !important;
     background-color: #fff5f5;
     border-radius: 6px;
@@ -3588,7 +3300,7 @@ button.action.confirmed,
 }
 
 /* =========================================================
-   PREMIUM SEGMENTED TOGGLE 
+   PREMIUM SEGMENTED TOGGLE
    ========================================================= */
 .outbound-call-section {
     margin-bottom: 14px;
@@ -3607,7 +3319,6 @@ button.action.confirmed,
 }
 
 .segmented-toggle {
-    margin-top: 0;
     display: inline-flex;
     width: fit-content;
     gap: 6px;
@@ -3677,14 +3388,12 @@ button.action.confirmed,
     vertical-align: -2px;
 }
 
-
 .segmented-option:has(input[value="Yes"]:checked) span::before {
     width: 14px;
     margin-right: 7px;
     opacity: 1;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='23 7 23 1 17 1'%3E%3C/polyline%3E%3Cline x1='16' y1='8' x2='23' y2='1'%3E%3C/line%3E%3Cpath d='M21 16.42v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.11 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 16.42z'%3E%3C/path%3E%3C/svg%3E");
 }
-
 
 .segmented-option:has(input[value="No"]:checked) span::before {
     width: 14px;
@@ -3693,15 +3402,8 @@ button.action.confirmed,
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ef4444' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='1 7 1 1 7 1'%3E%3C/polyline%3E%3Cline x1='8' y1='8' x2='1' y2='1'%3E%3C/line%3E%3Cpath d='M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z'%3E%3C/path%3E%3C/svg%3E");
 }
 
-.field-transition {
-    position: relative;
-    overflow: hidden;
-    margin-top: var(--field-stack);
-    transition: height 240ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
 .output {
-    margin-top: auto;  
+    margin-top: auto;
     display: flex;
     flex-direction: column;
 }
@@ -3771,7 +3473,6 @@ body.dark .action-dock {
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
 }
 
-
 .dock-btn:hover .dock-icon-fuse {
     animation: dockFlash 0.5s ease;
 }
@@ -3780,7 +3481,6 @@ body.dark .action-dock {
     30%      { transform: scale(1.06); filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4)) brightness(1.4); }
     60%      { transform: scale(0.97); filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35)) brightness(1); }
 }
-
 
 .dock-btn:hover .dock-icon-mail {
     animation: dockSend 0.45s ease;
@@ -3791,7 +3491,6 @@ body.dark .action-dock {
     100% { transform: translate(0, 0) rotate(0deg); }
 }
 
-
 .dock-btn:hover .dock-icon-check {
     animation: dockCheckPop 0.4s cubic-bezier(.34, 1.56, .64, 1);
 }
@@ -3800,7 +3499,6 @@ body.dark .action-dock {
     50%  { transform: scale(1.22) rotate(-8deg); }
     100% { transform: scale(1) rotate(0deg); }
 }
-
 
 .dock-btn::before {
     content: attr(data-label);
@@ -3830,7 +3528,6 @@ body.dark .dock-btn::before {
 .dock-btn:hover::before {
     display: flex;
 }
-
 
 /* =========================================================
    SIDE NOTEPAD — FREE-TEXT SCRATCHPAD
@@ -3944,7 +3641,6 @@ body.dark .side-notepad-tab::before {
     white-space: nowrap;
 }
 
-
 .side-notepad-modal {
     z-index: 10500;
     align-items: stretch;
@@ -4001,7 +3697,6 @@ body.dark .side-notepad-content {
         0 2px 0 var(--glass-highlight) inset,
         0 0 0 1px rgba(255, 255, 255, 0.04) inset;
 }
-
 
 .side-notepad-content::before {
     content: "";
