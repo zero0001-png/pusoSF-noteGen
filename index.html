@@ -21,7 +21,7 @@
             <button
                 type="button"
                 class="premium-reset"
-                onclick="handleResetAll(this)"
+                data-click="resetAll"
                 aria-label="Reset all fields"
             >
                 <span class="reset-icon" id="resetIcon"><svg viewBox="0 -960 960 960" width="16" height="16" fill="currentColor"><path d="M451-122q-123-10-207-101t-84-216q0-77 35.5-145T295-695l43 43q-56 33-87 90.5T220-439q0 100 66 173t165 84v60Zm60 0v-60q100-12 165-84.5T741-439q0-109-75.5-184.5T481-699h-20l60 60-43 43-133-133 133-133 43 43-60 60h20q134 0 227 93.5T801-439q0 125-83.5 216T511-122Z"/></svg></span>
@@ -32,7 +32,7 @@
                 type="button"
                 class="premium-toggle premium-alarm-btn"
                 id="breakAlarmBtn"
-                onclick="openBreakAlarmModal()"
+                data-click="openBreakAlarmModal"
                 aria-label="Break and meeting alarms"
             >
                 <span class="alarm-btn-icon" aria-hidden="true">
@@ -45,7 +45,7 @@
                 type="button"
                 class="premium-toggle"
                 id="darkModeToggle"
-                onclick="toggleDarkMode()"
+                data-click="toggleDarkMode"
                 aria-label="Toggle dark mode"
                 aria-pressed="false"
             >
@@ -65,7 +65,7 @@
     <div class="active-timer-widget" id="activeTimerWidget">
         <div class="active-timer-label" id="activeTimerLabel">Break</div>
         <div class="active-timer-clock" id="activeTimerClock">00:00</div>
-        <button type="button" class="active-timer-stop" onclick="stopActiveBreakTimer()">Stop</button>
+        <button type="button" class="active-timer-stop" data-click="stopActiveBreakTimer">Stop</button>
     </div>
 
     <!-- =====================================================
@@ -130,7 +130,7 @@
                        (if Applicable)
                     </span>
                 </label>
-                <input type="text" inputmode="text" pattern="[0-9RBGrbg_/\ ]*" oninput="this.value = this.value.replace(/[^0-9RBGrbg_/\ ]/g, '')" placeholder="Leave BLANK if N/A" id="ticketNumber">
+                <input type="text" inputmode="text" pattern="[0-9RBGrbg_/\ ]*" data-filter="ticket" placeholder="Leave BLANK if N/A" id="ticketNumber">
             </div>
         </div>
 
@@ -208,7 +208,7 @@
                             style="flex:1;"
                         >
 
-                        <button type="button" class="action nowrap action-copy" onclick="copySubject(event); showConfirm(this, '✓ Copied')" style="margin-top:0;padding:10px 14px;white-space:nowrap;">
+                        <button type="button" class="action nowrap action-copy" data-click="copySubject" data-confirm="✓ Copied" style="margin-top:0;padding:10px 14px;white-space:nowrap;">
                             <svg class="action-icon" viewBox="0 -960 960 960" width="14" height="14" fill="currentColor" style="vertical-align:-2px"><path d="M780-160H260q-24 0-42-18t-18-42v-640q0-24 18-42t42-18h348l232 232v468q0 24-18 42t-42 18ZM578-662v-198H260v640h520v-442H578ZM140-40q-24 0-42-18t-18-42v-619h60v619h498v60H140Zm120-820v198-198 640-640Z"/></svg> Copy Subject
                         </button>
 
@@ -225,7 +225,7 @@
                     ></textarea>
                 </div>
 
-                <button type="button" class="action full action-copy" onclick="copyIssue(event); showConfirm(this, '✓ Copied')" style="margin-top:14px;width:100%;">
+                <button type="button" class="action full action-copy" data-click="copyIssue" data-confirm="✓ Copied" style="margin-top:14px;width:100%;">
                     <svg class="action-icon" viewBox="0 -960 960 960" width="14" height="14" fill="currentColor" style="vertical-align:-2px"><path d="M780-160H260q-24 0-42-18t-18-42v-640q0-24 18-42t42-18h348l232 232v468q0 24-18 42t-42 18ZM578-662v-198H260v640h520v-442H578ZM140-40q-24 0-42-18t-18-42v-619h60v619h498v60H140Zm120-820v198-198 640-640Z"/></svg> Copy Description
                 </button>
 
@@ -252,61 +252,29 @@
 
             <div class="segmented-toggle" id="outboundCallToggle">
                 <label class="segmented-option">
-                    <input type="radio" name="outboundCall" value="Yes" onchange="toggleOutboundCall()">
+                    <input type="radio" name="outboundCall" value="Yes" data-change="toggleOutboundCall">
                     <span>Yes</span>
                 </label>
                 <label class="segmented-option">
-                    <input type="radio" name="outboundCall" value="No" onchange="toggleOutboundCall()">
+                    <input type="radio" name="outboundCall" value="No" data-change="toggleOutboundCall">
                     <span>No</span>
                 </label>
             </div>
         </div>
 
                 <label>Platform</label>
-                <select id="platform">
-                    <option value="-- Select One --">-- Select One --</option>
-                    <option value="Facebook">Facebook</option>
-                    <option value="Threads">Threads</option>
-                    <option value="Instagram">Instagram</option>
-                    <option value="Reddit">Reddit</option>
-                    <option value="Twitter">Twitter</option>
-                    <option value=" ">Callback / Service Recovery</option>
-                    <option value="Client Endorsement">Client Endorsement</option>
-                </select>
+                <select id="platform"></select>
 
                 <!-- ENGAGEMENT + PERSONA -->
                 <div class="two-column-row" id="engagementPersonaRow">
                     <div class="input-container">
                         <label for="engagementType">Type of Engagement</label>
-                        <select id="engagementType">
-                            <option value="">-- Select One--</option>
-                            <option>Comment on Post (with Resolution)</option>
-                            <option>Comment on Post (Reroute to PLDT Channels)</option>
-                            <option>Comment on Post (Invite to DM)</option>
-                            <option>Sent DM</option>
-                            <option>Hide Comment</option>
-                            <option>Edit Comment</option>
-                        </select>
+                        <select id="engagementType"></select>
                     </div>
 
                     <div class="input-container">
                         <label for="persona" id="personaLabel">Persona Used</label>
-                        <select id="persona">
-                            <option value="">-- Select One--</option>
-                            <option>PLDT Cares</option>
-                            <option>Sabrina Del Valle</option>
-                            <option>Andrew Chavez</option>
-                            <option>Lily Miller</option>
-                            <option>Peter Delos Reyes</option>
-                            <option>Amelia Gala</option>
-                            <option>Dennis Castillo</option>
-                            <option>Jas Santos</option>
-                            <option>Samantha Smith</option>
-                            <option>Nikki Perez</option>
-                            <option>Camilla Ester</option>
-                            <option>Mari Elle</option>
-                            <option>Anya Cortes</option>
-                        </select>
+                        <select id="persona"></select>
                     </div>
                 </div>
 
@@ -328,7 +296,7 @@
                         type="text"
                         inputmode="numeric"
                         pattern="[0-9]*"
-                        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                        data-filter="digits"
                         id="outboundCallAniCbr"
                         placeholder="Telephone / Mobile Number"
                     >
@@ -348,7 +316,7 @@
                         <input type="text"
                             inputmode="numeric"
                             pattern="[0-9]*"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                            data-filter="digits"
                             placeholder="Leave BLANK if N/A" id="accountNumber">
                     </div>
 
@@ -362,7 +330,7 @@
                         <input type="text"
                             inputmode="numeric"
                             pattern="[0-9]*"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                            data-filter="digits"
                             placeholder="Leave BLANK if N/A" id="telephoneNumber">
                     </div>
                 </div>
@@ -394,7 +362,7 @@
                     <textarea id="engagementOutput" readonly></textarea>
                 </div>
 
-                <button type="button" class="action full action-copy" onclick="copyEngagement(event); showConfirm(this, '✓ Copied')" style="margin-top:14px;width:100%;">
+                <button type="button" class="action full action-copy" data-click="copyEngagement" data-confirm="✓ Copied" style="margin-top:14px;width:100%;">
                     <svg class="action-icon" viewBox="0 -960 960 960" width="14" height="14" fill="currentColor" style="vertical-align:-2px"><path d="M780-160H260q-24 0-42-18t-18-42v-640q0-24 18-42t42-18h348l232 232v468q0 24-18 42t-42 18ZM578-662v-198H260v640h520v-442H578ZM140-40q-24 0-42-18t-18-42v-619h60v619h498v60H140Zm120-820v198-198 640-640Z"/></svg> Copy Case Comments
                 </button>
 
@@ -411,7 +379,7 @@
     <div class="action-dock">
 
         <!-- PUSO ADVOCATE REPORT -->
-        <button type="button" class="dock-btn" data-label="FUSE Notes" onclick="openPusoReportModal()">
+        <button type="button" class="dock-btn" data-label="FUSE Notes" data-click="openPusoReportModal">
     <svg class="dock-icon-fuse" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="17" cy="17" r="17" fill="url(#pusoGrad)"/>
         <circle cx="17" cy="17" r="17" fill="url(#pusoGloss)"/>
@@ -432,7 +400,7 @@
         </button>
 
         <!-- EMAIL ESCALATION -->
-        <button type="button" class="dock-btn" data-label="Email Escalation" onclick="openCaseInfoModal()">
+        <button type="button" class="dock-btn" data-label="Email Escalation" data-click="openCaseInfoModal">
             <svg class="dock-icon-mail" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="17" cy="17" r="17" fill="url(#mailGrad)"/>
                 <circle cx="17" cy="17" r="17" fill="url(#mailGloss)"/>
@@ -453,7 +421,7 @@
         </button>
 
         <!-- RESOLVED CASE NOTES -->
-        <button type="button" class="dock-btn" data-label="Resolved Case Notes" onclick="openResolvedNotesModal()">
+        <button type="button" class="dock-btn" data-label="Resolved Case Notes" data-click="openResolvedNotesModal">
             <svg class="dock-icon-check" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="17" cy="17" r="17" fill="url(#checkGrad)"/>
                 <circle cx="17" cy="17" r="17" fill="url(#checkGloss)"/>
@@ -480,11 +448,12 @@
      SIDE NOTEPAD — free-text scratchpad (no rich text/formatting)
      ========================================================= -->
 
+<div class="side-tabs">
 <button
     type="button"
     class="side-notepad-tab"
     id="sideNotepadTab"
-    onclick="toggleSideNotepad()"
+    data-click="toggleSideNotepad"
     aria-label="Open notepad"
     aria-haspopup="true"
     aria-expanded="false"
@@ -494,6 +463,7 @@
     </span>
     <span class="side-notepad-tab-label">Notepad</span>
 </button>
+</div>
 
 <div id="sideNotepadModal" class="case-info-modal side-notepad-modal">
     <div class="side-notepad-content">
@@ -503,7 +473,7 @@
                 <h2>Notepad</h2>
                 <span>Plain-text scratchpad — not part of the case report</span>
             </div>
-            <button type="button" class="case-info-close" onclick="closeSideNotepad()" aria-label="Close">×</button>
+            <button type="button" class="case-info-close" data-click="closeSideNotepad" aria-label="Close">×</button>
         </div>
 
         <textarea
@@ -516,7 +486,7 @@
 
         <div class="side-notepad-footer">
             <span class="side-notepad-status" id="sideNotepadStatus">&nbsp;</span>
-            <button type="button" class="action action-clear" onclick="clearSideNotepad()">
+            <button type="button" class="action action-clear" data-click="clearSideNotepad">
                 <svg class="action-icon" viewBox="0 -960 960 960" width="14" height="14" fill="currentColor" style="vertical-align:-2px"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
                 Clear
             </button>
@@ -546,7 +516,7 @@
     <button
         type="button"
         class="case-info-close"
-        onclick="closeCaseInfoModal()"
+        data-click="closeCaseInfoModal"
         aria-label="Close"
     >
         ×
@@ -565,13 +535,13 @@
             <!-- SF CASE NUMBER -->
             <div class="case-info-field">
                 <label for="caseNumber">SF Case Number:</label>
-                <input type="text" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '')" id="caseNumber">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" data-filter="digits" id="caseNumber">
             </div>
 
             <!-- FT/SO/SR -->
             <div class="case-info-field">
                 <label for="caseFtSoSr">FT/SO/SR:</label>
-                <input type="text" inputmode="text" pattern="[0-9RBGrbg_/\ ]*" oninput="this.value = this.value.replace(/[^0-9RBGrbg_/\ ]/g, '')" id="caseFtSoSr">
+                <input type="text" inputmode="text" pattern="[0-9RBGrbg_/\ ]*" data-filter="ticket" id="caseFtSoSr">
             </div>
 
             <!-- FT/SO/SR CREATION DATE -->
@@ -589,7 +559,7 @@
             <!-- FT/SO QUEUE -->
             <div class="case-info-field">
                 <label for="caseQueue">FT/SO Queue:</label>
-                <select id="caseQueue" name="caseQueue" onchange="toggleOtherQueue()">
+                <select id="caseQueue" name="caseQueue" data-change="toggleOtherQueue">
                     <option value="">-- Select Queue --</option>
 					<option value="OTHER">Other - SO Queue/Status</option>
                     <option value="OFSC">OFSC</option>
@@ -609,7 +579,7 @@
             <!-- CALLBACK -->
             <div class="case-info-field">
                 <label for="caseCallback">Callback:</label>
-                <select id="caseCallback" onchange="toggleCallbackField()">
+                <select id="caseCallback" data-change="toggleCallbackField">
                     <option value="No">No</option>
                     <option value="Yes">Yes</option>
                 </select>
@@ -623,7 +593,7 @@
             <!-- FOLLOW UPS -->
             <div class="case-info-field">
                 <label for="caseFfupCount">Number of Follow Ups Before Engagement:</label>
-                <input type="text" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '')" min="0" id="caseFfupCount">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" data-filter="digits" min="0" id="caseFfupCount">
             </div>
 
             <!-- EMAIL ENDORSEMENT DATE -->
@@ -635,7 +605,7 @@
             <!-- CUSTOMER ACCOUNT NUMBER -->
             <div class="case-info-field">
                 <label for="caseAccountNumber">Customer Account Number:</label>
-                <input type="text" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '')" id="caseAccountNumber">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" data-filter="digits" id="caseAccountNumber">
             </div>
 
             <!-- CUSTOMER TELEPHONE NUMBER -->
@@ -653,7 +623,7 @@
             <!-- CUSTOMER CONTACT NUMBER -->
             <div class="case-info-field">
                 <label for="caseContactPerson">Customer Contact Number:</label>
-                <input type="text" inputmode="numeric" pattern="[0-9\/ ]*" oninput="this.value = this.value.replace(/[^0-9\/ ]/g, '')" id="caseContactPerson">
+                <input type="text" inputmode="numeric" pattern="[0-9\/ ]*" data-filter="digitsSlash" id="caseContactPerson">
             </div>
 
             <!-- ADDRESS -->
@@ -675,7 +645,7 @@
             </div>
 
             <div class="case-info-full">
-                <button type="button" class="case-search-button" onclick="openCitySearchFromCaseInfo()">
+                <button type="button" class="case-search-button" data-click="openCitySearchFromCaseInfo">
                     <span class="search-btn-icon" aria-hidden="true">🔎</span> Search City / Exchange Code
                 </button>
             </div>
@@ -709,10 +679,10 @@
 
         <!-- ACTIONS -->
         <div class="case-info-actions">
-<button type="button" class="action action-clear" onclick="clearModalFields('caseInfoModal')">
+<button type="button" class="action action-clear" data-click="clearModalFields" data-arg="caseInfoModal">
     <svg class="action-icon" viewBox="0 -960 960 960" width="17" height="17" fill="currentColor" style="vertical-align:-3px"><path d="M600-240v-80h160v80H600Zm0-320v-80h280v80H600Zm0 160v-80h240v80H600ZM120-640H80v-80h160v-60h160v60h160v80h-40v360q0 33-23.5 56.5T440-200H200q-33 0-56.5-23.5T120-280v-360Zm80 0v360h240v-360H200Zm0 0v360-360Z"/></svg> Clear
 </button>
-<button type="button" class="action action-copy" onclick="copyCaseInformation()">
+<button type="button" class="action action-copy" id="copyCaseInfoBtn" data-click="copyCaseInformation">
     <svg class="action-icon" viewBox="0 -960 960 960" width="14" height="14" fill="currentColor" style="vertical-align:-2px"><path d="M780-160H260q-24 0-42-18t-18-42v-640q0-24 18-42t42-18h348l232 232v468q0 24-18 42t-42 18ZM578-662v-198H260v640h520v-442H578ZM140-40q-24 0-42-18t-18-42v-619h60v619h498v60H140Zm120-820v198-198 640-640Z"/></svg> Copy Email Escalation Report
 </button>
         </div>
@@ -736,7 +706,7 @@
                     <span>Customer Journey and Action Taken Summary</span>
                 </div>
             </div>
-            <button type="button" class="case-info-close" onclick="closeResolvedNotesModal()" aria-label="Close">×</button>
+            <button type="button" class="case-info-close" data-click="closeResolvedNotesModal" aria-label="Close">×</button>
         </div>
 
         <div class="case-info-field case-info-full">
@@ -749,7 +719,7 @@
             <div class="case-info-field">
                 <label for="resolvedCaseNumber">Case Number:</label>
                 <input type="text" inputmode="numeric" pattern="[0-9]*"
-                       oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                       data-filter="digits"
                        id="resolvedCaseNumber">
             </div>
 
@@ -763,7 +733,7 @@
                     Customer Account Number
                 </label>
                 <input type="text" inputmode="numeric" pattern="[0-9]*"
-                       oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                       data-filter="digits"
                        id="resolvedAccountNumber">
             </div>
 
@@ -778,14 +748,14 @@
                 <label for="resolvedFtSoSr">
                     FT/SO/SR
                 </label>
-                <input type="text" inputmode="text" pattern="[0-9RBGrbg_/\ ]*" oninput="this.value = this.value.replace(/[^0-9RBGrbg_/\ ]/g, '')" id="resolvedFtSoSr">
+                <input type="text" inputmode="text" pattern="[0-9RBGrbg_/\ ]*" data-filter="ticket" id="resolvedFtSoSr">
             </div>
 
 <div class="case-info-field">
     <label for="resolvedFtIssueType">
         FT Issue Type
     </label>
-    <select id="resolvedFtIssueType" name="resolvedFtIssueType" onchange="toggleResolvedFtCause()">
+    <select id="resolvedFtIssueType" name="resolvedFtIssueType" data-change="toggleResolvedFtCause">
         <option value="">-- DO NOT SELECT IF N/A --</option>
         <option value="Individual Trouble - Last Mile">Individual Trouble - Last Mile</option>
         <option value="Outage Related">Outage Related</option>
@@ -808,10 +778,10 @@
         </div>
 
         <div class="case-info-actions">
-            <button type="button" class="action action-clear" onclick="clearModalFields('resolvedNotesModal')">
+            <button type="button" class="action action-clear" data-click="clearModalFields" data-arg="resolvedNotesModal">
                 <svg class="action-icon" viewBox="0 -960 960 960" width="17" height="17" fill="currentColor" style="vertical-align:-3px"><path d="M600-240v-80h160v80H600Zm0-320v-80h280v80H600Zm0 160v-80h240v80H600ZM120-640H80v-80h160v-60h160v60h160v80h-40v360q0 33-23.5 56.5T440-200H200q-33 0-56.5-23.5T120-280v-360Zm80 0v360h240v-360H200Zm0 0v360-360Z"/></svg> Clear
             </button>
-            <button type="button" class="action action-copy" onclick="copyResolvedNotes(); showConfirm(this, '✓ Copied')">
+            <button type="button" class="action action-copy" data-click="copyResolvedNotes" data-confirm="✓ Copied">
                 <svg class="action-icon" viewBox="0 -960 960 960" width="14" height="14" fill="currentColor" style="vertical-align:-2px"><path d="M780-160H260q-24 0-42-18t-18-42v-640q0-24 18-42t42-18h348l232 232v468q0 24-18 42t-42 18ZM578-662v-198H260v640h520v-442H578ZM140-40q-24 0-42-18t-18-42v-619h60v619h498v60H140Zm120-820v198-198 640-640Z"/></svg> Copy Resolved Case Notes
             </button>
         </div>
@@ -835,7 +805,7 @@
                     <span>Case Handling Summary</span>
                 </div>
             </div>
-            <button type="button" class="case-info-close" onclick="closePusoReportModal()" aria-label="Close">×</button>
+            <button type="button" class="case-info-close" data-click="closePusoReportModal" aria-label="Close">×</button>
         </div>
 
         <div class="case-info-grid">
@@ -843,7 +813,7 @@
             <div class="case-info-field">
                 <label for="pusoCaseNumber">Case Number:</label>
                 <input type="text" inputmode="numeric" pattern="[0-9]*"
-                       oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                       data-filter="digits"
                        id="pusoCaseNumber">
             </div>
 
@@ -865,10 +835,10 @@
         </div>
 
         <div class="case-info-actions">
-            <button type="button" class="action action-clear" onclick="clearModalFields('pusoReportModal')">
+            <button type="button" class="action action-clear" data-click="clearModalFields" data-arg="pusoReportModal">
                 <svg class="action-icon" viewBox="0 -960 960 960" width="17" height="17" fill="currentColor" style="vertical-align:-3px"><path d="M600-240v-80h160v80H600Zm0-320v-80h280v80H600Zm0 160v-80h240v80H600ZM120-640H80v-80h160v-60h160v60h160v80h-40v360q0 33-23.5 56.5T440-200H200q-33 0-56.5-23.5T120-280v-360Zm80 0v360h240v-360H200Zm0 0v360-360Z"/></svg> Clear
             </button>
-            <button type="button" class="action action-copy" onclick="copyPusoReport(); showConfirm(this, '✓ Copied')">
+            <button type="button" class="action action-copy" data-click="copyPusoReport" data-confirm="✓ Copied">
                 <svg class="action-icon" viewBox="0 -960 960 960" width="14" height="14" fill="currentColor" style="vertical-align:-2px"><path d="M780-160H260q-24 0-42-18t-18-42v-640q0-24 18-42t42-18h348l232 232v468q0 24-18 42t-42 18ZM578-662v-198H260v640h520v-442H578ZM140-40q-24 0-42-18t-18-42v-619h60v619h498v60H140Zm120-820v198-198 640-640Z"/></svg> Copy FUSE Notes
             </button>
         </div>
@@ -892,7 +862,7 @@
                     <span>Set start times — each one alarms and runs its own countdown</span>
                 </div>
             </div>
-            <button type="button" class="case-info-close" onclick="closeBreakAlarmModal()" aria-label="Close">×</button>
+            <button type="button" class="case-info-close" data-click="closeBreakAlarmModal" aria-label="Close">×</button>
         </div>
 
         <div class="case-info-grid">
@@ -946,18 +916,18 @@
             <div class="break-alarm-permission-row">
                 <div class="break-alarm-permission-text" id="breakAlarmPermissionText">Checking notification permission…</div>
                 <div class="break-alarm-permission-actions">
-                    <button type="button" class="break-alarm-permission-btn" id="breakAlarmEnableBtn" onclick="requestBreakAlarmNotifyPermission()">Enable notifications</button>
-                    <button type="button" class="break-alarm-permission-btn" id="breakAlarmTestBtn" onclick="sendBreakAlarmTestNotification()">Send test</button>
+                    <button type="button" class="break-alarm-permission-btn" id="breakAlarmEnableBtn" data-click="requestBreakAlarmNotifyPermission">Enable notifications</button>
+                    <button type="button" class="break-alarm-permission-btn" id="breakAlarmTestBtn" data-click="sendBreakAlarmTestNotification">Send test</button>
                 </div>
             </div>
 
         </div>
 
         <div class="case-info-actions">
-            <button type="button" class="action action-clear" onclick="clearBreakAlarms()">
+            <button type="button" class="action action-clear" data-click="clearBreakAlarms">
                 <svg class="action-icon" viewBox="0 -960 960 960" width="17" height="17" fill="currentColor" style="vertical-align:-3px"><path d="M600-240v-80h160v80H600Zm0-320v-80h280v80H600Zm0 160v-80h240v80H600ZM120-640H80v-80h160v-60h160v60h160v80h-40v360q0 33-23.5 56.5T440-200H200q-33 0-56.5-23.5T120-280v-360Zm80 0v360h240v-360H200Zm0 0v360-360Z"/></svg> Clear
             </button>
-            <button type="button" class="action" id="breakAlarmSaveBtn" onclick="saveBreakAlarms()">
+            <button type="button" class="action" id="breakAlarmSaveBtn" data-click="saveBreakAlarms">
                 <svg class="action-icon" viewBox="0 -960 960 960" width="14" height="14" fill="currentColor" style="vertical-align:-2px"><path d="M339.5-110q-65.5-28-114-76.5t-77-114Q120-366 120-440.73q0-74.74 28.5-140Q177-646 225.5-695t114-77Q405-800 479-800t139.5 28Q684-744 733-695t77 114.27q28 65.26 28 140 0 74.73-28 140.23-28 65.5-77 114T618.5-110Q553-82 479-82t-139.5-28ZM479-439Zm121 161 42-42-130-130v-190h-60v214l148 148ZM214-867l42 42L92-667l-42-42 164-158Zm530 0 164 158-42 42-164-158 42-42ZM479.04-142Q604-142 691-229.04q87-87.05 87-212Q778-566 690.96-653q-87.05-87-212-87Q354-740 267-652.96q-87 87.05-87 212Q180-316 267.04-229q87.05 87 212 87Z"/></svg> Save &amp; Set Alarms
             </button>
         </div>
@@ -993,7 +963,7 @@
                     id="businessSearchClear"
                     class="business-search-clear-btn"
                     aria-label="Clear search"
-                    onclick="clearBusinessSearch()"
+                    data-click="clearBusinessSearch"
                 >
                     <svg viewBox="0 -960 960 960" width="13" height="13" fill="currentColor"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
                 </button>
@@ -1034,2223 +1004,210 @@
 </div>
 </div>
 
-<script>
-
-// =========================================================
-// RESOLVED CASE MODAL
-// =========================================================
-
-function toggleResolvedFtCause() {
-    const issueType = document.getElementById('resolvedFtIssueType').value;
-    const container = document.getElementById('resolvedFtCauseContainer');
-    container.style.display = issueType ? '' : 'none';
+<!-- App data. Edit these two JSON blocks to add a persona, platform, engagement type, alarm or zone row. -->
+<script type="application/json" id="app-config">
+{
+  "selectPlaceholder": "-- Select One --",
+  "platforms": [
+    {
+      "id": "facebook",
+      "value": "Facebook"
+    },
+    {
+      "id": "threads",
+      "value": "Threads"
+    },
+    {
+      "id": "instagram",
+      "value": "Instagram"
+    },
+    {
+      "id": "reddit",
+      "value": "Reddit"
+    },
+    {
+      "id": "twitter",
+      "value": "Twitter"
+    },
+    {
+      "id": "callback",
+      "value": "Callback / Service Recovery"
+    },
+    {
+      "id": "clientEndorsement",
+      "value": "Client Endorsement"
+    }
+  ],
+  "engagement": {
+    "names": {
+      "commentResolution": "Comment on Post (with Resolution)",
+      "commentReroute": "Comment on Post (Reroute to PLDT Channels)",
+      "commentInviteDm": "Comment on Post (Invite to DM)",
+      "sentDm": "Sent DM",
+      "hideComment": "Hide Comment",
+      "editComment": "Edit Comment",
+      "conductCallback": "Conduct Callback",
+      "emailEndorsement": "Send Email Endorsement",
+      "outboundCall": "Outbound Call"
+    },
+    "forPlatform": {
+      "standard": [
+        "commentResolution",
+        "commentReroute",
+        "commentInviteDm",
+        "sentDm",
+        "hideComment",
+        "editComment"
+      ],
+      "clientEndorsement": [
+        "emailEndorsement",
+        "outboundCall"
+      ],
+      "callback": [
+        "conductCallback"
+      ]
+    },
+    "showsComment": [
+      "commentResolution",
+      "commentReroute",
+      "commentInviteDm",
+      "sentDm",
+      "editComment"
+    ],
+    "showsActionDone": [
+      "commentResolution",
+      "commentReroute",
+      "commentInviteDm",
+      "hideComment",
+      "sentDm",
+      "editComment",
+      "conductCallback",
+      "emailEndorsement",
+      "outboundCall"
+    ]
+  },
+  "personaLabels": {
+    "default": "Persona Used",
+    "clientEndorsement": "Endorsement Made Via"
+  },
+  "personas": {
+    "default": [
+      "PLDT Cares",
+      "Sabrina Del Valle",
+      "Andrew Chavez",
+      "Lily Miller",
+      "Peter Delos Reyes",
+      "Amelia Gala",
+      "Dennis Castillo",
+      "Jas Santos",
+      "Samantha Smith",
+      "Nikki Perez",
+      "Camilla Ester",
+      "Mari Elle",
+      "Anya Cortes"
+    ],
+    "twitter": [
+      "Marvin (@marvin_dlcrz04)",
+      "Amelia (@_urameliagala)",
+      "Camilla (@CamieEast)",
+      "Jas (@JasSainnts)",
+      "Andrew (@andrw_chz)",
+      "Mari Elle (@bubblyelle_)",
+      "Anya (@anyacortes14)",
+      "Dennis (@DennisCastpiol)"
+    ],
+    "threads": [
+      "Andrew Chavez (@andrew_chz21)",
+      "Amelia Gala (@_ruamelia)",
+      "Camilla Ester (@cmll_ester)",
+      "Jas Santos (@jassantos07)",
+      "Mari Elle (@bubblyelle_)",
+      "Dennis Castillo (@denden_cstl)"
+    ],
+    "instagram": [
+      "Amelia Gala (_ruamelia)",
+      "Camilla Ester (cmll_ester)",
+      "Jas Santos (jassantos07)",
+      "Andrew Chavez (andrew_chz21)",
+      "Mari Elle (bubblyelle_)",
+      "Dennis Castillo (denden_cstl)"
+    ],
+    "reddit": [
+      "camilla_east (u/camilla_east)",
+      "Reddit Persona 2"
+    ],
+    "clientEndorsement": [
+      "Telegram",
+      "MS Teams"
+    ],
+    "callback": [
+      "N/A - Callback"
+    ]
+  },
+  "alarmTypes": [
+    {
+      "id": "break1",
+      "label": "1st Break",
+      "duration": 900
+    },
+    {
+      "id": "lunch",
+      "label": "Lunch",
+      "duration": 3600
+    },
+    {
+      "id": "break2",
+      "label": "2nd Break",
+      "duration": 900
+    },
+    {
+      "id": "coaching",
+      "label": "Coaching",
+      "duration": 1800
+    },
+    {
+      "id": "meeting",
+      "label": "Meeting",
+      "duration": 1800
+    },
+    {
+      "id": "training",
+      "label": "Training",
+      "duration": 1800,
+      "customDuration": true
+    }
+  ],
+  "privacy": {
+    "clearSensitiveAfterSeconds": 45,
+    "sensitiveFieldIds": [
+      "accountNumber",
+      "telephoneNumber",
+      "commentText",
+      "actionsDone",
+      "wocas",
+      "outboundCallCosmoId",
+      "outboundCallAniCbr",
+      "caseAccountNumber",
+      "caseTelephoneNumber",
+      "caseCustomerName",
+      "caseContactPerson",
+      "caseAddress",
+      "resolvedCustomerName",
+      "resolvedAccountNumber",
+      "resolvedTelephoneNumber",
+      "resolvedActionTaken",
+      "pusoConcern",
+      "pusoActionsDone"
+    ]
+  },
+  "timing": {
+    "zoneSearchDebounceMs": 150
+  }
 }
+</script>
 
-function openResolvedNotesModal() {
-    // Auto-sync from Description panel + Email Escalation modal
-    document.getElementById('resolvedAccountNumber').value =
-        document.getElementById('caseAccountNumber')?.value || '';
-    document.getElementById('resolvedTelephoneNumber').value =
-        document.getElementById('caseTelephoneNumber')?.value || '';
-    document.getElementById('resolvedFtSoSr').value =
-        document.getElementById('ticketNumber')?.value || '';
-    document.getElementById('resolvedFtIssueType').value =
-        document.getElementById('ftIssueType')?.value || '';
-    document.getElementById('resolvedFtCause').value =
-        document.getElementById('ftCause')?.value || '';
-
-	 toggleResolvedFtCause();
-
-    document.getElementById('resolvedNotesModal').classList.add('show');
-}
-
-function closeResolvedNotesModal() {
-    document.getElementById('resolvedNotesModal').classList.remove('show');
-}
-
-async function copyResolvedNotes() {
-    const postUrl              = document.getElementById('resolvedPostUrl').value.trim();
-    const caseNumber           = document.getElementById('resolvedCaseNumber').value.trim();
-    const resolvedCustomerName = document.getElementById('resolvedCustomerName').value.trim();
-    const accountNumber        = document.getElementById('resolvedAccountNumber').value.trim();
-    const telephoneNumber      = document.getElementById('resolvedTelephoneNumber').value.trim();
-    const ftSoSr                = document.getElementById('resolvedFtSoSr').value.trim();
-    const issueType              = document.getElementById('resolvedFtIssueType').value.trim();
-    const cause                  = document.getElementById('resolvedFtCause').value.trim();
-    const actionTaken           = document.getElementById('resolvedActionTaken').value.trim();
-
-    const ftLine = [ftSoSr, issueType, cause].filter(Boolean).join(' / ');
-
-    const plainOutput =
-`Post URL: ${postUrl}
-
-Case Number: ${caseNumber}
-Customer Name: ${resolvedCustomerName}
-Customer Account: ${accountNumber}
-Telephone Number: ${telephoneNumber}
-FT/SO/SR: ${ftLine}
-
-CX Journey and Action Taken:
-${actionTaken}`;
-
-    const htmlOutput =
-`Post URL: ${escapeHtml(postUrl)}<br><br>` +
-`Case Number: <b>${escapeHtml(caseNumber)}</b><br>` +
-`Customer Name: <b>${escapeHtml(resolvedCustomerName)}</b><br>` +
-`Customer Account: <b>${escapeHtml(accountNumber)}</b><br>` +
-`Telephone Number: <b>${escapeHtml(telephoneNumber)}</b><br>` +
-`FT/SO/SR: <b>${escapeHtml(ftLine)}</b><br><br>` +
-`<b>CX Journey and Action Taken:</b><br>` +
-`${escapeHtml(actionTaken).replace(/\n/g, '<br>')}`;
-
-    const temp = document.getElementById('resolvedNotesCopyOutput');
-    temp.value = plainOutput;
-
-    try {
-        await navigator.clipboard.write([
-            new ClipboardItem({
-                'text/plain': new Blob([plainOutput], { type: 'text/plain' }),
-                'text/html':  new Blob([htmlOutput], { type: 'text/html' })
-            })
-        ]);
-    } catch (err) {
-        try {
-            await navigator.clipboard.writeText(plainOutput);
-        } catch {
-            temp.select();
-            document.execCommand('copy');
-        }
-    }
-}
-
-// =========================================================
-// FUSE NOTES
-// =========================================================
-
-function openPusoReportModal() {
-    document.getElementById('pusoActionsDone').value =
-        document.getElementById('actionsDone')?.value || '';
-    document.getElementById('pusoReportModal').classList.add('show');
-}
-function closePusoReportModal() {
-    document.getElementById('pusoReportModal').classList.remove('show');
-}
-
-async function copyPusoReport() {
-    const caseNumber  = document.getElementById('pusoCaseNumber').value.trim();
-    const concern      = document.getElementById('pusoConcern').value.trim();
-    const ftSoSr        = document.getElementById('pusoFtSoSr').value.trim();
-    const actionsDone  = document.getElementById('pusoActionsDone').value.trim();
-
-    const output =
-`PUSO - Social Media Handling / Case #: ${caseNumber} / ${concern}
-FT/SO/SR: ${ftSoSr}
-
-A- ${actionsDone}
-
-CNDT-PusoAdvocate`;
-
-    const temp = document.getElementById('pusoReportCopyOutput');
-    temp.value = output;
-
-    try {
-        await navigator.clipboard.writeText(output);
-    } catch {
-        temp.select();
-        document.execCommand('copy');
-    }
-}
-
-// =========================================================
-// BREAK & MEETING ALARMS
-// =========================================================
-
-const BREAK_ALARM_TYPES = [
-    { id: "break1", label: "1st Break", duration: 15 * 60 },
-    { id: "lunch", label: "Lunch", duration: 60 * 60 },
-    { id: "break2", label: "2nd Break", duration: 15 * 60 },
-    { id: "coaching", label: "Coaching", duration: 30 * 60 },
-    { id: "meeting", label: "Meeting", duration: 30 * 60 },
-    { id: "training", label: "Training", duration: 30 * 60, customDuration: true }
-];
-
-const BREAK_ALARM_STORAGE_KEY = "breakAlarmSchedule";
-const BREAK_ALARM_DURATIONS_KEY = "breakAlarmCustomDurations";
-const BREAK_ALARM_RUN_KEY = "breakAlarmRunningTimer";
-
-let breakAlarmCustomDurations = {}; // { training: "01:30" }
-
-// Parses "HH:MM" into whole seconds. Returns null if not a valid duration.
-function parseHHMMToSeconds(value) {
-    if (!value) return null;
-    const match = /^(\d{1,2}):([0-5]\d)$/.exec(value.trim());
-    if (!match) return null;
-
-    const hours = parseInt(match[1], 10);
-    const minutes = parseInt(match[2], 10);
-    const totalSeconds = (hours * 60 + minutes) * 60;
-
-    return totalSeconds > 0 ? totalSeconds : null;
-}
-
-// Resolves the effective duration (seconds) for an alarm type, honoring
-// custom HH:MM durations (e.g. Training) with a fallback to the default.
-function getBreakAlarmDuration(type) {
-    if (!type.customDuration) return type.duration;
-
-    const custom = parseHHMMToSeconds(breakAlarmCustomDurations[type.id]);
-    return custom !== null ? custom : type.duration;
-}
-
-function formatSecondsAsDurationLabel(totalSeconds) {
-    const totalMinutes = Math.round(totalSeconds / 60);
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-
-    if (hours > 0 && minutes > 0) return hours + "h " + minutes + "m";
-    if (hours > 0) return hours + "h";
-    return minutes + " min";
-}
-
-let breakAlarmSchedule = {};    // { break1: "13:00", lunch: "14:00", ... }
-let breakAlarmFiredToday = {};  // { break1: "Thu Sep 03 2026", ... }
-let breakAlarmCheckInterval = null;
-let breakAlarmAudioCtx = null;
-let breakAlarmSoundInterval = null;
-let activeBreakTimer = null;    // { id, label, duration, endsAt }
-let activeBreakTimerInterval = null;
-
-function pad2(n) {
-    return String(n).padStart(2, "0");
-}
-
-// Anchors the alarm popover's glass panel directly under the
-// bell button (right-aligned to it, clamped to the viewport),
-// and points its transform-origin + tail arrow back at the
-// button so the open/close animation reads as emerging from it.
-function positionAlarmPopover() {
-    const btn = document.getElementById("breakAlarmBtn");
-    const content = document.querySelector("#breakAlarmModal .case-info-modal-content");
-    if (!btn || !content) return;
-
-    const rect = btn.getBoundingClientRect();
-    const gap = 10;
-    const margin = 12;
-    const popoverWidth = content.offsetWidth;
-    const viewportW = window.innerWidth;
-    const viewportH = window.innerHeight;
-
-    let left = rect.right - popoverWidth;
-    left = Math.max(margin, Math.min(left, viewportW - popoverWidth - margin));
-
-    let top = rect.bottom + gap;
-    top = Math.min(top, Math.max(margin, viewportH - margin - 160));
-
-    content.style.left = left + "px";
-    content.style.top = top + "px";
-
-    const buttonCenterX = rect.left + rect.width / 2;
-    const arrowRight = Math.max(16, (left + popoverWidth) - buttonCenterX - 8);
-    content.style.setProperty("--arrow-right", arrowRight + "px");
-
-    const originX = popoverWidth
-        ? Math.min(96, Math.max(4, ((buttonCenterX - left) / popoverWidth) * 100))
-        : 82;
-    content.style.transformOrigin = originX + "% -12px";
-}
-
-/* Restarts the "pressed" pop animation on a header button, even on rapid re-clicks. */
-function playPressAnimation(id) {
-    const btn = document.getElementById(id);
-    if (!btn) return;
-
-    btn.classList.remove("pressed");
-    void btn.offsetWidth;
-    btn.classList.add("pressed");
-
-    clearTimeout(btn._pressedTimeout);
-    btn._pressedTimeout = setTimeout(() => btn.classList.remove("pressed"), 280);
-}
-
-function openBreakAlarmModal() {
-    playPressAnimation("breakAlarmBtn");
-
-    BREAK_ALARM_TYPES.forEach(type => {
-        const input = document.getElementById("breakAlarmTime_" + type.id);
-        if (input) input.value = breakAlarmSchedule[type.id] || "";
-    });
-
-    const trainingDurationInput = document.getElementById("breakAlarmDuration_training");
-    if (trainingDurationInput) {
-        trainingDurationInput.value = breakAlarmCustomDurations.training || "00:30";
-    }
-    updateTrainingDurationLabel();
-
-    updateBreakAlarmStatus();
-    refreshBreakAlarmPermissionUI();
-
-    positionAlarmPopover();
-    document.getElementById("breakAlarmModal").classList.add("show");
-    document.body.style.overflow = "hidden";
-}
-
-function closeBreakAlarmModal() {
-    document.getElementById("breakAlarmModal").classList.remove("show");
-    document.body.style.overflow = "";
-}
-
-window.addEventListener("resize", function() {
-    const modal = document.getElementById("breakAlarmModal");
-    if (modal && modal.classList.contains("show")) {
-        positionAlarmPopover();
-    }
-});
-
-// Keeps the "Training: <duration>" badge in sync with whatever the user
-// picks from the duration dropdown, falling back to the 30-min default.
-function updateTrainingDurationLabel() {
-    const labelEl = document.querySelector("#breakAlarmModal .break-alarm-field-training .break-alarm-duration");
-    if (!labelEl) return;
-
-    const input = document.getElementById("breakAlarmDuration_training");
-    const rawValue = input ? input.value.trim() : "";
-    const parsedSeconds = parseHHMMToSeconds(rawValue);
-
-    labelEl.textContent = parsedSeconds !== null ? formatSecondsAsDurationLabel(parsedSeconds) : "30 min";
-}
-
-function saveBreakAlarms() {
-    const trainingDurationInput = document.getElementById("breakAlarmDuration_training");
-    const trainingDurationRaw = trainingDurationInput ? trainingDurationInput.value.trim() : "00:30";
-
-    const newSchedule = {};
-
-    BREAK_ALARM_TYPES.forEach(type => {
-        const input = document.getElementById("breakAlarmTime_" + type.id);
-        const value = input ? input.value : "";
-        if (value) newSchedule[type.id] = value;
-    });
-
-    breakAlarmSchedule = newSchedule;
-    breakAlarmFiredToday = {};
-    breakAlarmCustomDurations.training = trainingDurationRaw;
-    persistBreakAlarmSchedule();
-    persistBreakAlarmCustomDurations();
-    updateBreakAlarmStatus();
-    updateBreakAlarmActiveDot();
-    startBreakAlarmWatcher();
-
-    showConfirm(document.getElementById("breakAlarmSaveBtn"), "✓ Saved");
-}
-
-function clearBreakAlarms() {
-    breakAlarmSchedule = {};
-    breakAlarmFiredToday = {};
-    breakAlarmCustomDurations = {};
-    persistBreakAlarmSchedule();
-    persistBreakAlarmCustomDurations();
-
-    BREAK_ALARM_TYPES.forEach(type => {
-        const input = document.getElementById("breakAlarmTime_" + type.id);
-        if (input) input.value = "";
-    });
-
-    const trainingDurationInput = document.getElementById("breakAlarmDuration_training");
-    if (trainingDurationInput) {
-        trainingDurationInput.value = "00:30";
-    }
-    updateTrainingDurationLabel();
-
-    updateBreakAlarmStatus();
-    updateBreakAlarmActiveDot();
-}
-
-function persistBreakAlarmSchedule() {
-    try {
-        localStorage.setItem(BREAK_ALARM_STORAGE_KEY, JSON.stringify(breakAlarmSchedule));
-    } catch (e) {}
-}
-
-function persistBreakAlarmCustomDurations() {
-    try {
-        localStorage.setItem(BREAK_ALARM_DURATIONS_KEY, JSON.stringify(breakAlarmCustomDurations));
-    } catch (e) {}
-}
-
-function loadBreakAlarmSchedule() {
-    try {
-        const saved = localStorage.getItem(BREAK_ALARM_STORAGE_KEY);
-        breakAlarmSchedule = saved ? JSON.parse(saved) : {};
-    } catch (e) {
-        breakAlarmSchedule = {};
-    }
-
-    try {
-        const savedDurations = localStorage.getItem(BREAK_ALARM_DURATIONS_KEY);
-        breakAlarmCustomDurations = savedDurations ? JSON.parse(savedDurations) : {};
-    } catch (e) {
-        breakAlarmCustomDurations = {};
-    }
-
-    updateBreakAlarmActiveDot();
-
-    if (Object.keys(breakAlarmSchedule).length > 0) {
-        startBreakAlarmWatcher();
-    }
-}
-
-function updateBreakAlarmStatus() {
-    const statusEl = document.getElementById("breakAlarmStatus");
-    if (!statusEl) return;
-
-    const count = Object.keys(breakAlarmSchedule).length;
-    statusEl.textContent = count > 0
-        ? count + " alarm" + (count === 1 ? "" : "s") + " scheduled for today"
-        : "No alarms scheduled yet";
-}
-
-function updateBreakAlarmActiveDot() {
-    const dot = document.getElementById("breakAlarmActiveDot");
-    if (!dot) return;
-    dot.hidden = Object.keys(breakAlarmSchedule).length === 0;
-}
-
-function refreshBreakAlarmPermissionUI() {
-    const textEl = document.getElementById("breakAlarmPermissionText");
-    const enableBtn = document.getElementById("breakAlarmEnableBtn");
-    if (!textEl) return;
-
-    if (!("Notification" in window)) {
-        textEl.textContent = "Desktop notifications aren't supported in this browser. Alarms will still beep and show the on-screen timer.";
-        textEl.className = "break-alarm-permission-text warn";
-        if (enableBtn) enableBtn.style.display = "none";
-        return;
-    }
-
-    if (window.isSecureContext === false) {
-        textEl.textContent = "This page isn't loaded in a secure context, so the browser may silently block the permission prompt. Try opening it through http://localhost or a hosted URL instead of double-clicking the file.";
-        textEl.className = "break-alarm-permission-text warn";
-        if (enableBtn) enableBtn.style.display = "inline-block";
-        return;
-    }
-
-    if (Notification.permission === "granted") {
-        textEl.textContent = "Desktop notifications are enabled.";
-        textEl.className = "break-alarm-permission-text ok";
-        if (enableBtn) enableBtn.style.display = "none";
-    } else if (Notification.permission === "denied") {
-        textEl.textContent = "Notifications are blocked for this page. Click the lock/info icon in the address bar, allow notifications, then reload.";
-        textEl.className = "break-alarm-permission-text warn";
-        if (enableBtn) enableBtn.style.display = "none";
-    } else {
-        textEl.textContent = "Notifications aren't enabled yet — alarms will still beep, but won't show a desktop popup until you allow them.";
-        textEl.className = "break-alarm-permission-text";
-        if (enableBtn) enableBtn.style.display = "inline-block";
-    }
-}
-
-function requestBreakAlarmNotifyPermission() {
-    if (!("Notification" in window)) return;
-
-    Notification.requestPermission().then(() => {
-        refreshBreakAlarmPermissionUI();
-    }).catch(() => {
-        refreshBreakAlarmPermissionUI();
-    });
-}
-
-function sendBreakAlarmTestNotification() {
-    if (!("Notification" in window)) {
-        alert("This browser doesn't support desktop notifications.");
-        return;
-    }
-
-    if (Notification.permission !== "granted") {
-        alert("Notifications aren't enabled yet. Click \"Enable notifications\" first and allow the browser prompt, then try the test again.");
-        return;
-    }
-
-    try {
-        new Notification("Test notification", {
-            body: "If you can see this, desktop notifications are working."
-        });
-    } catch (err) {
-        alert("The browser blocked the notification: " + err.message);
-    }
-}
-
-function startBreakAlarmWatcher() {
-    if (breakAlarmCheckInterval) return;
-    checkBreakAlarms();
-    breakAlarmCheckInterval = setInterval(checkBreakAlarms, 15000);
-}
-
-function checkBreakAlarms() {
-    const now = new Date();
-    const nowTime = pad2(now.getHours()) + ":" + pad2(now.getMinutes());
-    const todayKey = now.toDateString();
-
-    BREAK_ALARM_TYPES.forEach(type => {
-        const scheduledTime = breakAlarmSchedule[type.id];
-        if (!scheduledTime || scheduledTime !== nowTime) return;
-        if (breakAlarmFiredToday[type.id] === todayKey) return;
-
-        breakAlarmFiredToday[type.id] = todayKey;
-        fireBreakAlarm(type);
-    });
-}
-
-function fireBreakAlarm(type) {
-    playBreakAlarmBeep();
-
-    const effectiveDuration = getBreakAlarmDuration(type);
-
-    if ("Notification" in window && Notification.permission === "granted") {
-        try {
-            new Notification(type.label + "!", {
-                body: "Enjoy your " + type.label.toLowerCase() + ".",
-                requireInteraction: true
-            });
-        } catch (e) {}
-    }
-
-    startActiveBreakTimer(type, effectiveDuration);
-}
-
-function playBreakAlarmBeep() {
-    try {
-        if (!breakAlarmAudioCtx) {
-            breakAlarmAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-
-        clearInterval(breakAlarmSoundInterval);
-        let beeps = 0;
-
-        const doBeep = () => {
-            const osc = breakAlarmAudioCtx.createOscillator();
-            const gain = breakAlarmAudioCtx.createGain();
-            osc.type = "sine";
-            osc.frequency.value = 880;
-            gain.gain.setValueAtTime(0.0001, breakAlarmAudioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.28, breakAlarmAudioCtx.currentTime + 0.02);
-            gain.gain.exponentialRampToValueAtTime(0.0001, breakAlarmAudioCtx.currentTime + 0.35);
-            osc.connect(gain);
-            gain.connect(breakAlarmAudioCtx.destination);
-            osc.start();
-            osc.stop(breakAlarmAudioCtx.currentTime + 0.4);
-
-            beeps++;
-            if (beeps >= 3) clearInterval(breakAlarmSoundInterval);
-        };
-
-        doBeep();
-        breakAlarmSoundInterval = setInterval(doBeep, 500);
-    } catch (e) {}
-}
-
-function startActiveBreakTimer(type, durationOverrideSeconds) {
-    const duration = durationOverrideSeconds || getBreakAlarmDuration(type);
-
-    activeBreakTimer = {
-        id: type.id,
-        label: type.label,
-        duration: duration,
-        endsAt: Date.now() + duration * 1000
-    };
-    persistActiveBreakTimer();
-    renderActiveBreakTimer();
-}
-
-function persistActiveBreakTimer() {
-    try {
-        if (activeBreakTimer) {
-            localStorage.setItem(BREAK_ALARM_RUN_KEY, JSON.stringify(activeBreakTimer));
-        } else {
-            localStorage.removeItem(BREAK_ALARM_RUN_KEY);
-        }
-    } catch (e) {}
-}
-
-function loadActiveBreakTimer() {
-    try {
-        const saved = localStorage.getItem(BREAK_ALARM_RUN_KEY);
-        if (!saved) return;
-
-        const parsed = JSON.parse(saved);
-        if (parsed && parsed.endsAt > Date.now()) {
-            activeBreakTimer = parsed;
-            renderActiveBreakTimer();
-        } else {
-            localStorage.removeItem(BREAK_ALARM_RUN_KEY);
-        }
-    } catch (e) {}
-}
-
-function renderActiveBreakTimer() {
-    const widget = document.getElementById("activeTimerWidget");
-    if (!widget || !activeBreakTimer) return;
-
-    document.getElementById("activeTimerLabel").textContent = activeBreakTimer.label;
-    widget.classList.remove("ending");
-    widget.classList.add("show");
-
-    clearInterval(activeBreakTimerInterval);
-    activeBreakTimerInterval = setInterval(updateActiveBreakTimerClock, 1000);
-    updateActiveBreakTimerClock();
-}
-
-function updateActiveBreakTimerClock() {
-    if (!activeBreakTimer) return;
-
-    const widget = document.getElementById("activeTimerWidget");
-    const clockEl = document.getElementById("activeTimerClock");
-    const remainingMs = activeBreakTimer.endsAt - Date.now();
-
-    if (remainingMs <= 0) {
-        clockEl.textContent = "00:00";
-        finishActiveBreakTimer();
-        return;
-    }
-
-    const remainingSeconds = Math.round(remainingMs / 1000);
-    clockEl.textContent = pad2(Math.floor(remainingSeconds / 60)) + ":" + pad2(remainingSeconds % 60);
-
-    if (remainingSeconds <= 10) {
-        widget.classList.add("ending");
-    } else {
-        widget.classList.remove("ending");
-    }
-}
-
-function finishActiveBreakTimer() {
-    const finishedLabel = activeBreakTimer ? activeBreakTimer.label : "Timer";
-
-    clearInterval(activeBreakTimerInterval);
-    activeBreakTimerInterval = null;
-
-    playBreakAlarmBeep();
-
-    if ("Notification" in window && Notification.permission === "granted") {
-        try {
-            new Notification(finishedLabel + " ended!", {
-                body: "All good things come to an end.",
-                requireInteraction: true
-            });
-        } catch (e) {}
-    }
-
-    activeBreakTimer = null;
-    persistActiveBreakTimer();
-
-    setTimeout(() => {
-        const widget = document.getElementById("activeTimerWidget");
-        if (widget) {
-            widget.classList.remove("show");
-            widget.classList.remove("ending");
-        }
-    }, 1500);
-}
-
-function stopActiveBreakTimer() {
-    clearInterval(activeBreakTimerInterval);
-    activeBreakTimerInterval = null;
-    clearInterval(breakAlarmSoundInterval);
-
-    activeBreakTimer = null;
-    persistActiveBreakTimer();
-
-    const widget = document.getElementById("activeTimerWidget");
-    if (widget) {
-        widget.classList.remove("show");
-        widget.classList.remove("ending");
-    }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    loadBreakAlarmSchedule();
-    loadActiveBreakTimer();
-
-    const trainingDurationInput = document.getElementById("breakAlarmDuration_training");
-    if (trainingDurationInput) {
-        trainingDurationInput.addEventListener("change", () => {
-            updateTrainingDurationLabel();
-        });
-    }
-});
-
-// =========================================================
-// SYNC PLATFORM -> OUTBOUND CALL
-// =========================================================
-
-// Guards against Platform->Outbound and Outbound->Platform sync
-// triggering each other in a loop / clobbering a manual selection.
-let isSyncingOutboundPlatform = false;
-
-function syncPlatformToOutboundCall() {
-    if (isSyncingOutboundPlatform) return;
-
-    const platformEl = document.getElementById("platform");
-    if (!platformEl) return;
-
-    const yesRadio = document.querySelector(
-        'input[name="outboundCall"][value="Yes"]'
-    );
-    const noRadio = document.querySelector(
-        'input[name="outboundCall"][value="No"]'
-    );
-
-    isSyncingOutboundPlatform = true;
-
-    if (platformEl.value === " ") {
-        if (yesRadio && !yesRadio.checked) {
-            yesRadio.checked = true;
-            toggleOutboundCall();
-        }
-    } else {
-        if (noRadio && !noRadio.checked) {
-            noRadio.checked = true;
-            toggleOutboundCall();
-        }
-    }
-
-    isSyncingOutboundPlatform = false;
-}
-
-document.getElementById("platform").addEventListener("change", () => {
-    syncPlatformToOutboundCall();
-    updatePersonaDropdown();
-    updateEngagementPersonaVisibility();
-    generateEngagement();
-    saveFormData();
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    loadFormData();
-    syncPlatformToOutboundCall();
-    updatePersonaDropdown();
-    updateCategoryFields(true);
-    updateEngagementPersonaVisibility();
-    generateIssueNotes();
-    generateEngagement();
-    searchBusinessZones();
-});
-
-function showConfirm(btn, message) {
-    if (!btn) return;
-
-    // remember original content so we can restore it
-    if (!btn.dataset.originalHtml) {
-        btn.dataset.originalHtml = btn.innerHTML;
-    }
-
-    btn.classList.add('confirmed');
-    btn.innerHTML = message || '✓ Copied';
-
-    clearTimeout(btn._confirmTimeout);
-    btn._confirmTimeout = setTimeout(() => {
-        btn.classList.remove('confirmed');
-        btn.innerHTML = btn.dataset.originalHtml;
-    }, 1200);
-}
-
-/* Reset button: spins the icon and flips it to a checkmark without
-   nuking the button's markup the way the generic showConfirm() does
-   (that's fine for plain-text copy buttons, but here it would kill
-   the icon span the spin animation depends on for next time). */
-function handleResetAll(btn) {
-    resetAll();
-
-    const icon = btn.querySelector('.reset-icon');
-
-    if (icon) {
-        if (!icon.dataset.originalHtml) {
-            icon.dataset.originalHtml = icon.innerHTML;
-        }
-        icon.classList.remove('resetting');
-        void icon.offsetWidth; // restart the animation even on rapid re-clicks
-        icon.classList.add('resetting');
-        icon.innerHTML = '✓';
-    }
-
-    btn.classList.add('confirmed');
-
-    clearTimeout(btn._confirmTimeout);
-    btn._confirmTimeout = setTimeout(() => {
-        btn.classList.remove('confirmed');
-        if (icon) {
-            icon.classList.remove('resetting');
-            icon.innerHTML = icon.dataset.originalHtml;
-        }
-    }, 1200);
-}
-
-document.getElementById("ftCreator").addEventListener("change", function () {
-    document.getElementById("caseCreator").value = this.value;
-});
-
-document.getElementById("ticketNumber").addEventListener("input", function () {
-    document.getElementById("caseFtSoSr").value = this.value;
-});
-
-function syncCaseFields() {
-    document.getElementById("caseCreator").value =
-        document.getElementById("ftCreator").value;
-
-    document.getElementById("caseFtSoSr").value =
-        document.getElementById("ticketNumber").value;
-}
-
-syncCaseFields();
-
-// =========================================================
-// AUTO-SYNC OUTBOUND CALL TO CASE INFO AND CASE NOTES
-// =========================================================
-
-function syncOutboundCallToAllSections() {
-    const selected = document.querySelector(
-        'input[name="outboundCall"]:checked'
-    );
-    const outboundCosmoId =
-        document.getElementById("outboundCallCosmoId");
-    // Case Information
-    const caseCallback =
-        document.getElementById("caseCallback");
-    const caseCallerId =
-        document.getElementById("caseCallerId");
-    const callIdContainer =
-        document.getElementById("callIdContainer");
-    // Case Notes
-    const caseNotesPlatform =
-        document.getElementById("platform");
-    if (!selected || !outboundCosmoId) {
-        return;
-    }
-
-    // ==========================================
-    // OUTBOUND CALL = YES
-    // ==========================================
-    if (selected.value === "Yes") {
-        const cosmoValue = outboundCosmoId.value.trim();
-
-        // --------------------------------------
-        // CASE INFORMATION
-        // --------------------------------------
-
-        // Automatically select Callback = Yes
-        if (caseCallback) {
-            caseCallback.value = "Yes";
-            // Trigger any existing onchange logic
-            caseCallback.dispatchEvent(
-                new Event("change", { bubbles: true })
-            );
-        }
-        // Show Cosmo/Call ID field
-        if (callIdContainer) {
-            callIdContainer.style.display = "block";
-        }
-        // Sync Cosmo/Call ID
-        if (caseCallerId) {
-            caseCallerId.value = cosmoValue;
-        }
-        // --------------------------------------
-        // CASE NOTES
-        // --------------------------------------
-
-        // Automatically select Callback / Service Recovery
-        if (caseNotesPlatform) {
-            caseNotesPlatform.value = " ";
-            // Trigger any existing platform onchange logic
-            caseNotesPlatform.dispatchEvent(
-                new Event("change", { bubbles: true })
-            );
-        }
-    }
-    // ==========================================
-    // OUTBOUND CALL = NO
-    // ==========================================
-    else {
-        // --------------------------------------
-        // CASE INFORMATION
-        // --------------------------------------
-
-        if (caseCallback) {
-            caseCallback.value = "No";
-            caseCallback.dispatchEvent(
-                new Event("change", { bubbles: true })
-            );
-        }
-        if (callIdContainer) {
-            callIdContainer.style.display = "none";
-        }
-        if (caseCallerId) {
-            caseCallerId.value = "";
-        }
-    }
-
-    updateEngagementPersonaVisibility();
-}
-
-// =========================================================
-// TOGGLE TYPE OF ENGAGEMENT / PERSONA USED VISIBILITY
-// =========================================================
-// Hidden only when Outbound Call = Yes AND Platform =
-// "Callback / Service Recovery" (value " "). Restored for
-// any other Platform selection.
-
-function updateEngagementPersonaVisibility() {
-    const outboundCallSelected = document.querySelector(
-        'input[name="outboundCall"]:checked'
-    );
-    const platformEl = document.getElementById("platform");
-    const row = document.getElementById("engagementPersonaRow");
-
-    if (!platformEl || !row) {
-        return;
-    }
-
-    const shouldHide =
-        !!outboundCallSelected &&
-        outboundCallSelected.value === "Yes" &&
-        platformEl.value === " ";
-
-    row.style.display = shouldHide ? "none" : "flex";
-}
-
-function toggleOutboundCall() {
-    const selected = document.querySelector(
-        'input[name="outboundCall"]:checked'
-    );
-    const details =
-        document.getElementById("outboundCallDetails");
-    const cosmoId =
-        document.getElementById("outboundCallCosmoId");
-    const aniCbr =
-        document.getElementById("outboundCallAniCbr");
-    const radioGroupEl =
-        document.querySelector(".outbound-radio-group");
-
-    // Clear the missing-field highlight now that a selection was made
-    if (radioGroupEl) radioGroupEl.classList.remove("field-missing");
-
-    if (!selected) {
-        details.style.display = "none";
-        cosmoId.value = "";
-        aniCbr.value = "";
-        cosmoId.classList.remove("field-missing");
-        aniCbr.classList.remove("field-missing");
-        syncOutboundCallToAllSections();
-        return;
-    }
-    if (selected.value === "Yes") {
-        // Show Outbound Call Details
-        details.style.display = "block";
-    } else {
-        // Hide Outbound Call Details
-        details.style.display = "none";
-        cosmoId.value = "";
-        aniCbr.value = "";
-        cosmoId.classList.remove("field-missing");
-        aniCbr.classList.remove("field-missing");
-    }
-
-    // Outbound Call -> Platform sync (skip if this run was itself
-    // triggered by a Platform change, to avoid clobbering it)
-    if (!isSyncingOutboundPlatform) {
-        const platformEl = document.getElementById("platform");
-        if (platformEl) {
-            isSyncingOutboundPlatform = true;
-            if (selected.value === "No") {
-                platformEl.value = "-- Select One --";
-            } else if (selected.value === "Yes") {
-                platformEl.value = " ";
-            }
-            platformEl.dispatchEvent(new Event("change"));
-            isSyncingOutboundPlatform = false;
-        }
-    }
-
-    // Sync everything
-    syncOutboundCallToAllSections();
-}
-
-// =========================================================
-// LIVE SYNC WHILE TYPING CALL/COSMO ID
-// =========================================================
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    const outboundCosmoId =
-        document.getElementById("outboundCallCosmoId");
-
-    if (outboundCosmoId) {
-
-        outboundCosmoId.addEventListener(
-            "input",
-            function () {
-
-                const selected = document.querySelector(
-                    'input[name="outboundCall"]:checked'
-                );
-
-                // Only sync when Outbound Call = Yes
-                if (selected && selected.value === "Yes") {
-                    syncOutboundCallToAllSections();
-                }
-            }
-        );
-    }
-    // Initial sync
-    syncOutboundCallToAllSections();
-});
-
-// =========================================================
-// AUTO-SYNC CASE INFORMATION
-// =========================================================
-
-const accountNumber = document.getElementById("accountNumber");
-const telephoneNumber = document.getElementById("telephoneNumber");
-
-const caseAccountNumber = document.getElementById("caseAccountNumber");
-const caseTelephoneNumber = document.getElementById("caseTelephoneNumber");
-
-// Sync Account Number
-accountNumber.addEventListener("input", function () {
-    caseAccountNumber.value = this.value;
-});
-
-// Sync Telephone Number
-telephoneNumber.addEventListener("input", function () {
-    caseTelephoneNumber.value = this.value;
-});
-
-function syncCaseUrl() {
-    const mainUrl = document.getElementById("url");
-    const caseUrl = document.getElementById("caseUrl");
-
-    if (mainUrl && caseUrl) {
-        caseUrl.value = mainUrl.value.trim();
-    }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    const mainUrl = document.getElementById("url");
-
-    if (mainUrl) {
-        mainUrl.addEventListener("input", syncCaseUrl);
-        mainUrl.addEventListener("change", syncCaseUrl);
-    }
-
-    syncCaseUrl();
-});
-
-/* =========================================================
-   LOCAL STORAGE
-   ========================================================= */
-
-const FORM_STORAGE_PREFIX = "form_";
-
-function getSaveableFields() {
-    // #sideNotepadText is excluded on purpose \u2014 the notepad is a separate
-    // scratchpad with its own save/load/clear logic, and shouldn't be
-    // wiped by Reset or touched by the case form's autosave.
-    return document.querySelectorAll(
-        "input[id]:not([readonly]), select[id], textarea[id]:not([readonly]):not(#sideNotepadText)"
-    );
-}
-
-function saveFormData() {
-    getSaveableFields().forEach(el => {
-        localStorage.setItem(
-            FORM_STORAGE_PREFIX + el.id,
-            el.value
-        );
-    });
-}
-
-function loadFormData() {
-    getSaveableFields().forEach(el => {
-        const savedValue = localStorage.getItem(
-            FORM_STORAGE_PREFIX + el.id
-        );
-
-        if (savedValue !== null) {
-            el.value = savedValue;
-        }
-    });
-}
-
-/* =========================================================
-   COPY FEEDBACK
-   ========================================================= */
-
-function showCopyFeedback(buttonElement, originalText) {
-    if (!buttonElement) {
-        return;
-    }
-
-    // remember original content (icon + label) so we can restore it exactly
-    if (!buttonElement.dataset.originalHtml) {
-        buttonElement.dataset.originalHtml = buttonElement.innerHTML;
-    }
-
-    buttonElement.classList.add("copied");
-    buttonElement.innerText = "✓ Copied!";
-
-    clearTimeout(buttonElement._copyFeedbackTimeout);
-    buttonElement._copyFeedbackTimeout = setTimeout(() => {
-        buttonElement.classList.remove("copied");
-        buttonElement.innerHTML = buttonElement.dataset.originalHtml;
-    }, 1500);
-}
-
-/* =========================================================
-   PLATFORM & PERSONA
-   ========================================================= */
-
-function updatePersonaDropdown() {
-    const platform = document.getElementById("platform").value.trim();
-    const personaSelect = document.getElementById("persona");
-    const engagementSelect = document.getElementById("engagementType");
-    const personaLabelEl = document.getElementById("personaLabel");
-    const savedPersona = localStorage.getItem(
-        FORM_STORAGE_PREFIX + "persona"
-    );
-
-    personaSelect.innerHTML = "";
-    engagementSelect.innerHTML = "";
-
-    /* CLIENT ENDORSEMENT */
-    if (platform === "Client Endorsement") {
-        if (personaLabelEl) {
-            personaLabelEl.textContent = "Endorsement Made Via";
-        }
-
-        [
-            "-- Select One --",
-            "Send Email Endorsement",
-            "Outbound Call"
-        ].forEach(e => {
-            const opt = document.createElement("option");
-            opt.value = e;
-            opt.text = e;
-            engagementSelect.appendChild(opt);
-        });
-
-        const personas = [
-            "   ",
-            "Telegram",
-            "MS Teams"
-        ];
-
-        personas.forEach(p => {
-            const opt = document.createElement("option");
-            opt.value = p;
-            opt.text = p;
-            personaSelect.appendChild(opt);
-        });
-
-        if (savedPersona && personas.includes(savedPersona)) {
-            personaSelect.value = savedPersona;
-        }
-
-        return;
-    }
-
-    if (personaLabelEl) {
-        personaLabelEl.textContent = "Persona Used";
-    }
-
-    /* CALLBACK ONLY */
-    if (platform === "") {
-        const opt = document.createElement("option");
-
-        opt.value = "N/A - Callback";
-        opt.text = "N/A - Callback";
-
-        personaSelect.appendChild(opt);
-
-        engagementSelect.innerHTML = `
-            <option value="Conduct Callback">Conduct Callback</option>
-        `;
-
-        engagementSelect.value = "Conduct Callback";
-    } else {
-        const allEngagements = [
-            "-- Select One --",
-            "Comment on Post (with Resolution)",
-            "Comment on Post (Reroute to PLDT Channels)",
-            "Comment on Post (Invite to DM)",
-            "Sent DM",
-            "Hide Comment",
-            "Edit Comment"
-        ];
-
-        allEngagements.forEach(e => {
-            const opt = document.createElement("option");
-            opt.value = e;
-            opt.text = e;
-            engagementSelect.appendChild(opt);
-        });
-
-        let personas = [];
-
-        if (platform === "Twitter") {
-            personas = [
-                "   ",
-                "Marvin (@marvin_dlcrz04)",
-                "Amelia (@_urameliagala)",
-                "Camilla (@CamieEast)",
-                "Jas (@JasSainnts)",
-                "Andrew (@andrw_chz)",
-                "Mari Elle (@bubblyelle_)",
-                "Anya (@anyacortes14)",
-                "Dennis (@DennisCastpiol)"
-            ];
-        } else if (platform === "Threads") {
-            personas = [
-                "  ",
-                "Andrew Chavez (@andrew_chz21)",
-                "Amelia Gala (@_ruamelia)",
-                "Camilla Ester (@cmll_ester)",
-                "Jas Santos (@jassantos07)",
-                "Mari Elle (@bubblyelle_)",
-                "Dennis Castillo (@denden_cstl)"
-            ];
-        } else if (platform === "Instagram") {
-            personas = [
-                "  ",
-                "Amelia Gala (_ruamelia)",
-                "Camilla Ester (cmll_ester)",
-                "Jas Santos (jassantos07)",
-                "Andrew Chavez (andrew_chz21)",
-                "Mari Elle (bubblyelle_)",
-                "Dennis Castillo (denden_cstl)"
-            ];
-        } else if (platform === "Reddit") {
-            personas = [
-                "  ",
-                "camilla_east (u/camilla_east)",
-                "Reddit Persona 2"
-            ];
-        } else {
-            personas = [
-                "   ",
-                "PLDT Cares",
-                "Sabrina Del Valle",
-                "Andrew Chavez",
-                "Lily Miller",
-                "Peter Delos Reyes",
-                "Amelia Gala",
-                "Dennis Castillo",
-                "Jas Santos",
-                "Samantha Smith",
-                "Nikki Perez",
-                "Camilla Ester",
-                "Mari Elle",
-                "Anya Cortes"
-            ];
-        }
-
-        personas.forEach(p => {
-            const opt = document.createElement("option");
-            opt.value = p;
-            opt.text = p;
-            personaSelect.appendChild(opt);
-        });
-
-        if (savedPersona && personas.includes(savedPersona)) {
-            personaSelect.value = savedPersona;
-        }
-    }
-}
-
-/* =========================================================
-   CATEGORY
-   ========================================================= */
-
-function updateCategoryFields(isInitialLoad = false) {
-    const category = document.getElementById("category").value;
-    const sub = document.getElementById("subCategory");
-    const subContainer = document.getElementById("subCategoryContainer");
-    const ticketContainer = document.getElementById("ticketContainer");
-    const promoCompContainer = document.getElementById("promoComplaintContainer");
-    const promoCompLabel = document.getElementById("promoComplaintLabel");
-    const promoCompSub = document.getElementById("promoComplaintSub");
-
-    const previousSubValue =
-        sub.value ||
-        localStorage.getItem(FORM_STORAGE_PREFIX + "subCategory");
-
-    const previousPromoCompValue =
-        promoCompSub.value ||
-        localStorage.getItem(
-            FORM_STORAGE_PREFIX + "promoComplaintSub"
-        );
-
-    sub.innerHTML = "";
-    promoCompSub.innerHTML = "";
-
-    subContainer.style.display = "none";
-    ticketContainer.style.display = "none";
-    promoCompContainer.style.display = "none";
-
-    if (category === "Service/Technical Issues") {
-        subContainer.style.display = "block";
-        ticketContainer.style.display = "block";
-
-        [
-
-            "Report Trouble - NIC/NDT",
-			"Report Trouble - NIC",
-            "Report Trouble - NDT",
-            "Report Trouble - SIC/INTERMITTENT",
-			"Follow Up Repair (OFSC)",
-            "Follow Up Repair (Outage)",
-            "Report Trouble - IPTV",
-            "Report Trouble - VAS (Defective Unit / Content Issue)",
-            "Bantay Kable (164)",
-            "Modem Requests (Super Admin / Local GUI / Change WiFi UN/PW)",
-            "Service Restoration (Customer Confirmed)",
-            "Service Restoration (Unconfirmed)"
-        ].forEach(o => {
-            const opt = document.createElement("option");
-            opt.value = o;
-            opt.text = o;
-            sub.appendChild(opt);
-        });
-
-        if (previousSubValue) {
-            sub.value = previousSubValue;
-        }
-    } else if (category === "Billing/Aftersales Issues") {
-        subContainer.style.display = "block";
-        ticketContainer.style.display = "block";
-
-        [
-            "Relocation",
-            "Relocation (Follow Up)",
-            "New Application",
-            "New Application (Follow Up)",
-            "Cignal Activation",
-            "Upgrade / Downgrade",
-            "Disconnection",
-            "Reconnection",
-            "Account / Billing Concerns",
-			"Payment Concerns",
-            "myHome Concerns",
-            "Bill Dispute",
-			"Rebate",
-            "Refund",
-            "VAS Activation (HBO Max / Netflix / Viu)",
-			"VAS Delivery (Follow Up)",
-			"Inmove",
-			"Wire Re-Route",
-			"Change Ownership",
-			"Always On",
-			"Migration",
-            "Others"
-        ].forEach(o => {
-            const opt = document.createElement("option");
-            opt.value = o;
-            opt.text = o;
-            sub.appendChild(opt);
-        });
-
-        if (previousSubValue) {
-            sub.value = previousSubValue;
-        }
-    } else if (category === "Products and Promos") {
-        promoCompContainer.style.display = "block";
-        promoCompLabel.innerText = "Product / Promo Type";
-
-        [
-            "New Application / PLDT Plans",
-            "Fiber Prepaid",
-            "Always On",
-            "Cignal / IPTV",
-            "Netflix / HBO Max / Viu",
-            "StreamTV",
-            "Cameras / Door Lock",
-            "Others",
-            "Speed Add On",
-            "Speed Alignment",
-            "Wifi Mesh"
-        ].forEach(o => {
-            const opt = document.createElement("option");
-            opt.value = o;
-            opt.text = o;
-            promoCompSub.appendChild(opt);
-        });
-
-        if (previousPromoCompValue) {
-            promoCompSub.value = previousPromoCompValue;
-        }
-    } else if (
-        category ===
-        "Personnel Complaints (Technicians, Contractors, Call center Vendor, SSC)"
-    ) {
-        promoCompContainer.style.display = "block";
-        promoCompLabel.innerText = "Complaint Personnel Type";
-
-        [
-            " ",
-            "Delivery Courier Service",
-            "Hotline Agent",
-            "Sales / Field Agent",
-            "Social Media Agent",
-            "SSC Personnel",
-            "Technician",
-            "Customer Service Complaints",
-            "Telesales"
-        ].forEach(o => {
-            const opt = document.createElement("option");
-            opt.value = o;
-            opt.text = o;
-            promoCompSub.appendChild(opt);
-        });
-
-        if (previousPromoCompValue) {
-            promoCompSub.value = previousPromoCompValue;
-        }
-    } else if (category === "Brand Hate") {
-        promoCompContainer.style.display = "block";
-        promoCompLabel.innerText = "Brand Hate Subcategory";
-
-        [
-            " ",
-            "Product / Service Dissatisfaction",
-            "Profanity / Abusive Language",
-            "Repetitive Negative Comments",
-			"Spamming",
-            "Trolling"
-        ].forEach(o => {
-            const opt = document.createElement("option");
-            opt.value = o;
-            opt.text = o;
-            promoCompSub.appendChild(opt);
-        });
-
-        if (previousPromoCompValue) {
-            promoCompSub.value = previousPromoCompValue;
-        }
-    } else if (category === "Threats") {
-        promoCompContainer.style.display = "block";
-        promoCompLabel.innerText = "Threats Subcategory";
-
-        [
-            " ",
-            "Service Cancellation / Churn to Another ISP",
-            "Legal Action",
-            "Regulatory Complaint / Escalation (NTC, DTI, etc.)",
-            "Executive / Government Escalation",
-			"Physical Threats (Personnel/Facility)",
-            "Public / Social Media Escalation"
-        ].forEach(o => {
-            const opt = document.createElement("option");
-            opt.value = o;
-            opt.text = o;
-            promoCompSub.appendChild(opt);
-        });
-
-        if (previousPromoCompValue) {
-            promoCompSub.value = previousPromoCompValue;
-        }
-    } else if (category === "Brand Advocacy/Positive Comments") {
-        promoCompContainer.style.display = "block";
-        promoCompLabel.innerText = "Advocacy Subcategory";
-
-        [
-            " ",
-            "Positive Experience",
-            "Product / Brand Promotion",
-            "Success Story / Testimonial",
-            "Brand Defense",
-            "Product / Service Satisfaction",
-            "Loyalty & Retention"
-        ].forEach(o => {
-            const opt = document.createElement("option");
-            opt.value = o;
-            opt.text = o;
-            promoCompSub.appendChild(opt);
-        });
-
-        if (previousPromoCompValue) {
-            promoCompSub.value = previousPromoCompValue;
-        }
-    }
-
-    generateIssueNotes();
-}
-
-/* =========================================================
-   ISSUE NOTES
-   ========================================================= */
-
-   const formatDate = (dateString) => {
-    if (!dateString) return "";
-
-    const [year, month, day] = dateString.split("-");
-
-    const months = [
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ];
-
-    return `${day}-${months[parseInt(month, 10) - 1]}-${year}`;
-};
-
-function generateIssueNotes() {
-    const category = document.getElementById("category").value.trim();
-    const postDateRaw = document.getElementById("postDate").value.trim();
-    const postDate = formatDate(postDateRaw);
-    const customerGroup = document.getElementById("customerGroup").value.trim();
-    const ticket = document.getElementById("ticketNumber").value.trim();
-
-    let wocas = document.getElementById("wocas").value;
-    const url = document.getElementById("url").value.trim();
-
-    const ftExtra = document.getElementById("ftExtraContainer");
-
-    // ==========================================
-    // CLEAN WOCAS
-    // ==========================================
-
-    if (wocas) {
-        wocas = wocas
-            .split("\n")
-            .map(line => line.trim())
-            .filter(Boolean)
-            .join("\n");
-    }
-
-// ==========================================
-// OUTBOUND CALL
-// ==========================================
-
-const outboundCall = document.querySelector(
-    'input[name="outboundCall"]:checked'
-);
-
-let outboundBlock = "";
-
-if (outboundCall && outboundCall.value === "Yes") {
-    const cosmoId = document
-        .getElementById("outboundCallCosmoId")
-        .value
-        .trim();
-
-    const aniCbr = document
-        .getElementById("outboundCallAniCbr")
-        .value
-        .trim();
-
-    const outboundLines = [];
-
-    // First line
-    let firstLine = "Outbound Call: Yes";
-
-    if (cosmoId) {
-        firstLine += ` | Cosmo ID: ${cosmoId}`;
-    }
-
-    outboundLines.push(firstLine);
-
-    // Second line
-    if (aniCbr) {
-        outboundLines.push(`ANI/CBR: ${aniCbr}`);
-    }
-
-    outboundBlock = outboundLines.join("\n");
-}
-
-    // ==========================================
-    // HEADER
-    // ==========================================
-
-    const headerParts = [];
-
-    if (category) {
-        headerParts.push(category);
-    }
-
-    if (category === "Service/Technical Issues") {
-
-        const sub = document
-            .getElementById("subCategory")
-            .value
-            .trim();
-
-        if (sub) {
-            headerParts.push(sub);
-        }
-
-        ftExtra.style.display = ticket ? "block" : "none";
-
-    } else if (category === "Billing/Aftersales Issues") {
-
-        const sub = document
-            .getElementById("subCategory")
-            .value
-            .trim();
-
-        if (sub) {
-            headerParts.push(sub);
-        }
-
-        ftExtra.style.display = "none";
-
-    } else if (
-        category === "Products and Promos" ||
-        category === "Personnel Complaints (Technicians, Contractors, Call center Vendor, SSC)" ||
-        category === "Brand Hate" ||
-        category === "Threats" ||
-        category === "Brand Advocacy/Positive Comments"
-    ) {
-
-        const detailSubValue = document
-            .getElementById("promoComplaintSub")
-            .value
-            .trim();
-
-        if (detailSubValue) {
-            headerParts.push(detailSubValue);
-        }
-
-        ftExtra.style.display = "none";
-
-    } else {
-        ftExtra.style.display = "none";
-    }
-
-    const header = headerParts.join(" | ");
-
-    // ==========================================
-    // FT DETAILS
-    // ==========================================
-
-    let ftBlock = "";
-
-    if (category === "Service/Technical Issues" && ticket) {
-
-        const issue = document
-            .getElementById("ftIssueType")
-            .value
-            .trim();
-
-        const origin = document
-            .getElementById("ftOrigin")
-            .value
-            .trim();
-
-        const cause = document
-            .getElementById("ftCause")
-            .value
-            .trim();
-
-        const creator = document
-            .getElementById("ftCreator")
-            .value
-            .trim();
-
-        const ftParts = [ticket];
-
-        if (issue) {
-            ftParts.push(issue);
-        }
-
-        if (origin) {
-            ftParts.push(origin);
-        }
-
-        if (cause) {
-            ftParts.push(cause);
-        }
-
-        if (creator) {
-            ftParts.push(creator);
-        }
-
-        ftBlock = `FT: ${ftParts.join(" / ")}`;
-    }
-
-    // ==========================================
-    // BUILD FINAL OUTPUT
-    // ==========================================
-    // Layout (each section separated by exactly one blank line):
-    //
-    //   Header [+ Outbound Call lines directly underneath]
-    //
-    //   Post Date: ...
-    //   Group: ...            <- only when Group is not blank
-    //
-    //   WOCAS: ...
-    //
-    //   URL: ...
-    //
-    //   FT: ...
-
-    const sections = [];
-
-    // Header (+ Outbound Call lines stay attached to the header)
-    // Billing/Aftersales: SO goes on its own line right under the header
-    const soLine = (category === "Billing/Aftersales Issues" && ticket) ? `SO: ${ticket}` : "";
-    const headerSection = [header, soLine, outboundBlock].filter(Boolean).join("\n");
-    if (headerSection) {
-        sections.push(headerSection);
-    }
-
-    // Post Date / Group (Group hidden when blank)
-    const postInfoLines = [];
-
-    if (postDate) {
-        postInfoLines.push(`Post Date: ${postDate}`);
-    }
-
-    if (customerGroup) {
-        postInfoLines.push(`Group: ${customerGroup}`);
-    }
-
-    if (postInfoLines.length) {
-        sections.push(postInfoLines.join("\n"));
-    }
-
-    // WOCAS
-    if (wocas) {
-        sections.push(`WOCAS: ${wocas}`);
-    }
-
-    // URL
-    if (url) {
-        sections.push(`URL: ${url}`);
-    }
-
-    // FT
-    if (ftBlock) {
-        sections.push(ftBlock);
-    }
-
-    // Strip trailing spaces on every line and make sure no more than
-    // one blank line ever appears in a row.
-    const finalNote = sections
-        .join("\n\n")
-        .split("\n")
-        .map(line => line.replace(/\s+$/g, ""))
-        .join("\n")
-        .replace(/\n{3,}/g, "\n\n")
-        .trim();
-
-    // ==========================================
-    // OUTPUT
-    // ==========================================
-
-    document.getElementById("subjectOutput").value = category;
-
-    document.getElementById("issueOutput").value = finalNote;
-}
-
-/* =========================================================
-   ENGAGEMENT NOTES
-   ========================================================= */
-
-function generateEngagement() {
-    const category = document.getElementById("category").value.trim();
-    const platform = document.getElementById("platform").value.trim();
-    const type = document.getElementById("engagementType").value.trim();
-    const persona = document.getElementById("persona").value.trim();
-    const acct = document.getElementById("accountNumber").value.trim();
-    const tel = document.getElementById("telephoneNumber").value.trim();
-    const action = document.getElementById("actionsDone").value.trim();
-    const comment = document.getElementById("commentText").value.trim();
-    const ticket = document.getElementById("ticketNumber").value.trim();
-
-    const issue = document.getElementById("ftIssueType").value.trim();
-    const origin = document.getElementById("ftOrigin").value.trim();
-    const cause = document.getElementById("ftCause").value.trim();
-    const creator = document.getElementById("ftCreator").value.trim();
-
-    const cosmoId = document
-        .getElementById("outboundCallCosmoId")
-        ?.value.trim() || "";
-
-    const aniCbr = document
-        .getElementById("outboundCallAniCbr")
-        ?.value.trim() || "";
-
-    const showComment = [
-        "Comment on Post (with Resolution)",
-        "Comment on Post (Reroute to PLDT Channels)",
-        "Comment on Post (Invite to DM)",
-        "Sent DM",
-        "Edit Comment"
-    ].includes(type);
-
-    const showActionDone = [
-        "Comment on Post (with Resolution)",
-        "Comment on Post (Reroute to PLDT Channels)",
-        "Comment on Post (Invite to DM)",
-        "Hide Comment",
-        "Sent DM",
-        "Edit Comment",
-        "Conduct Callback",
-        "Send Email Endorsement",
-        "Outbound Call"
-    ].includes(type);
-
-    document.getElementById("commentContainer").style.display =
-        showComment ? "block" : "none";
-
-    document.getElementById("actionContainer").style.display =
-        showActionDone ? "block" : "none";
-
-    /* ---- Dynamic field labels based on Type of Engagement ---- */
-    const actionsDoneLabelEl = document.getElementById("actionsDoneLabel");
-    const commentTextLabelEl = document.getElementById("commentTextLabel");
-    const commentTextEl = document.getElementById("commentText");
-    const commentTextHintEl = document.getElementById("commentTextHint");
-
-    if (actionsDoneLabelEl) {
-        actionsDoneLabelEl.textContent =
-            type === "Edit Comment" ? "Previous Comment with Actions Done" : "Actions Done";
-    }
-
-    if (commentTextLabelEl) {
-        if (type === "Edit Comment") {
-            commentTextLabelEl.textContent = "New Comment";
-        } else {
-            commentTextLabelEl.textContent = "Comment / Message Sent";
-        }
-    }
-
-    if (commentTextEl) {
-        commentTextEl.placeholder = "Comment/Message to customer...";
-    }
-
-    if (commentTextHintEl) {
-        commentTextHintEl.style.display = "none";
-    }
-
-    const outboundCallSelected = document.querySelector(
-        'input[name="outboundCall"]:checked'
-    );
-
-    const isOutboundCallback =
-        !!outboundCallSelected &&
-        outboundCallSelected.value === "Yes" &&
-        type === "Conduct Callback";
-
-    const sectionSep = "\n\n";
-
-    /* =========================================================
-       OUTBOUND CALLBACK
-       ========================================================= */
-
-    if (isOutboundCallback) {
-
-        const outputLines = [];
-
-        // ------------------------------------------
-        // Header
-        // ------------------------------------------
-
-        let callbackHeader = "Conduct Callback - Outbound";
-
-        if (aniCbr) {
-            callbackHeader += ` | ${aniCbr}`;
-        }
-
-        outputLines.push(callbackHeader);
-
-        // ------------------------------------------
-        // Cosmo ID
-        // ------------------------------------------
-
-        if (cosmoId) {
-            outputLines.push(`Cosmo ID: ${cosmoId}`);
-        }
-
-        // ------------------------------------------
-        // Account / Telephone
-        // ------------------------------------------
-
-        const contactParts = [];
-
-        if (acct) {
-            contactParts.push(`Acct#: ${acct}`);
-        }
-
-        if (tel) {
-            contactParts.push(`Tel#: ${tel}`);
-        }
-
-        if (contactParts.length) {
-            outputLines.push(contactParts.join(" | "));
-        }
-
-        // ------------------------------------------
-        // Action Done
-        // ------------------------------------------
-
-        if (action) {
-            outputLines.push("");
-            outputLines.push(`Action Done: ${action}`);
-        }
-
-        // ------------------------------------------
-        // FT
-        // ------------------------------------------
-
-        if (ticket && category === "Service/Technical Issues") {
-
-            const ftParts = [ticket];
-
-            if (issue) {
-                ftParts.push(issue);
-            }
-
-            if (origin) {
-                ftParts.push(origin);
-            }
-
-            if (cause) {
-                ftParts.push(cause);
-            }
-
-            if (creator) {
-                ftParts.push(creator);
-            }
-
-            outputLines.push("");
-            outputLines.push(`FT: ${ftParts.join(" / ")}`);
-
-        } else if (ticket && category === "Billing/Aftersales Issues") {
-
-            outputLines.push("");
-            outputLines.push(`SO: ${ticket}`);
-        }
-
-        // ------------------------------------------
-        // Footer
-        // ------------------------------------------
-
-        outputLines.push("");
-        outputLines.push("CNDT-PusoAdvocate");
-
-        document.getElementById("engagementOutput").value =
-            outputLines.join("\n").trim();
-
-        return;
-    }
-
-    /* =========================================================
-       NORMAL ENGAGEMENT
-       ========================================================= */
-
-    const headerLines = [];
-    const headerParts = [];
-
-    if (platform) {
-        if (platform === "Client Endorsement") {
-            headerParts.push(
-                persona ? `${platform} from ${persona}` : platform
-            );
-        } else {
-            headerParts.push(platform);
-
-            if (persona) {
-                headerParts.push(`Persona used: ${persona}`);
-            }
-        }
-    }
-
-    if (headerParts.length) {
-        headerLines.push(headerParts.join(" | "));
-    }
-
-    if (type && type !== "-- Select One --") {
-        headerLines.push(type);
-    }
-
-    const contactParts = [];
-
-    if (acct) {
-        contactParts.push(`Acct#: ${acct}`);
-    }
-
-    if (tel) {
-        contactParts.push(`Tel#: ${tel}`);
-    }
-
-    if (contactParts.length) {
-        headerLines.push(contactParts.join(" | "));
-    }
-
-    let note = headerLines.join("\n");
-
-    if (showActionDone && action) {
-        const actionLabel =
-            type === "Edit Comment" ? "Previous Comment with Actions Done" : "Action Done";
-        note += `${sectionSep}${actionLabel}: ${action}`;
-    }
-
-    if (showComment && comment) {
-        let commentLabel = "Comment";
-        if (type === "Edit Comment") {
-            commentLabel = "New Comment";
-        }
-        note += `${sectionSep}${commentLabel}: ${comment}`;
-    }
-
-    if (ticket) {
-
-        if (category === "Service/Technical Issues") {
-
-            const ftParts = [ticket];
-
-            if (issue) {
-                ftParts.push(issue);
-            }
-
-            if (origin) {
-                ftParts.push(origin);
-            }
-
-            if (cause) {
-                ftParts.push(cause);
-            }
-
-            if (creator) {
-                ftParts.push(creator);
-            }
-
-            note += `${sectionSep}FT: ${ftParts.join(" / ")}`;
-
-        } else if (category === "Billing/Aftersales Issues") {
-
-            note += `${sectionSep}SO: ${ticket}`;
-        }
-    }
-
-    note += `${sectionSep}CNDT-PusoAdvocate`;
-
-    document.getElementById("engagementOutput").value =
-        note.trim();
-}
-
-/* =========================================================
-   COPY ISSUE
-   ========================================================= */
-
-function validateOutboundCallForCopy() {
-    const selected = document.querySelector(
-        'input[name="outboundCall"]:checked'
-    );
-
-    const radioGroupEl = document.getElementById("outboundCallToggle");
-
-    if (!selected) {
-        if (radioGroupEl) radioGroupEl.classList.add("field-missing");
-        alert("Please select whether this is an Outbound Call: Yes or No.");
-        return false;
-    }
-
-    if (radioGroupEl) radioGroupEl.classList.remove("field-missing");
-
-    if (selected.value === "Yes") {
-        const cosmoIdEl = document.getElementById("outboundCallCosmoId");
-        const aniCbrEl = document.getElementById("outboundCallAniCbr");
-
-        const cosmoId = cosmoIdEl.value.trim();
-        const aniCbr = aniCbrEl.value.trim();
-
-        let missing = [];
-
-        if (!cosmoId) {
-            cosmoIdEl.classList.add("field-missing");
-            missing.push("Call/Cosmo ID");
-        } else {
-            cosmoIdEl.classList.remove("field-missing");
-        }
-
-        if (!aniCbr) {
-            aniCbrEl.classList.add("field-missing");
-            missing.push("ANI/CBR");
-        } else {
-            aniCbrEl.classList.remove("field-missing");
-        }
-
-        if (missing.length) {
-            alert(`Please enter the ${missing.join(" and ")} before copying.`);
-            return false;
-        }
-    }
-
-    return true;
-}
-
-function copyIssue() {
-
-    // Validate Outbound Call requirements first
-    if (!validateOutboundCallForCopy()) {
-        return;
-    }
-
-    const btn = document.querySelector(
-        "button[onclick='copyIssue()']"
-    );
-
-    const issueOutput = document.getElementById("issueOutput").value;
-
-    if (!issueOutput.trim()) {
-        alert("There is no Description Notes to copy.");
-        return;
-    }
-
-    copyText(issueOutput).then(() => {
-        showCopyFeedback(btn, "Copy Description");
-    });
-}
-
-/* =========================================================
-   COPY SUBJECT
-   ========================================================= */
-
-function copySubject() {
-    const btn = document.querySelector(
-        "button[onclick='copySubject()']"
-    );
-
-    copyText(
-        document.getElementById("subjectOutput").value
-    ).then(() => {
-        showCopyFeedback(btn, "Copy Subject");
-    });
-}
-
-/* =========================================================
-   COPY ENGAGEMENT
-   ========================================================= */
-
-function copyEngagement() {
-    const btn = document.querySelector(
-        "button[onclick='copyEngagement()']"
-    );
-
-    copyText(
-        document.getElementById("engagementOutput").value
-    ).then(() => {
-        showCopyFeedback(btn, "Copy SF Case Notes");
-    });
-}
-
-/* =========================================================
-   UNIVERSAL COPY
-   ========================================================= */
-
-function copyText(text) {
-    if (navigator.clipboard && window.isSecureContext) {
-        return navigator.clipboard.writeText(text);
-    }
-
-    return new Promise((resolve, reject) => {
-        const textarea = document.createElement("textarea");
-
-        textarea.value = text;
-        textarea.style.position = "fixed";
-        textarea.style.left = "-9999px";
-
-        document.body.appendChild(textarea);
-        textarea.select();
-
-        try {
-            document.execCommand("copy");
-            document.body.removeChild(textarea);
-            resolve();
-        } catch (error) {
-            document.body.removeChild(textarea);
-            reject(error);
-        }
-    });
-}
-
-/* =========================================================
-   DARK MODE
-   ========================================================= */
-
-function updateDarkModeToggle() {
-    const toggle = document.getElementById("darkModeToggle");
-    const label = document.getElementById("darkModeLabel");
-
-    if (!toggle) return;
-
-    const isDark = document.body.classList.contains("dark");
-
-    toggle.setAttribute("aria-pressed", String(isDark));
-
-    if (label) {
-        label.textContent = isDark ? "Light Mode" : "Dark Mode";
-    }
-}
-
-function toggleDarkMode() {
-    document.body.classList.toggle("dark");
-
-    const isDark = document.body.classList.contains("dark");
-
-    localStorage.setItem("dark", isDark);
-
-    updateDarkModeToggle();
-
-    playPressAnimation("darkModeToggle");
-}
-
-if (localStorage.getItem("dark") === "true") {
-    document.body.classList.add("dark");
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    updateDarkModeToggle();
-});
-
-/* =========================================================
-   RESET
-   ========================================================= */
-
-function resetAll() {
-    getSaveableFields().forEach(el => {
-        el.value = "";
-
-        localStorage.removeItem(
-            FORM_STORAGE_PREFIX + el.id
-        );
-    });
-
-    document.getElementById("subCategoryContainer").style.display = "none";
-    document.getElementById("promoComplaintContainer").style.display = "none";
-    document.getElementById("ticketContainer").style.display = "none";
-    document.getElementById("commentContainer").style.display = "none";
-    document.getElementById("ftExtraContainer").style.display = "none";
-
-    document.getElementById("platform").value = "Facebook";
-
-    updatePersonaDropdown();
-    updateEngagementPersonaVisibility();
-
-    document.getElementById("subjectOutput").value = "";
-    document.getElementById("issueOutput").value = "";
-    document.getElementById("engagementOutput").value = "";
-
-    clearBusinessSearch();
-    closeCaseInfoModal();
-
-    generateIssueNotes();
-    generateEngagement();
-}
-
-/* =========================================================
-   BUSINESS ZONE / CITY SEARCH DATABASE
-   ========================================================= */
-
-const businessZoneData = [
+<script type="application/json" id="zone-data">
+[
 ["CTAABMT", "Angono (ANG)", "ANGONO EXCHANGE"],
 ["CTAABMT", "Antipolo City (ANT)", "ANTIPOLO CITY EXCHANGE"],
 ["CTAABMT", "Baras (BRS)", "BARAS RIZAL SERVICE CODE"],
@@ -4984,8 +2941,2378 @@ const businessZoneData = [
 ["NORTH CEBU", "Tabuelan (TBU)", "TABUELAN SERVICE CODE"],
 ["NORTH CEBU", "Tuburan (TRN)", "TUBURAN CEB SERVICE CODE"],
 ["NORTH CEBU", "Tudela (TDL)", "TUDELA CEB SERVICE CODE"]
+]
+</script>
 
-];
+<script>
+
+// =========================================================
+// CONFIG + CONSTANTS  (single source of truth)
+// Names of platforms / engagement types / personas live in the
+// #app-config JSON block. Everything below is built from it, so
+// the dropdowns and the .includes() checks can never drift apart.
+// =========================================================
+
+const CONFIG = JSON.parse(document.getElementById("app-config").textContent);
+
+const SELECT_PLACEHOLDER = CONFIG.selectPlaceholder;
+
+const PLATFORM = Object.fromEntries(CONFIG.platforms.map(p => [p.id, p.value]));
+PLATFORM.none = "";   // the real "-- Select One --" option has an empty value
+
+const ENGAGEMENT = CONFIG.engagement.names;
+
+function engagementNamesFor(ids) {
+    return ids.map(id => {
+        if (!(id in ENGAGEMENT)) throw new Error("Unknown engagement id in config: " + id);
+        return ENGAGEMENT[id];
+    });
+}
+
+const ENGAGEMENT_FOR_PLATFORM = {
+    standard: engagementNamesFor(CONFIG.engagement.forPlatform.standard),
+    clientEndorsement: engagementNamesFor(CONFIG.engagement.forPlatform.clientEndorsement),
+    callback: engagementNamesFor(CONFIG.engagement.forPlatform.callback)
+};
+const ENGAGEMENT_SHOWS_COMMENT = engagementNamesFor(CONFIG.engagement.showsComment);
+const ENGAGEMENT_SHOWS_ACTION_DONE = engagementNamesFor(CONFIG.engagement.showsActionDone);
+
+function fillSelect(selectEl, values, withPlaceholder) {
+    selectEl.innerHTML = "";
+    if (withPlaceholder) {
+        const ph = document.createElement("option");
+        ph.value = "";
+        ph.textContent = SELECT_PLACEHOLDER;
+        selectEl.appendChild(ph);
+    }
+    values.forEach(v => {
+        const opt = document.createElement("option");
+        opt.value = v;
+        opt.textContent = v;
+        selectEl.appendChild(opt);
+    });
+}
+
+fillSelect(document.getElementById("platform"), CONFIG.platforms.map(p => p.value), true);
+
+// =========================================================
+// SAFE STORAGE
+// Every read/write goes through here. If the browser blocks or
+// fills its storage, the agent sees a notice instead of the
+// autosave silently stopping.
+// =========================================================
+
+let storageNoticeShown = false;
+
+function reportStorageFailure(err) {
+    console.warn("Browser storage unavailable:", err);
+    if (storageNoticeShown) return;
+    storageNoticeShown = true;
+
+    const notice = document.createElement("div");
+    notice.className = "storage-notice";
+    notice.setAttribute("role", "status");
+
+    const text = document.createElement("span");
+    text.textContent = "\u26a0 Autosave unavailable \u2014 browser storage is blocked or full. Your entries won\u2019t survive a refresh.";
+
+    const close = document.createElement("button");
+    close.type = "button";
+    close.setAttribute("aria-label", "Dismiss");
+    close.textContent = "\u00d7";
+    close.addEventListener("click", () => notice.remove());
+
+    notice.append(text, close);
+    document.body.appendChild(notice);
+}
+
+function makeSafeStore(kind) {
+    const area = () => window[kind];   // may throw if storage is blocked
+    return {
+        get(key) {
+            try { return area().getItem(key); }
+            catch (err) { reportStorageFailure(err); return null; }
+        },
+        getJSON(key, fallback) {
+            const raw = this.get(key);
+            if (raw === null) return fallback;
+            try { return JSON.parse(raw); }
+            catch (err) { console.warn("Ignoring corrupt saved value for", key, err); return fallback; }
+        },
+        set(key, value) {
+            try { area().setItem(key, String(value)); return true; }
+            catch (err) { reportStorageFailure(err); return false; }
+        },
+        remove(key) {
+            try { area().removeItem(key); return true; }
+            catch (err) { reportStorageFailure(err); return false; }
+        }
+    };
+}
+
+const store = makeSafeStore("localStorage");          // survives closing the browser
+const sessionStore = makeSafeStore("sessionStorage"); // cleared when the tab closes
+
+// =========================================================
+// INLINE MESSAGES  (instead of popup dialogs)
+// =========================================================
+
+const inlineMessages = new WeakMap();
+
+function clearInlineMessage(anchor) {
+    const entry = anchor && inlineMessages.get(anchor);
+    if (!entry) return;
+    clearTimeout(entry.timer);
+    entry.msg.remove();
+    inlineMessages.delete(anchor);
+}
+
+function clearAllInlineMessages(container) {
+    (container || document).querySelectorAll(".inline-msg").forEach(el => el.remove());
+}
+
+// Shows a message next to `anchor`. It disappears when the agent edits the
+// anchor, or after `timeout` ms (0 = stay until edited).
+function showInlineMessage(anchor, text, options = {}) {
+    if (!anchor) return null;
+    clearInlineMessage(anchor);
+
+    const msg = document.createElement("div");
+    msg.className = "inline-msg";
+    msg.setAttribute("role", "alert");
+    msg.textContent = text;
+    anchor.insertAdjacentElement(options.position || "afterend", msg);
+
+    const timeout = options.timeout === undefined ? 8000 : options.timeout;
+    const timer = timeout ? setTimeout(() => clearInlineMessage(anchor), timeout) : null;
+    const dismiss = () => clearInlineMessage(anchor);
+    anchor.addEventListener("input", dismiss, { once: true });
+    anchor.addEventListener("change", dismiss, { once: true });
+
+    inlineMessages.set(anchor, { msg, timer });
+    return msg;
+}
+
+// =========================================================
+// DECLARATIVE HANDLERS
+// Buttons/inputs carry data-click / data-change / data-filter instead of
+// inline event attributes; they are wired here, once.
+// =========================================================
+
+const INPUT_FILTERS = {
+    digits: v => v.replace(/[^0-9]/g, ""),
+    ticket: v => v.replace(/[^0-9RBGrbg_\/ ]/g, ""),
+    digitsSlash: v => v.replace(/[^0-9\/ ]/g, "")
+};
+
+// Each action receives (element, event). Returning false means "didn't happen",
+// which suppresses the green "Copied" flash on buttons that have data-confirm.
+const CLICK_ACTIONS = {
+    resetAll: (el) => handleResetAll(el),
+    openBreakAlarmModal: () => openBreakAlarmModal(),
+    closeBreakAlarmModal: () => closeBreakAlarmModal(),
+    toggleDarkMode: () => toggleDarkMode(),
+    stopActiveBreakTimer: () => stopActiveBreakTimer(),
+    requestBreakAlarmNotifyPermission: () => requestBreakAlarmNotifyPermission(),
+    sendBreakAlarmTestNotification: () => sendBreakAlarmTestNotification(),
+    clearBreakAlarms: () => clearBreakAlarms(),
+    saveBreakAlarms: () => saveBreakAlarms(),
+    copySubject: () => copySubject(),
+    copyIssue: () => copyIssue(),
+    copyEngagement: () => copyEngagement(),
+    openPusoReportModal: () => openPusoReportModal(),
+    closePusoReportModal: () => closePusoReportModal(),
+    copyPusoReport: () => copyPusoReport(),
+    openCaseInfoModal: () => openCaseInfoModal(),
+    closeCaseInfoModal: () => closeCaseInfoModal(),
+    copyCaseInformation: () => copyCaseInformation(),
+    openCitySearchFromCaseInfo: () => openCitySearchFromCaseInfo(),
+    openResolvedNotesModal: () => openResolvedNotesModal(),
+    closeResolvedNotesModal: () => closeResolvedNotesModal(),
+    copyResolvedNotes: () => copyResolvedNotes(),
+    clearModalFields: (el) => clearModalFields(el.dataset.arg),
+    toggleSideNotepad: () => toggleSideNotepad(),
+    closeSideNotepad: () => closeSideNotepad(),
+    clearSideNotepad: () => clearSideNotepad(),
+    clearBusinessSearch: () => clearBusinessSearch()
+};
+
+const CHANGE_ACTIONS = {
+    toggleOutboundCall: () => toggleOutboundCall(),
+    toggleOtherQueue: () => toggleOtherQueue(),
+    toggleCallbackField: () => toggleCallbackField(),
+    toggleResolvedFtCause: () => toggleResolvedFtCause()
+};
+
+function bindDeclarativeHandlers() {
+    document.querySelectorAll("[data-click]").forEach(el => {
+        const action = CLICK_ACTIONS[el.dataset.click];
+        if (!action) { console.error("Unknown data-click action:", el.dataset.click); return; }
+        el.addEventListener("click", (event) => {
+            const result = action(el, event);
+            if (el.dataset.confirm) {
+                Promise.resolve(result).then(ok => {
+                    if (ok !== false) showConfirm(el, el.dataset.confirm);
+                });
+            }
+        });
+    });
+
+    document.querySelectorAll("[data-change]").forEach(el => {
+        const action = CHANGE_ACTIONS[el.dataset.change];
+        if (!action) { console.error("Unknown data-change action:", el.dataset.change); return; }
+        el.addEventListener("change", action);
+    });
+
+    document.querySelectorAll("[data-filter]").forEach(el => {
+        const filter = INPUT_FILTERS[el.dataset.filter];
+        if (!filter) { console.error("Unknown data-filter:", el.dataset.filter); return; }
+        el.addEventListener("input", () => {
+            const cleaned = filter(el.value);
+            if (cleaned !== el.value) el.value = cleaned;
+        });
+    });
+}
+
+// Must run before the generic input listeners are attached further down,
+// so the filters clean the value first (same order the inline handlers had).
+bindDeclarativeHandlers();
+
+function debounce(fn, ms) {
+    let timer = null;
+    const wrapped = (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), ms);
+    };
+    wrapped.cancel = () => clearTimeout(timer);
+    return wrapped;
+}
+
+// =========================================================
+// RESOLVED CASE MODAL
+// =========================================================
+
+function toggleResolvedFtCause() {
+    const issueType = document.getElementById('resolvedFtIssueType').value;
+    const container = document.getElementById('resolvedFtCauseContainer');
+    container.style.display = issueType ? '' : 'none';
+}
+
+function openResolvedNotesModal() {
+    // Auto-sync from Description panel + Email Escalation modal
+    document.getElementById('resolvedAccountNumber').value =
+        document.getElementById('caseAccountNumber')?.value || '';
+    document.getElementById('resolvedTelephoneNumber').value =
+        document.getElementById('caseTelephoneNumber')?.value || '';
+    document.getElementById('resolvedFtSoSr').value =
+        document.getElementById('ticketNumber')?.value || '';
+    document.getElementById('resolvedFtIssueType').value =
+        document.getElementById('ftIssueType')?.value || '';
+    document.getElementById('resolvedFtCause').value =
+        document.getElementById('ftCause')?.value || '';
+
+	 toggleResolvedFtCause();
+
+    document.getElementById('resolvedNotesModal').classList.add('show');
+}
+
+function closeResolvedNotesModal() {
+    document.getElementById('resolvedNotesModal').classList.remove('show');
+}
+
+async function copyResolvedNotes() {
+    const postUrl              = document.getElementById('resolvedPostUrl').value.trim();
+    const caseNumber           = document.getElementById('resolvedCaseNumber').value.trim();
+    const resolvedCustomerName = document.getElementById('resolvedCustomerName').value.trim();
+    const accountNumber        = document.getElementById('resolvedAccountNumber').value.trim();
+    const telephoneNumber      = document.getElementById('resolvedTelephoneNumber').value.trim();
+    const ftSoSr                = document.getElementById('resolvedFtSoSr').value.trim();
+    const issueType              = document.getElementById('resolvedFtIssueType').value.trim();
+    const cause                  = document.getElementById('resolvedFtCause').value.trim();
+    const actionTaken           = document.getElementById('resolvedActionTaken').value.trim();
+
+    const ftLine = [ftSoSr, issueType, cause].filter(Boolean).join(' / ');
+
+    const plainOutput =
+`Post URL: ${postUrl}
+
+Case Number: ${caseNumber}
+Customer Name: ${resolvedCustomerName}
+Customer Account: ${accountNumber}
+Telephone Number: ${telephoneNumber}
+FT/SO/SR: ${ftLine}
+
+CX Journey and Action Taken:
+${actionTaken}`;
+
+    const htmlOutput =
+`Post URL: ${escapeHtml(postUrl)}<br><br>` +
+`Case Number: <b>${escapeHtml(caseNumber)}</b><br>` +
+`Customer Name: <b>${escapeHtml(resolvedCustomerName)}</b><br>` +
+`Customer Account: <b>${escapeHtml(accountNumber)}</b><br>` +
+`Telephone Number: <b>${escapeHtml(telephoneNumber)}</b><br>` +
+`FT/SO/SR: <b>${escapeHtml(ftLine)}</b><br><br>` +
+`<b>CX Journey and Action Taken:</b><br>` +
+`${escapeHtml(actionTaken).replace(/\n/g, '<br>')}`;
+
+    const temp = document.getElementById('resolvedNotesCopyOutput');
+    temp.value = plainOutput;
+
+    try {
+        await navigator.clipboard.write([
+            new ClipboardItem({
+                'text/plain': new Blob([plainOutput], { type: 'text/plain' }),
+                'text/html':  new Blob([htmlOutput], { type: 'text/html' })
+            })
+        ]);
+    } catch (err) {
+        try {
+            await navigator.clipboard.writeText(plainOutput);
+        } catch {
+            temp.select();
+            document.execCommand('copy');
+        }
+    }
+
+    purgeSensitiveStorage();
+}
+
+// =========================================================
+// FUSE NOTES
+// =========================================================
+
+function openPusoReportModal() {
+    document.getElementById('pusoActionsDone').value =
+        document.getElementById('actionsDone')?.value || '';
+    document.getElementById('pusoReportModal').classList.add('show');
+}
+function closePusoReportModal() {
+    document.getElementById('pusoReportModal').classList.remove('show');
+}
+
+async function copyPusoReport() {
+    const caseNumber  = document.getElementById('pusoCaseNumber').value.trim();
+    const concern      = document.getElementById('pusoConcern').value.trim();
+    const ftSoSr        = document.getElementById('pusoFtSoSr').value.trim();
+    const actionsDone  = document.getElementById('pusoActionsDone').value.trim();
+
+    const output =
+`PUSO - Social Media Handling / Case #: ${caseNumber} / ${concern}
+FT/SO/SR: ${ftSoSr}
+
+A- ${actionsDone}
+
+CNDT-PusoAdvocate`;
+
+    const temp = document.getElementById('pusoReportCopyOutput');
+    temp.value = output;
+
+    try {
+        await navigator.clipboard.writeText(output);
+    } catch {
+        temp.select();
+        document.execCommand('copy');
+    }
+
+    purgeSensitiveStorage();
+}
+
+// =========================================================
+// BREAK & MEETING ALARMS
+// =========================================================
+
+const BREAK_ALARM_TYPES = CONFIG.alarmTypes;   // { id, label, duration (seconds), customDuration? }
+
+const BREAK_ALARM_STORAGE_KEY = "breakAlarmSchedule";
+const BREAK_ALARM_DURATIONS_KEY = "breakAlarmCustomDurations";
+const BREAK_ALARM_RUN_KEY = "breakAlarmRunningTimer";
+
+let breakAlarmCustomDurations = {}; // { training: "01:30" }
+
+// Parses "HH:MM" into whole seconds. Returns null if not a valid duration.
+function parseHHMMToSeconds(value) {
+    if (!value) return null;
+    const match = /^(\d{1,2}):([0-5]\d)$/.exec(value.trim());
+    if (!match) return null;
+
+    const hours = parseInt(match[1], 10);
+    const minutes = parseInt(match[2], 10);
+    const totalSeconds = (hours * 60 + minutes) * 60;
+
+    return totalSeconds > 0 ? totalSeconds : null;
+}
+
+// Resolves the effective duration (seconds) for an alarm type, honoring
+// custom HH:MM durations (e.g. Training) with a fallback to the default.
+function getBreakAlarmDuration(type) {
+    if (!type.customDuration) return type.duration;
+
+    const custom = parseHHMMToSeconds(breakAlarmCustomDurations[type.id]);
+    return custom !== null ? custom : type.duration;
+}
+
+function formatSecondsAsDurationLabel(totalSeconds) {
+    const totalMinutes = Math.round(totalSeconds / 60);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    if (hours > 0 && minutes > 0) return hours + "h " + minutes + "m";
+    if (hours > 0) return hours + "h";
+    return minutes + " min";
+}
+
+let breakAlarmSchedule = {};    // { break1: "13:00", lunch: "14:00", ... }
+let breakAlarmFiredToday = {};  // { break1: "Thu Sep 03 2026", ... }
+let breakAlarmCheckInterval = null;
+let breakAlarmAudioCtx = null;
+let breakAlarmSoundInterval = null;
+let activeBreakTimer = null;    // { id, label, duration, endsAt }
+let activeBreakTimerInterval = null;
+
+function pad2(n) {
+    return String(n).padStart(2, "0");
+}
+
+// Anchors the alarm popover's glass panel directly under the
+// bell button (right-aligned to it, clamped to the viewport),
+// and points its transform-origin + tail arrow back at the
+// button so the open/close animation reads as emerging from it.
+function positionAlarmPopover() {
+    const btn = document.getElementById("breakAlarmBtn");
+    const content = document.querySelector("#breakAlarmModal .case-info-modal-content");
+    if (!btn || !content) return;
+
+    const rect = btn.getBoundingClientRect();
+    const gap = 10;
+    const margin = 12;
+    const popoverWidth = content.offsetWidth;
+    const viewportW = window.innerWidth;
+    const viewportH = window.innerHeight;
+
+    let left = rect.right - popoverWidth;
+    left = Math.max(margin, Math.min(left, viewportW - popoverWidth - margin));
+
+    let top = rect.bottom + gap;
+    top = Math.min(top, Math.max(margin, viewportH - margin - 160));
+
+    content.style.left = left + "px";
+    content.style.top = top + "px";
+
+    const buttonCenterX = rect.left + rect.width / 2;
+    const arrowRight = Math.max(16, (left + popoverWidth) - buttonCenterX - 8);
+    content.style.setProperty("--arrow-right", arrowRight + "px");
+
+    const originX = popoverWidth
+        ? Math.min(96, Math.max(4, ((buttonCenterX - left) / popoverWidth) * 100))
+        : 82;
+    content.style.transformOrigin = originX + "% -12px";
+}
+
+/* Restarts the "pressed" pop animation on a header button, even on rapid re-clicks. */
+function playPressAnimation(id) {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+
+    btn.classList.remove("pressed");
+    void btn.offsetWidth;
+    btn.classList.add("pressed");
+
+    clearTimeout(btn._pressedTimeout);
+    btn._pressedTimeout = setTimeout(() => btn.classList.remove("pressed"), 280);
+}
+
+function openBreakAlarmModal() {
+    playPressAnimation("breakAlarmBtn");
+
+    BREAK_ALARM_TYPES.forEach(type => {
+        const input = document.getElementById("breakAlarmTime_" + type.id);
+        if (input) input.value = breakAlarmSchedule[type.id] || "";
+    });
+
+    const trainingDurationInput = document.getElementById("breakAlarmDuration_training");
+    if (trainingDurationInput) {
+        trainingDurationInput.value = breakAlarmCustomDurations.training || "00:30";
+    }
+    updateTrainingDurationLabel();
+
+    updateBreakAlarmStatus();
+    refreshBreakAlarmPermissionUI();
+
+    positionAlarmPopover();
+    document.getElementById("breakAlarmModal").classList.add("show");
+    document.body.style.overflow = "hidden";
+}
+
+function closeBreakAlarmModal() {
+    document.getElementById("breakAlarmModal").classList.remove("show");
+    document.body.style.overflow = "";
+}
+
+window.addEventListener("resize", function() {
+    const modal = document.getElementById("breakAlarmModal");
+    if (modal && modal.classList.contains("show")) {
+        positionAlarmPopover();
+    }
+});
+
+// Keeps the "Training: <duration>" badge in sync with whatever the user
+// picks from the duration dropdown, falling back to the 30-min default.
+function updateTrainingDurationLabel() {
+    const labelEl = document.querySelector("#breakAlarmModal .break-alarm-field-training .break-alarm-duration");
+    if (!labelEl) return;
+
+    const input = document.getElementById("breakAlarmDuration_training");
+    const rawValue = input ? input.value.trim() : "";
+    const parsedSeconds = parseHHMMToSeconds(rawValue);
+
+    labelEl.textContent = parsedSeconds !== null ? formatSecondsAsDurationLabel(parsedSeconds) : "30 min";
+}
+
+function saveBreakAlarms() {
+    const trainingDurationInput = document.getElementById("breakAlarmDuration_training");
+    const trainingDurationRaw = trainingDurationInput ? trainingDurationInput.value.trim() : "00:30";
+
+    const newSchedule = {};
+
+    BREAK_ALARM_TYPES.forEach(type => {
+        const input = document.getElementById("breakAlarmTime_" + type.id);
+        const value = input ? input.value : "";
+        if (value) newSchedule[type.id] = value;
+    });
+
+    breakAlarmSchedule = newSchedule;
+    breakAlarmFiredToday = {};
+    breakAlarmCustomDurations.training = trainingDurationRaw;
+    persistBreakAlarmSchedule();
+    persistBreakAlarmCustomDurations();
+    updateBreakAlarmStatus();
+    updateBreakAlarmActiveDot();
+    startBreakAlarmWatcher();
+
+    showConfirm(document.getElementById("breakAlarmSaveBtn"), "✓ Saved");
+}
+
+function clearBreakAlarms() {
+    breakAlarmSchedule = {};
+    breakAlarmFiredToday = {};
+    breakAlarmCustomDurations = {};
+    persistBreakAlarmSchedule();
+    persistBreakAlarmCustomDurations();
+
+    BREAK_ALARM_TYPES.forEach(type => {
+        const input = document.getElementById("breakAlarmTime_" + type.id);
+        if (input) input.value = "";
+    });
+
+    const trainingDurationInput = document.getElementById("breakAlarmDuration_training");
+    if (trainingDurationInput) {
+        trainingDurationInput.value = "00:30";
+    }
+    updateTrainingDurationLabel();
+
+    updateBreakAlarmStatus();
+    updateBreakAlarmActiveDot();
+}
+
+function persistBreakAlarmSchedule() {
+    store.set(BREAK_ALARM_STORAGE_KEY, JSON.stringify(breakAlarmSchedule));
+}
+
+function persistBreakAlarmCustomDurations() {
+    store.set(BREAK_ALARM_DURATIONS_KEY, JSON.stringify(breakAlarmCustomDurations));
+}
+
+function loadBreakAlarmSchedule() {
+    breakAlarmSchedule = store.getJSON(BREAK_ALARM_STORAGE_KEY, {});
+    breakAlarmCustomDurations = store.getJSON(BREAK_ALARM_DURATIONS_KEY, {});
+
+    updateBreakAlarmActiveDot();
+
+    if (Object.keys(breakAlarmSchedule).length > 0) {
+        startBreakAlarmWatcher();
+    }
+}
+
+function updateBreakAlarmStatus() {
+    const statusEl = document.getElementById("breakAlarmStatus");
+    if (!statusEl) return;
+
+    const count = Object.keys(breakAlarmSchedule).length;
+    statusEl.textContent = count > 0
+        ? count + " alarm" + (count === 1 ? "" : "s") + " scheduled for today"
+        : "No alarms scheduled yet";
+}
+
+function updateBreakAlarmActiveDot() {
+    const dot = document.getElementById("breakAlarmActiveDot");
+    if (!dot) return;
+    dot.hidden = Object.keys(breakAlarmSchedule).length === 0;
+}
+
+function refreshBreakAlarmPermissionUI() {
+    const textEl = document.getElementById("breakAlarmPermissionText");
+    const enableBtn = document.getElementById("breakAlarmEnableBtn");
+    if (!textEl) return;
+
+    if (!("Notification" in window)) {
+        textEl.textContent = "Desktop notifications aren't supported in this browser. Alarms will still beep and show the on-screen timer.";
+        textEl.className = "break-alarm-permission-text warn";
+        if (enableBtn) enableBtn.style.display = "none";
+        return;
+    }
+
+    if (window.isSecureContext === false) {
+        textEl.textContent = "This page isn't loaded in a secure context, so the browser may silently block the permission prompt. Try opening it through http://localhost or a hosted URL instead of double-clicking the file.";
+        textEl.className = "break-alarm-permission-text warn";
+        if (enableBtn) enableBtn.style.display = "inline-block";
+        return;
+    }
+
+    if (Notification.permission === "granted") {
+        textEl.textContent = "Desktop notifications are enabled.";
+        textEl.className = "break-alarm-permission-text ok";
+        if (enableBtn) enableBtn.style.display = "none";
+    } else if (Notification.permission === "denied") {
+        textEl.textContent = "Notifications are blocked for this page. Click the lock/info icon in the address bar, allow notifications, then reload.";
+        textEl.className = "break-alarm-permission-text warn";
+        if (enableBtn) enableBtn.style.display = "none";
+    } else {
+        textEl.textContent = "Notifications aren't enabled yet — alarms will still beep, but won't show a desktop popup until you allow them.";
+        textEl.className = "break-alarm-permission-text";
+        if (enableBtn) enableBtn.style.display = "inline-block";
+    }
+}
+
+function requestBreakAlarmNotifyPermission() {
+    if (!("Notification" in window)) return;
+
+    Notification.requestPermission().then(() => {
+        refreshBreakAlarmPermissionUI();
+    }).catch(() => {
+        refreshBreakAlarmPermissionUI();
+    });
+}
+
+function sendBreakAlarmTestNotification() {
+    const row = document.querySelector("#breakAlarmModal .break-alarm-permission-row");
+
+    if (!("Notification" in window)) {
+        showInlineMessage(row, "This browser doesn't support desktop notifications.");
+        return;
+    }
+
+    if (Notification.permission !== "granted") {
+        showInlineMessage(row, "Notifications aren't enabled yet. Click \"Enable notifications\" first and allow the browser prompt, then try the test again.");
+        return;
+    }
+
+    try {
+        new Notification("Test notification", {
+            body: "If you can see this, desktop notifications are working."
+        });
+        clearInlineMessage(row);
+    } catch (err) {
+        showInlineMessage(row, "The browser blocked the notification: " + err.message);
+    }
+}
+
+function startBreakAlarmWatcher() {
+    if (breakAlarmCheckInterval) return;
+    checkBreakAlarms();
+    breakAlarmCheckInterval = setInterval(checkBreakAlarms, 15000);
+}
+
+function checkBreakAlarms() {
+    const now = new Date();
+    const nowTime = pad2(now.getHours()) + ":" + pad2(now.getMinutes());
+    const todayKey = now.toDateString();
+
+    BREAK_ALARM_TYPES.forEach(type => {
+        const scheduledTime = breakAlarmSchedule[type.id];
+        if (!scheduledTime || scheduledTime !== nowTime) return;
+        if (breakAlarmFiredToday[type.id] === todayKey) return;
+
+        breakAlarmFiredToday[type.id] = todayKey;
+        fireBreakAlarm(type);
+    });
+}
+
+function fireBreakAlarm(type) {
+    playBreakAlarmBeep();
+
+    const effectiveDuration = getBreakAlarmDuration(type);
+
+    if ("Notification" in window && Notification.permission === "granted") {
+        try {
+            new Notification(type.label + "!", {
+                body: "Enjoy your " + type.label.toLowerCase() + ".",
+                requireInteraction: true
+            });
+        } catch (e) {
+            console.warn("Break notification failed:", e);
+        }
+    }
+
+    startActiveBreakTimer(type, effectiveDuration);
+}
+
+function playBreakAlarmBeep() {
+    try {
+        if (!breakAlarmAudioCtx) {
+            breakAlarmAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        clearInterval(breakAlarmSoundInterval);
+        let beeps = 0;
+
+        const doBeep = () => {
+            const osc = breakAlarmAudioCtx.createOscillator();
+            const gain = breakAlarmAudioCtx.createGain();
+            osc.type = "sine";
+            osc.frequency.value = 880;
+            gain.gain.setValueAtTime(0.0001, breakAlarmAudioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.28, breakAlarmAudioCtx.currentTime + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, breakAlarmAudioCtx.currentTime + 0.35);
+            osc.connect(gain);
+            gain.connect(breakAlarmAudioCtx.destination);
+            osc.start();
+            osc.stop(breakAlarmAudioCtx.currentTime + 0.4);
+
+            beeps++;
+            if (beeps >= 3) clearInterval(breakAlarmSoundInterval);
+        };
+
+        doBeep();
+        breakAlarmSoundInterval = setInterval(doBeep, 500);
+    } catch (e) {
+        console.warn("Alarm sound failed:", e);
+    }
+}
+
+function startActiveBreakTimer(type, durationOverrideSeconds) {
+    const duration = durationOverrideSeconds || getBreakAlarmDuration(type);
+
+    activeBreakTimer = {
+        id: type.id,
+        label: type.label,
+        duration: duration,
+        endsAt: Date.now() + duration * 1000
+    };
+    persistActiveBreakTimer();
+    renderActiveBreakTimer();
+}
+
+function persistActiveBreakTimer() {
+    if (activeBreakTimer) {
+        store.set(BREAK_ALARM_RUN_KEY, JSON.stringify(activeBreakTimer));
+    } else {
+        store.remove(BREAK_ALARM_RUN_KEY);
+    }
+}
+
+function loadActiveBreakTimer() {
+    const parsed = store.getJSON(BREAK_ALARM_RUN_KEY, null);
+    if (!parsed) return;
+
+    if (parsed.endsAt > Date.now()) {
+        activeBreakTimer = parsed;
+        renderActiveBreakTimer();
+    } else {
+        store.remove(BREAK_ALARM_RUN_KEY);
+    }
+}
+
+function renderActiveBreakTimer() {
+    const widget = document.getElementById("activeTimerWidget");
+    if (!widget || !activeBreakTimer) return;
+
+    document.getElementById("activeTimerLabel").textContent = activeBreakTimer.label;
+    widget.classList.remove("ending");
+    widget.classList.add("show");
+
+    clearInterval(activeBreakTimerInterval);
+    activeBreakTimerInterval = setInterval(updateActiveBreakTimerClock, 1000);
+    updateActiveBreakTimerClock();
+}
+
+function updateActiveBreakTimerClock() {
+    if (!activeBreakTimer) return;
+
+    const widget = document.getElementById("activeTimerWidget");
+    const clockEl = document.getElementById("activeTimerClock");
+    const remainingMs = activeBreakTimer.endsAt - Date.now();
+
+    if (remainingMs <= 0) {
+        clockEl.textContent = "00:00";
+        finishActiveBreakTimer();
+        return;
+    }
+
+    const remainingSeconds = Math.round(remainingMs / 1000);
+    clockEl.textContent = pad2(Math.floor(remainingSeconds / 60)) + ":" + pad2(remainingSeconds % 60);
+
+    if (remainingSeconds <= 10) {
+        widget.classList.add("ending");
+    } else {
+        widget.classList.remove("ending");
+    }
+}
+
+function finishActiveBreakTimer() {
+    const finishedLabel = activeBreakTimer ? activeBreakTimer.label : "Timer";
+
+    clearInterval(activeBreakTimerInterval);
+    activeBreakTimerInterval = null;
+
+    playBreakAlarmBeep();
+
+    if ("Notification" in window && Notification.permission === "granted") {
+        try {
+            new Notification(finishedLabel + " ended!", {
+                body: "All good things come to an end.",
+                requireInteraction: true
+            });
+        } catch (e) {
+            console.warn("Break-ended notification failed:", e);
+        }
+    }
+
+    activeBreakTimer = null;
+    persistActiveBreakTimer();
+
+    setTimeout(() => {
+        const widget = document.getElementById("activeTimerWidget");
+        if (widget) {
+            widget.classList.remove("show");
+            widget.classList.remove("ending");
+        }
+    }, 1500);
+}
+
+function stopActiveBreakTimer() {
+    clearInterval(activeBreakTimerInterval);
+    activeBreakTimerInterval = null;
+    clearInterval(breakAlarmSoundInterval);
+
+    activeBreakTimer = null;
+    persistActiveBreakTimer();
+
+    const widget = document.getElementById("activeTimerWidget");
+    if (widget) {
+        widget.classList.remove("show");
+        widget.classList.remove("ending");
+    }
+}
+
+
+// =========================================================
+// SYNC PLATFORM -> OUTBOUND CALL
+// =========================================================
+
+// Guards against Platform->Outbound and Outbound->Platform sync
+// triggering each other in a loop / clobbering a manual selection.
+let isSyncingOutboundPlatform = false;
+
+function syncPlatformToOutboundCall() {
+    if (isSyncingOutboundPlatform) return;
+
+    const platformEl = document.getElementById("platform");
+    if (!platformEl) return;
+
+    const yesRadio = document.querySelector(
+        'input[name="outboundCall"][value="Yes"]'
+    );
+    const noRadio = document.querySelector(
+        'input[name="outboundCall"][value="No"]'
+    );
+
+    isSyncingOutboundPlatform = true;
+
+    if (platformEl.value === PLATFORM.callback) {
+        if (yesRadio && !yesRadio.checked) {
+            yesRadio.checked = true;
+            toggleOutboundCall();
+        }
+    } else {
+        if (noRadio && !noRadio.checked) {
+            noRadio.checked = true;
+            toggleOutboundCall();
+        }
+    }
+
+    isSyncingOutboundPlatform = false;
+}
+
+document.getElementById("platform").addEventListener("change", () => {
+    syncPlatformToOutboundCall();
+    updatePersonaDropdown();
+    updateEngagementPersonaVisibility();
+    generateEngagement();
+    saveFormData();
+});
+
+
+function showConfirm(btn, message) {
+    if (!btn) return;
+
+    // remember original content so we can restore it
+    if (!btn.dataset.originalHtml) {
+        btn.dataset.originalHtml = btn.innerHTML;
+    }
+
+    btn.classList.add('confirmed');
+    btn.innerHTML = message || '✓ Copied';
+
+    clearTimeout(btn._confirmTimeout);
+    btn._confirmTimeout = setTimeout(() => {
+        btn.classList.remove('confirmed');
+        btn.innerHTML = btn.dataset.originalHtml;
+    }, 1200);
+}
+
+/* Reset button: flips the icon to a checkmark without nuking the button's
+   markup the way the generic showConfirm() does (that's fine for plain-text
+   copy buttons, but here it would kill the icon span). */
+function handleResetAll(btn) {
+    resetAll();
+
+    const icon = btn.querySelector('.reset-icon');
+
+    if (icon) {
+        if (!icon.dataset.originalHtml) {
+            icon.dataset.originalHtml = icon.innerHTML;
+        }
+        icon.innerHTML = '✓';
+    }
+
+    btn.classList.add('confirmed');
+
+    clearTimeout(btn._confirmTimeout);
+    btn._confirmTimeout = setTimeout(() => {
+        btn.classList.remove('confirmed');
+        if (icon) {
+            icon.innerHTML = icon.dataset.originalHtml;
+        }
+    }, 1200);
+}
+
+document.getElementById("ftCreator").addEventListener("change", function () {
+    document.getElementById("caseCreator").value = this.value;
+});
+
+document.getElementById("ticketNumber").addEventListener("input", function () {
+    document.getElementById("caseFtSoSr").value = this.value;
+});
+
+function syncCaseFields() {
+    document.getElementById("caseCreator").value =
+        document.getElementById("ftCreator").value;
+
+    document.getElementById("caseFtSoSr").value =
+        document.getElementById("ticketNumber").value;
+}
+
+// (syncCaseFields() runs from init())
+
+// =========================================================
+// AUTO-SYNC OUTBOUND CALL TO CASE INFO AND CASE NOTES
+// =========================================================
+
+function syncOutboundCallToAllSections() {
+    const selected = document.querySelector(
+        'input[name="outboundCall"]:checked'
+    );
+    const outboundCosmoId =
+        document.getElementById("outboundCallCosmoId");
+    // Case Information
+    const caseCallback =
+        document.getElementById("caseCallback");
+    const caseCallerId =
+        document.getElementById("caseCallerId");
+    const callIdContainer =
+        document.getElementById("callIdContainer");
+    // Case Notes
+    const caseNotesPlatform =
+        document.getElementById("platform");
+    if (!selected || !outboundCosmoId) {
+        return;
+    }
+
+    // ==========================================
+    // OUTBOUND CALL = YES
+    // ==========================================
+    if (selected.value === "Yes") {
+        const cosmoValue = outboundCosmoId.value.trim();
+
+        // --------------------------------------
+        // CASE INFORMATION
+        // --------------------------------------
+
+        // Automatically select Callback = Yes
+        if (caseCallback) {
+            caseCallback.value = "Yes";
+            // Trigger any existing onchange logic
+            caseCallback.dispatchEvent(
+                new Event("change", { bubbles: true })
+            );
+        }
+        // Show Cosmo/Call ID field
+        if (callIdContainer) {
+            callIdContainer.style.display = "block";
+        }
+        // Sync Cosmo/Call ID
+        if (caseCallerId) {
+            caseCallerId.value = cosmoValue;
+        }
+        // --------------------------------------
+        // CASE NOTES
+        // --------------------------------------
+
+        // Automatically select Callback / Service Recovery
+        if (caseNotesPlatform) {
+            caseNotesPlatform.value = PLATFORM.callback;
+            // Trigger any existing platform onchange logic
+            caseNotesPlatform.dispatchEvent(
+                new Event("change", { bubbles: true })
+            );
+        }
+    }
+    // ==========================================
+    // OUTBOUND CALL = NO
+    // ==========================================
+    else {
+        // --------------------------------------
+        // CASE INFORMATION
+        // --------------------------------------
+
+        if (caseCallback) {
+            caseCallback.value = "No";
+            caseCallback.dispatchEvent(
+                new Event("change", { bubbles: true })
+            );
+        }
+        if (callIdContainer) {
+            callIdContainer.style.display = "none";
+        }
+        if (caseCallerId) {
+            caseCallerId.value = "";
+        }
+    }
+
+    updateEngagementPersonaVisibility();
+}
+
+// =========================================================
+// TOGGLE TYPE OF ENGAGEMENT / PERSONA USED VISIBILITY
+// =========================================================
+// Hidden only when Outbound Call = Yes AND Platform =
+// the Callback / Service Recovery platform. Restored for
+// any other Platform selection.
+
+function updateEngagementPersonaVisibility() {
+    const outboundCallSelected = document.querySelector(
+        'input[name="outboundCall"]:checked'
+    );
+    const platformEl = document.getElementById("platform");
+    const row = document.getElementById("engagementPersonaRow");
+
+    if (!platformEl || !row) {
+        return;
+    }
+
+    const shouldHide =
+        !!outboundCallSelected &&
+        outboundCallSelected.value === "Yes" &&
+        platformEl.value === PLATFORM.callback;
+
+    row.style.display = shouldHide ? "none" : "flex";
+}
+
+function toggleOutboundCall() {
+    const selected = document.querySelector(
+        'input[name="outboundCall"]:checked'
+    );
+    const details =
+        document.getElementById("outboundCallDetails");
+    const cosmoId =
+        document.getElementById("outboundCallCosmoId");
+    const aniCbr =
+        document.getElementById("outboundCallAniCbr");
+    const radioGroupEl =
+        document.getElementById("outboundCallToggle");
+
+    // Clear the missing-field highlight now that a selection was made
+    if (radioGroupEl) {
+        radioGroupEl.classList.remove("field-missing");
+        clearInlineMessage(radioGroupEl);
+    }
+
+    if (!selected) {
+        details.style.display = "none";
+        cosmoId.value = "";
+        aniCbr.value = "";
+        cosmoId.classList.remove("field-missing");
+        aniCbr.classList.remove("field-missing");
+        syncOutboundCallToAllSections();
+        return;
+    }
+    if (selected.value === "Yes") {
+        // Show Outbound Call Details
+        details.style.display = "block";
+    } else {
+        // Hide Outbound Call Details
+        details.style.display = "none";
+        cosmoId.value = "";
+        aniCbr.value = "";
+        cosmoId.classList.remove("field-missing");
+        aniCbr.classList.remove("field-missing");
+    }
+
+    // Outbound Call -> Platform sync (skip if this run was itself
+    // triggered by a Platform change, to avoid clobbering it)
+    if (!isSyncingOutboundPlatform) {
+        const platformEl = document.getElementById("platform");
+        if (platformEl) {
+            isSyncingOutboundPlatform = true;
+            if (selected.value === "No") {
+                platformEl.value = PLATFORM.none;
+            } else if (selected.value === "Yes") {
+                platformEl.value = PLATFORM.callback;
+            }
+            platformEl.dispatchEvent(new Event("change"));
+            isSyncingOutboundPlatform = false;
+        }
+    }
+
+    // Sync everything
+    syncOutboundCallToAllSections();
+}
+
+// =========================================================
+// LIVE SYNC WHILE TYPING CALL/COSMO ID
+// =========================================================
+
+
+// =========================================================
+// AUTO-SYNC CASE INFORMATION
+// =========================================================
+
+const accountNumber = document.getElementById("accountNumber");
+const telephoneNumber = document.getElementById("telephoneNumber");
+
+const caseAccountNumber = document.getElementById("caseAccountNumber");
+const caseTelephoneNumber = document.getElementById("caseTelephoneNumber");
+
+// Sync Account Number
+accountNumber.addEventListener("input", function () {
+    caseAccountNumber.value = this.value;
+});
+
+// Sync Telephone Number
+telephoneNumber.addEventListener("input", function () {
+    caseTelephoneNumber.value = this.value;
+});
+
+function syncCaseUrl() {
+    const mainUrl = document.getElementById("url");
+    const caseUrl = document.getElementById("caseUrl");
+
+    if (mainUrl && caseUrl) {
+        caseUrl.value = mainUrl.value.trim();
+    }
+}
+
+
+/* =========================================================
+   LOCAL STORAGE
+   ========================================================= */
+
+const FORM_STORAGE_PREFIX = "form_";
+
+// Customer data (account/phone numbers, comment text, ...) is never written to
+// localStorage. While the agent is working it is mirrored to sessionStorage
+// (gone when the tab closes) so an accidental refresh doesn't lose a case,
+// and that mirror is wiped after a short idle time and whenever a note is copied.
+const SENSITIVE_FIELD_IDS = new Set(CONFIG.privacy.sensitiveFieldIds);
+const SENSITIVE_TTL_MS = CONFIG.privacy.clearSensitiveAfterSeconds * 1000;
+const SENSITIVE_TS_KEY = "sensitive_lastEdit";
+let sensitivePurgeTimer = null;
+
+function isSensitiveField(el) {
+    return SENSITIVE_FIELD_IDS.has(el.id);
+}
+
+// Fields that are never autosaved at all: the zone search box is just a
+// throwaway query, and the notepad has its own save logic.
+function getSaveableFields() {
+    return document.querySelectorAll(
+        "input[id]:not([readonly]):not(#businessSearch), select[id], textarea[id]:not([readonly]):not(#sideNotepadText)"
+    );
+}
+
+function scheduleSensitivePurge(delayMs) {
+    clearTimeout(sensitivePurgeTimer);
+    sensitivePurgeTimer = setTimeout(purgeSensitiveStorage, delayMs);
+}
+
+// Removes every stored copy of customer data. The form on screen is untouched.
+function purgeSensitiveStorage() {
+    clearTimeout(sensitivePurgeTimer);
+    sensitivePurgeTimer = null;
+
+    SENSITIVE_FIELD_IDS.forEach(id => {
+        sessionStore.remove(FORM_STORAGE_PREFIX + id);
+        store.remove(FORM_STORAGE_PREFIX + id);   // also cleans up what older versions saved
+    });
+    sessionStore.remove(SENSITIVE_TS_KEY);
+}
+
+function persistSensitiveFields() {
+    let anyValue = false;
+
+    SENSITIVE_FIELD_IDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        if (el.value) {
+            sessionStore.set(FORM_STORAGE_PREFIX + id, el.value);
+            anyValue = true;
+        } else {
+            sessionStore.remove(FORM_STORAGE_PREFIX + id);
+        }
+    });
+
+    if (anyValue) {
+        sessionStore.set(SENSITIVE_TS_KEY, Date.now());
+        scheduleSensitivePurge(SENSITIVE_TTL_MS);   // restarts the countdown on every edit
+    } else {
+        purgeSensitiveStorage();
+    }
+}
+
+// changedEl: the field the agent just edited (if known). Customer data is only
+// re-saved when one of those fields was the one edited, so a purge after
+// "copy" isn't undone by typing in an unrelated field.
+function saveFormData(changedEl) {
+    getSaveableFields().forEach(el => {
+        if (isSensitiveField(el)) return;
+        store.set(FORM_STORAGE_PREFIX + el.id, el.value);
+    });
+
+    if (changedEl && isSensitiveField(changedEl)) {
+        persistSensitiveFields();
+    }
+}
+
+// Older versions saved "" or "-- Select One --" style values for Platform.
+function migrateSavedValue(el, savedValue) {
+    if (el.id !== "platform" || savedValue === null) return savedValue;
+    if (savedValue === "-- Select One --") return PLATFORM.none;
+    if (savedValue !== "" && savedValue.trim() === "") return PLATFORM.callback;   // old " " hack
+    return savedValue;
+}
+
+function loadFormData() {
+    // Customer data older versions left in localStorage, and the zone search query.
+    SENSITIVE_FIELD_IDS.forEach(id => store.remove(FORM_STORAGE_PREFIX + id));
+    store.remove(FORM_STORAGE_PREFIX + "businessSearch");
+
+    const lastEdit = Number(sessionStore.get(SENSITIVE_TS_KEY));
+    const age = Date.now() - lastEdit;
+    const sensitiveStillFresh = lastEdit > 0 && age >= 0 && age < SENSITIVE_TTL_MS;
+
+    getSaveableFields().forEach(el => {
+        let savedValue;
+
+        if (isSensitiveField(el)) {
+            savedValue = sensitiveStillFresh ? sessionStore.get(FORM_STORAGE_PREFIX + el.id) : null;
+        } else {
+            savedValue = store.get(FORM_STORAGE_PREFIX + el.id);
+        }
+
+        savedValue = migrateSavedValue(el, savedValue);
+
+        if (savedValue !== null) {
+            el.value = savedValue;
+        }
+    });
+
+    if (sensitiveStillFresh) {
+        scheduleSensitivePurge(SENSITIVE_TTL_MS - age);
+    } else {
+        purgeSensitiveStorage();
+    }
+}
+
+/* =========================================================
+   COPY FEEDBACK
+   ========================================================= */
+
+function showCopyFeedback(buttonElement, originalText) {
+    if (!buttonElement) {
+        return;
+    }
+
+    // remember original content (icon + label) so we can restore it exactly
+    if (!buttonElement.dataset.originalHtml) {
+        buttonElement.dataset.originalHtml = buttonElement.innerHTML;
+    }
+
+    buttonElement.classList.add("copied");
+    buttonElement.innerText = "✓ Copied!";
+
+    clearTimeout(buttonElement._copyFeedbackTimeout);
+    buttonElement._copyFeedbackTimeout = setTimeout(() => {
+        buttonElement.classList.remove("copied");
+        buttonElement.innerHTML = buttonElement.dataset.originalHtml;
+    }, 1500);
+}
+
+/* =========================================================
+   PLATFORM & PERSONA
+   ========================================================= */
+
+function updatePersonaDropdown() {
+    const platform = document.getElementById("platform").value;
+    const personaSelect = document.getElementById("persona");
+    const engagementSelect = document.getElementById("engagementType");
+    const personaLabelEl = document.getElementById("personaLabel");
+    const savedPersona = store.get(FORM_STORAGE_PREFIX + "persona");
+
+    /* CALLBACK ONLY */
+    if (platform === PLATFORM.callback) {
+        if (personaLabelEl) {
+            personaLabelEl.textContent = CONFIG.personaLabels.default;
+        }
+
+        fillSelect(personaSelect, CONFIG.personas.callback, false);
+        fillSelect(engagementSelect, ENGAGEMENT_FOR_PLATFORM.callback, false);
+        engagementSelect.value = ENGAGEMENT.conductCallback;
+        return;
+    }
+
+    /* CLIENT ENDORSEMENT */
+    if (platform === PLATFORM.clientEndorsement) {
+        if (personaLabelEl) {
+            personaLabelEl.textContent = CONFIG.personaLabels.clientEndorsement;
+        }
+
+        fillSelect(engagementSelect, ENGAGEMENT_FOR_PLATFORM.clientEndorsement, true);
+        fillSelect(personaSelect, CONFIG.personas.clientEndorsement, true);
+
+        if (savedPersona && CONFIG.personas.clientEndorsement.includes(savedPersona)) {
+            personaSelect.value = savedPersona;
+        }
+        return;
+    }
+
+    /* EVERYTHING ELSE (Facebook, Threads, Instagram, Reddit, Twitter, none selected) */
+    if (personaLabelEl) {
+        personaLabelEl.textContent = CONFIG.personaLabels.default;
+    }
+
+    const platformEntry = CONFIG.platforms.find(p => p.value === platform);
+    const personas =
+        (platformEntry && CONFIG.personas[platformEntry.id]) || CONFIG.personas.default;
+
+    fillSelect(engagementSelect, ENGAGEMENT_FOR_PLATFORM.standard, true);
+    fillSelect(personaSelect, personas, true);
+
+    if (savedPersona && personas.includes(savedPersona)) {
+        personaSelect.value = savedPersona;
+    }
+}
+
+/* =========================================================
+   CATEGORY
+   ========================================================= */
+
+function updateCategoryFields(isInitialLoad = false) {
+    const category = document.getElementById("category").value;
+    const sub = document.getElementById("subCategory");
+    const subContainer = document.getElementById("subCategoryContainer");
+    const ticketContainer = document.getElementById("ticketContainer");
+    const promoCompContainer = document.getElementById("promoComplaintContainer");
+    const promoCompLabel = document.getElementById("promoComplaintLabel");
+    const promoCompSub = document.getElementById("promoComplaintSub");
+
+    const previousSubValue =
+        sub.value ||
+        store.get(FORM_STORAGE_PREFIX + "subCategory");
+
+    const previousPromoCompValue =
+        promoCompSub.value ||
+        store.get(
+            FORM_STORAGE_PREFIX + "promoComplaintSub"
+        );
+
+    sub.innerHTML = "";
+    promoCompSub.innerHTML = "";
+
+    subContainer.style.display = "none";
+    ticketContainer.style.display = "none";
+    promoCompContainer.style.display = "none";
+
+    if (category === "Service/Technical Issues") {
+        subContainer.style.display = "block";
+        ticketContainer.style.display = "block";
+
+        [
+
+            "Report Trouble - NIC/NDT",
+			"Report Trouble - NIC",
+            "Report Trouble - NDT",
+            "Report Trouble - SIC/INTERMITTENT",
+			"Follow Up Repair (OFSC)",
+            "Follow Up Repair (Outage)",
+            "Report Trouble - IPTV",
+            "Report Trouble - VAS (Defective Unit / Content Issue)",
+            "Bantay Kable (164)",
+            "Modem Requests (Super Admin / Local GUI / Change WiFi UN/PW)",
+            "Service Restoration (Customer Confirmed)",
+            "Service Restoration (Unconfirmed)"
+        ].forEach(o => {
+            const opt = document.createElement("option");
+            opt.value = o;
+            opt.text = o;
+            sub.appendChild(opt);
+        });
+
+        if (previousSubValue) {
+            sub.value = previousSubValue;
+        }
+    } else if (category === "Billing/Aftersales Issues") {
+        subContainer.style.display = "block";
+        ticketContainer.style.display = "block";
+
+        [
+            "Relocation",
+            "Relocation (Follow Up)",
+            "New Application",
+            "New Application (Follow Up)",
+            "Cignal Activation",
+            "Upgrade / Downgrade",
+            "Disconnection",
+            "Reconnection",
+            "Account / Billing Concerns",
+			"Payment Concerns",
+            "myHome Concerns",
+            "Bill Dispute",
+			"Rebate",
+            "Refund",
+            "VAS Activation (HBO Max / Netflix / Viu)",
+			"VAS Delivery (Follow Up)",
+			"Inmove",
+			"Wire Re-Route",
+			"Change Ownership",
+			"Always On",
+			"Migration",
+            "Others"
+        ].forEach(o => {
+            const opt = document.createElement("option");
+            opt.value = o;
+            opt.text = o;
+            sub.appendChild(opt);
+        });
+
+        if (previousSubValue) {
+            sub.value = previousSubValue;
+        }
+    } else if (category === "Products and Promos") {
+        promoCompContainer.style.display = "block";
+        promoCompLabel.innerText = "Product / Promo Type";
+
+        [
+            "New Application / PLDT Plans",
+            "Fiber Prepaid",
+            "Always On",
+            "Cignal / IPTV",
+            "Netflix / HBO Max / Viu",
+            "StreamTV",
+            "Cameras / Door Lock",
+            "Others",
+            "Speed Add On",
+            "Speed Alignment",
+            "Wifi Mesh"
+        ].forEach(o => {
+            const opt = document.createElement("option");
+            opt.value = o;
+            opt.text = o;
+            promoCompSub.appendChild(opt);
+        });
+
+        if (previousPromoCompValue) {
+            promoCompSub.value = previousPromoCompValue;
+        }
+    } else if (
+        category ===
+        "Personnel Complaints (Technicians, Contractors, Call center Vendor, SSC)"
+    ) {
+        promoCompContainer.style.display = "block";
+        promoCompLabel.innerText = "Complaint Personnel Type";
+
+        [
+            " ",
+            "Delivery Courier Service",
+            "Hotline Agent",
+            "Sales / Field Agent",
+            "Social Media Agent",
+            "SSC Personnel",
+            "Technician",
+            "Customer Service Complaints",
+            "Telesales"
+        ].forEach(o => {
+            const opt = document.createElement("option");
+            opt.value = o;
+            opt.text = o;
+            promoCompSub.appendChild(opt);
+        });
+
+        if (previousPromoCompValue) {
+            promoCompSub.value = previousPromoCompValue;
+        }
+    } else if (category === "Brand Hate") {
+        promoCompContainer.style.display = "block";
+        promoCompLabel.innerText = "Brand Hate Subcategory";
+
+        [
+            " ",
+            "Product / Service Dissatisfaction",
+            "Profanity / Abusive Language",
+            "Repetitive Negative Comments",
+			"Spamming",
+            "Trolling"
+        ].forEach(o => {
+            const opt = document.createElement("option");
+            opt.value = o;
+            opt.text = o;
+            promoCompSub.appendChild(opt);
+        });
+
+        if (previousPromoCompValue) {
+            promoCompSub.value = previousPromoCompValue;
+        }
+    } else if (category === "Threats") {
+        promoCompContainer.style.display = "block";
+        promoCompLabel.innerText = "Threats Subcategory";
+
+        [
+            " ",
+            "Service Cancellation / Churn to Another ISP",
+            "Legal Action",
+            "Regulatory Complaint / Escalation (NTC, DTI, etc.)",
+            "Executive / Government Escalation",
+			"Physical Threats (Personnel/Facility)",
+            "Public / Social Media Escalation"
+        ].forEach(o => {
+            const opt = document.createElement("option");
+            opt.value = o;
+            opt.text = o;
+            promoCompSub.appendChild(opt);
+        });
+
+        if (previousPromoCompValue) {
+            promoCompSub.value = previousPromoCompValue;
+        }
+    } else if (category === "Brand Advocacy/Positive Comments") {
+        promoCompContainer.style.display = "block";
+        promoCompLabel.innerText = "Advocacy Subcategory";
+
+        [
+            " ",
+            "Positive Experience",
+            "Product / Brand Promotion",
+            "Success Story / Testimonial",
+            "Brand Defense",
+            "Product / Service Satisfaction",
+            "Loyalty & Retention"
+        ].forEach(o => {
+            const opt = document.createElement("option");
+            opt.value = o;
+            opt.text = o;
+            promoCompSub.appendChild(opt);
+        });
+
+        if (previousPromoCompValue) {
+            promoCompSub.value = previousPromoCompValue;
+        }
+    }
+
+    generateIssueNotes();
+}
+
+/* =========================================================
+   ISSUE NOTES
+   ========================================================= */
+
+   const formatDate = (dateString) => {
+    if (!dateString) return "";
+
+    const [year, month, day] = dateString.split("-");
+
+    const months = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+
+    return `${day}-${months[parseInt(month, 10) - 1]}-${year}`;
+};
+
+function generateIssueNotes() {
+    const category = document.getElementById("category").value.trim();
+    const postDateRaw = document.getElementById("postDate").value.trim();
+    const postDate = formatDate(postDateRaw);
+    const customerGroup = document.getElementById("customerGroup").value.trim();
+    const ticket = document.getElementById("ticketNumber").value.trim();
+
+    let wocas = document.getElementById("wocas").value;
+    const url = document.getElementById("url").value.trim();
+
+    const ftExtra = document.getElementById("ftExtraContainer");
+
+    // ==========================================
+    // CLEAN WOCAS
+    // ==========================================
+
+    if (wocas) {
+        wocas = wocas
+            .split("\n")
+            .map(line => line.trim())
+            .filter(Boolean)
+            .join("\n");
+    }
+
+// ==========================================
+// OUTBOUND CALL
+// ==========================================
+
+const outboundCall = document.querySelector(
+    'input[name="outboundCall"]:checked'
+);
+
+let outboundBlock = "";
+
+if (outboundCall && outboundCall.value === "Yes") {
+    const cosmoId = document
+        .getElementById("outboundCallCosmoId")
+        .value
+        .trim();
+
+    const aniCbr = document
+        .getElementById("outboundCallAniCbr")
+        .value
+        .trim();
+
+    const outboundLines = [];
+
+    // First line
+    let firstLine = "Outbound Call: Yes";
+
+    if (cosmoId) {
+        firstLine += ` | Cosmo ID: ${cosmoId}`;
+    }
+
+    outboundLines.push(firstLine);
+
+    // Second line
+    if (aniCbr) {
+        outboundLines.push(`ANI/CBR: ${aniCbr}`);
+    }
+
+    outboundBlock = outboundLines.join("\n");
+}
+
+    // ==========================================
+    // HEADER
+    // ==========================================
+
+    const headerParts = [];
+
+    if (category) {
+        headerParts.push(category);
+    }
+
+    if (category === "Service/Technical Issues") {
+
+        const sub = document
+            .getElementById("subCategory")
+            .value
+            .trim();
+
+        if (sub) {
+            headerParts.push(sub);
+        }
+
+        ftExtra.style.display = ticket ? "block" : "none";
+
+    } else if (category === "Billing/Aftersales Issues") {
+
+        const sub = document
+            .getElementById("subCategory")
+            .value
+            .trim();
+
+        if (sub) {
+            headerParts.push(sub);
+        }
+
+        ftExtra.style.display = "none";
+
+    } else if (
+        category === "Products and Promos" ||
+        category === "Personnel Complaints (Technicians, Contractors, Call center Vendor, SSC)" ||
+        category === "Brand Hate" ||
+        category === "Threats" ||
+        category === "Brand Advocacy/Positive Comments"
+    ) {
+
+        const detailSubValue = document
+            .getElementById("promoComplaintSub")
+            .value
+            .trim();
+
+        if (detailSubValue) {
+            headerParts.push(detailSubValue);
+        }
+
+        ftExtra.style.display = "none";
+
+    } else {
+        ftExtra.style.display = "none";
+    }
+
+    const header = headerParts.join(" | ");
+
+    // ==========================================
+    // FT DETAILS
+    // ==========================================
+
+    let ftBlock = "";
+
+    if (category === "Service/Technical Issues" && ticket) {
+
+        const issue = document
+            .getElementById("ftIssueType")
+            .value
+            .trim();
+
+        const origin = document
+            .getElementById("ftOrigin")
+            .value
+            .trim();
+
+        const cause = document
+            .getElementById("ftCause")
+            .value
+            .trim();
+
+        const creator = document
+            .getElementById("ftCreator")
+            .value
+            .trim();
+
+        const ftParts = [ticket];
+
+        if (issue) {
+            ftParts.push(issue);
+        }
+
+        if (origin) {
+            ftParts.push(origin);
+        }
+
+        if (cause) {
+            ftParts.push(cause);
+        }
+
+        if (creator) {
+            ftParts.push(creator);
+        }
+
+        ftBlock = `FT: ${ftParts.join(" / ")}`;
+    }
+
+    // ==========================================
+    // BUILD FINAL OUTPUT
+    // ==========================================
+    // Layout (each section separated by exactly one blank line):
+    //
+    //   Header [+ Outbound Call lines directly underneath]
+    //
+    //   Post Date: ...
+    //   Group: ...            <- only when Group is not blank
+    //
+    //   WOCAS: ...
+    //
+    //   URL: ...
+    //
+    //   FT: ...
+
+    const sections = [];
+
+    // Header (+ Outbound Call lines stay attached to the header)
+    // Billing/Aftersales: SO goes on its own line right under the header
+    const soLine = (category === "Billing/Aftersales Issues" && ticket) ? `SO: ${ticket}` : "";
+    const headerSection = [header, soLine, outboundBlock].filter(Boolean).join("\n");
+    if (headerSection) {
+        sections.push(headerSection);
+    }
+
+    // Post Date / Group (Group hidden when blank)
+    const postInfoLines = [];
+
+    if (postDate) {
+        postInfoLines.push(`Post Date: ${postDate}`);
+    }
+
+    if (customerGroup) {
+        postInfoLines.push(`Group: ${customerGroup}`);
+    }
+
+    if (postInfoLines.length) {
+        sections.push(postInfoLines.join("\n"));
+    }
+
+    // WOCAS
+    if (wocas) {
+        sections.push(`WOCAS: ${wocas}`);
+    }
+
+    // URL
+    if (url) {
+        sections.push(`URL: ${url}`);
+    }
+
+    // FT
+    if (ftBlock) {
+        sections.push(ftBlock);
+    }
+
+    // Strip trailing spaces on every line and make sure no more than
+    // one blank line ever appears in a row.
+    const finalNote = sections
+        .join("\n\n")
+        .split("\n")
+        .map(line => line.replace(/\s+$/g, ""))
+        .join("\n")
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
+
+    // ==========================================
+    // OUTPUT
+    // ==========================================
+
+    document.getElementById("subjectOutput").value = category;
+
+    document.getElementById("issueOutput").value = finalNote;
+}
+
+/* =========================================================
+   ENGAGEMENT NOTES
+   ========================================================= */
+
+function generateEngagement() {
+    const category = document.getElementById("category").value.trim();
+    const platform = document.getElementById("platform").value.trim();
+    const type = document.getElementById("engagementType").value.trim();
+    const persona = document.getElementById("persona").value.trim();
+    const acct = document.getElementById("accountNumber").value.trim();
+    const tel = document.getElementById("telephoneNumber").value.trim();
+    const action = document.getElementById("actionsDone").value.trim();
+    const comment = document.getElementById("commentText").value.trim();
+    const ticket = document.getElementById("ticketNumber").value.trim();
+
+    const issue = document.getElementById("ftIssueType").value.trim();
+    const origin = document.getElementById("ftOrigin").value.trim();
+    const cause = document.getElementById("ftCause").value.trim();
+    const creator = document.getElementById("ftCreator").value.trim();
+
+    const cosmoId = document
+        .getElementById("outboundCallCosmoId")
+        ?.value.trim() || "";
+
+    const aniCbr = document
+        .getElementById("outboundCallAniCbr")
+        ?.value.trim() || "";
+
+    const showComment = ENGAGEMENT_SHOWS_COMMENT.includes(type);
+
+    const showActionDone = ENGAGEMENT_SHOWS_ACTION_DONE.includes(type);
+
+    document.getElementById("commentContainer").style.display =
+        showComment ? "block" : "none";
+
+    document.getElementById("actionContainer").style.display =
+        showActionDone ? "block" : "none";
+
+    /* ---- Dynamic field labels based on Type of Engagement ---- */
+    const actionsDoneLabelEl = document.getElementById("actionsDoneLabel");
+    const commentTextLabelEl = document.getElementById("commentTextLabel");
+    const commentTextEl = document.getElementById("commentText");
+    const commentTextHintEl = document.getElementById("commentTextHint");
+
+    if (actionsDoneLabelEl) {
+        actionsDoneLabelEl.textContent =
+            type === ENGAGEMENT.editComment ? "Previous Comment with Actions Done" : "Actions Done";
+    }
+
+    if (commentTextLabelEl) {
+        if (type === ENGAGEMENT.editComment) {
+            commentTextLabelEl.textContent = "New Comment";
+        } else {
+            commentTextLabelEl.textContent = "Comment / Message Sent";
+        }
+    }
+
+    if (commentTextEl) {
+        commentTextEl.placeholder = "Comment/Message to customer...";
+    }
+
+    if (commentTextHintEl) {
+        commentTextHintEl.style.display = "none";
+    }
+
+    const outboundCallSelected = document.querySelector(
+        'input[name="outboundCall"]:checked'
+    );
+
+    const isOutboundCallback =
+        !!outboundCallSelected &&
+        outboundCallSelected.value === "Yes" &&
+        type === ENGAGEMENT.conductCallback;
+
+    const sectionSep = "\n\n";
+
+    /* =========================================================
+       OUTBOUND CALLBACK
+       ========================================================= */
+
+    if (isOutboundCallback) {
+
+        const outputLines = [];
+
+        // ------------------------------------------
+        // Header
+        // ------------------------------------------
+
+        let callbackHeader = "Conduct Callback - Outbound";
+
+        if (aniCbr) {
+            callbackHeader += ` | ${aniCbr}`;
+        }
+
+        outputLines.push(callbackHeader);
+
+        // ------------------------------------------
+        // Cosmo ID
+        // ------------------------------------------
+
+        if (cosmoId) {
+            outputLines.push(`Cosmo ID: ${cosmoId}`);
+        }
+
+        // ------------------------------------------
+        // Account / Telephone
+        // ------------------------------------------
+
+        const contactParts = [];
+
+        if (acct) {
+            contactParts.push(`Acct#: ${acct}`);
+        }
+
+        if (tel) {
+            contactParts.push(`Tel#: ${tel}`);
+        }
+
+        if (contactParts.length) {
+            outputLines.push(contactParts.join(" | "));
+        }
+
+        // ------------------------------------------
+        // Action Done
+        // ------------------------------------------
+
+        if (action) {
+            outputLines.push("");
+            outputLines.push(`Action Done: ${action}`);
+        }
+
+        // ------------------------------------------
+        // FT
+        // ------------------------------------------
+
+        if (ticket && category === "Service/Technical Issues") {
+
+            const ftParts = [ticket];
+
+            if (issue) {
+                ftParts.push(issue);
+            }
+
+            if (origin) {
+                ftParts.push(origin);
+            }
+
+            if (cause) {
+                ftParts.push(cause);
+            }
+
+            if (creator) {
+                ftParts.push(creator);
+            }
+
+            outputLines.push("");
+            outputLines.push(`FT: ${ftParts.join(" / ")}`);
+
+        } else if (ticket && category === "Billing/Aftersales Issues") {
+
+            outputLines.push("");
+            outputLines.push(`SO: ${ticket}`);
+        }
+
+        // ------------------------------------------
+        // Footer
+        // ------------------------------------------
+
+        outputLines.push("");
+        outputLines.push("CNDT-PusoAdvocate");
+
+        document.getElementById("engagementOutput").value =
+            outputLines.join("\n").trim();
+
+        return;
+    }
+
+    /* =========================================================
+       NORMAL ENGAGEMENT
+       ========================================================= */
+
+    const headerLines = [];
+    const headerParts = [];
+
+    if (platform && platform !== PLATFORM.callback) {
+        if (platform === PLATFORM.clientEndorsement) {
+            headerParts.push(
+                persona ? `${platform} from ${persona}` : platform
+            );
+        } else {
+            headerParts.push(platform);
+
+            if (persona) {
+                headerParts.push(`Persona used: ${persona}`);
+            }
+        }
+    }
+
+    if (headerParts.length) {
+        headerLines.push(headerParts.join(" | "));
+    }
+
+    if (type) {
+        headerLines.push(type);
+    }
+
+    const contactParts = [];
+
+    if (acct) {
+        contactParts.push(`Acct#: ${acct}`);
+    }
+
+    if (tel) {
+        contactParts.push(`Tel#: ${tel}`);
+    }
+
+    if (contactParts.length) {
+        headerLines.push(contactParts.join(" | "));
+    }
+
+    let note = headerLines.join("\n");
+
+    if (showActionDone && action) {
+        const actionLabel =
+            type === ENGAGEMENT.editComment ? "Previous Comment with Actions Done" : "Action Done";
+        note += `${sectionSep}${actionLabel}: ${action}`;
+    }
+
+    if (showComment && comment) {
+        let commentLabel = "Comment";
+        if (type === ENGAGEMENT.editComment) {
+            commentLabel = "New Comment";
+        }
+        note += `${sectionSep}${commentLabel}: ${comment}`;
+    }
+
+    if (ticket) {
+
+        if (category === "Service/Technical Issues") {
+
+            const ftParts = [ticket];
+
+            if (issue) {
+                ftParts.push(issue);
+            }
+
+            if (origin) {
+                ftParts.push(origin);
+            }
+
+            if (cause) {
+                ftParts.push(cause);
+            }
+
+            if (creator) {
+                ftParts.push(creator);
+            }
+
+            note += `${sectionSep}FT: ${ftParts.join(" / ")}`;
+
+        } else if (category === "Billing/Aftersales Issues") {
+
+            note += `${sectionSep}SO: ${ticket}`;
+        }
+    }
+
+    note += `${sectionSep}CNDT-PusoAdvocate`;
+
+    document.getElementById("engagementOutput").value =
+        note.trim();
+}
+
+/* =========================================================
+   COPY ISSUE
+   ========================================================= */
+
+function validateOutboundCallForCopy() {
+    const selected = document.querySelector(
+        'input[name="outboundCall"]:checked'
+    );
+
+    const radioGroupEl = document.getElementById("outboundCallToggle");
+
+    if (!selected) {
+        if (radioGroupEl) radioGroupEl.classList.add("field-missing");
+        showInlineMessage(radioGroupEl, "Select whether this is an Outbound Call: Yes or No.");
+        return false;
+    }
+
+    if (radioGroupEl) {
+        radioGroupEl.classList.remove("field-missing");
+        clearInlineMessage(radioGroupEl);
+    }
+
+    if (selected.value === "Yes") {
+        const cosmoIdEl = document.getElementById("outboundCallCosmoId");
+        const aniCbrEl = document.getElementById("outboundCallAniCbr");
+
+        const checks = [
+            [cosmoIdEl, "Enter the Call/Cosmo ID before copying."],
+            [aniCbrEl, "Enter the ANI/CBR before copying."]
+        ];
+
+        let firstMissing = null;
+
+        checks.forEach(([el, message]) => {
+            if (!el.value.trim()) {
+                el.classList.add("field-missing");
+                showInlineMessage(el, message);
+                if (!firstMissing) firstMissing = el;
+            } else {
+                el.classList.remove("field-missing");
+                clearInlineMessage(el);
+            }
+        });
+
+        if (firstMissing) {
+            firstMissing.focus();
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// Returns true when something was copied, false when validation stopped it.
+function copyIssue() {
+    const outputEl = document.getElementById("issueOutput");
+    clearInlineMessage(outputEl);
+
+    // Validate Outbound Call requirements first
+    if (!validateOutboundCallForCopy()) {
+        return false;
+    }
+
+    const issueOutput = outputEl.value;
+
+    if (!issueOutput.trim()) {
+        showInlineMessage(outputEl, "There is no Description Notes to copy yet.");
+        return false;
+    }
+
+    copyText(issueOutput).then(() => {
+        purgeSensitiveStorage();
+    }).catch(() => {
+        showInlineMessage(outputEl, "Couldn't copy automatically \u2014 select the text and press Ctrl+C.");
+    });
+
+    return true;
+}
+
+/* =========================================================
+   COPY SUBJECT
+   ========================================================= */
+
+function copySubject() {
+    const outputEl = document.getElementById("subjectOutput");
+
+    copyText(outputEl.value).catch(() => {
+        showInlineMessage(outputEl, "Couldn't copy automatically \u2014 select the text and press Ctrl+C.");
+    });
+
+    return true;
+}
+
+/* =========================================================
+   COPY ENGAGEMENT
+   ========================================================= */
+
+function copyEngagement() {
+    const outputEl = document.getElementById("engagementOutput");
+    const text = outputEl.value;
+
+    copyText(text).then(() => {
+        purgeSensitiveStorage();
+    }).catch(() => {
+        showInlineMessage(outputEl, "Couldn't copy automatically \u2014 select the text and press Ctrl+C.");
+    });
+
+    return true;
+}
+
+/* =========================================================
+   UNIVERSAL COPY
+   ========================================================= */
+
+function copyText(text) {
+    // Older copy method: works when the browser refuses the modern clipboard API
+    // (page not focused, embedded in another page, not a trusted origin, ...).
+    const legacyCopy = () => new Promise((resolve, reject) => {
+        const textarea = document.createElement("textarea");
+
+        textarea.value = text;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        let copied = false;
+        try {
+            copied = document.execCommand("copy");
+        } catch (error) {
+            copied = false;
+        }
+
+        document.body.removeChild(textarea);
+
+        if (copied) {
+            resolve();
+        } else {
+            reject(new Error("Copy was blocked by the browser"));
+        }
+    });
+
+    if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text).catch(legacyCopy);
+    }
+
+    return legacyCopy();
+}
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+function updateDarkModeToggle() {
+    const toggle = document.getElementById("darkModeToggle");
+    const label = document.getElementById("darkModeLabel");
+
+    if (!toggle) return;
+
+    const isDark = document.body.classList.contains("dark");
+
+    toggle.setAttribute("aria-pressed", String(isDark));
+
+    if (label) {
+        label.textContent = isDark ? "Light Mode" : "Dark Mode";
+    }
+}
+
+function toggleDarkMode() {
+    document.body.classList.toggle("dark");
+
+    const isDark = document.body.classList.contains("dark");
+
+    store.set("dark", isDark);
+
+    updateDarkModeToggle();
+
+    playPressAnimation("darkModeToggle");
+}
+
+if (store.get("dark") === "true") {
+    document.body.classList.add("dark");
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+function resetAll() {
+    getSaveableFields().forEach(el => {
+        el.value = "";
+
+        store.remove(FORM_STORAGE_PREFIX + el.id);
+    });
+
+    purgeSensitiveStorage();
+    clearAllInlineMessages();
+
+    document.getElementById("subCategoryContainer").style.display = "none";
+    document.getElementById("promoComplaintContainer").style.display = "none";
+    document.getElementById("ticketContainer").style.display = "none";
+    document.getElementById("commentContainer").style.display = "none";
+    document.getElementById("ftExtraContainer").style.display = "none";
+
+    document.getElementById("platform").value = PLATFORM.facebook;
+
+    // Keep Outbound Call (and Case Info callback fields) in step with the reset Platform
+    syncPlatformToOutboundCall();
+    syncOutboundCallToAllSections();
+
+    updatePersonaDropdown();
+    updateEngagementPersonaVisibility();
+
+    document.getElementById("subjectOutput").value = "";
+    document.getElementById("issueOutput").value = "";
+    document.getElementById("engagementOutput").value = "";
+
+    clearBusinessSearch();
+    closeCaseInfoModal();
+
+    generateIssueNotes();
+    generateEngagement();
+}
+
+/* =========================================================
+   BUSINESS ZONE / CITY SEARCH DATABASE
+   ========================================================= */
+
+const businessZoneData = JSON.parse(document.getElementById("zone-data").textContent);
+// Lower-cased search text per row, built once so each keystroke is a plain string scan.
+const businessZoneIndex = businessZoneData.map(row => row.join("\u0001").toLowerCase());
 
 /* =========================================================
    HIGHLIGHT SEARCH
@@ -5058,10 +5385,8 @@ function searchBusinessZones() {
         return;
     }
 
-    const results = businessZoneData.filter(row =>
-        row.some(value =>
-            String(value).toLowerCase().includes(searchInput)
-        )
+    const results = businessZoneData.filter((row, i) =>
+        businessZoneIndex[i].includes(searchInput)
     );
 
     if (results.length === 0) {
@@ -5141,19 +5466,23 @@ function selectBusinessZone(businessZone, cityExchange) {
     if (businessZoneField) {
         businessZoneField.value = businessZone;
         businessZoneField.classList.add("field-selected");
+        businessZoneField.classList.remove("field-missing");
+        clearInlineMessage(businessZoneField);
     }
 
     if (cityExchangeField) {
         cityExchangeField.value = cityExchange;
         cityExchangeField.classList.add("field-selected");
+        cityExchangeField.classList.remove("field-missing");
+        clearInlineMessage(cityExchangeField);
     }
 
-    localStorage.setItem(
+    store.set(
         FORM_STORAGE_PREFIX + "caseBusinessZone",
         businessZone
     );
 
-    localStorage.setItem(
+    store.set(
         FORM_STORAGE_PREFIX + "caseCityExchange",
         cityExchange
     );
@@ -5230,6 +5559,8 @@ function closeCaseInfoModal() {
 function clearModalFields(modalId) {
     const modal = document.getElementById(modalId);
     if (!modal) return;
+
+    clearAllInlineMessages(modal);
 
     modal.querySelectorAll("input, select, textarea").forEach((el) => {
         el.classList.remove("field-missing");
@@ -5448,9 +5779,13 @@ function validateCaseInformation() {
         const value = getValue(id);
         if (!value) {
             missing.push(label);
-            if (el) el.classList.add("field-missing");
+            if (el) {
+                el.classList.add("field-missing");
+                showInlineMessage(el, "Required", { timeout: 0 });
+            }
         } else if (el) {
             el.classList.remove("field-missing");
+            clearInlineMessage(el);
         }
     });
 
@@ -5461,8 +5796,10 @@ function validateCaseInformation() {
         if (!otherQueue) {
             missing.push("Service Order Status/Queue");
             document.getElementById("otherQueue").classList.add("field-missing");
+            showInlineMessage(document.getElementById("otherQueue"), "Required", { timeout: 0 });
         } else {
             document.getElementById("otherQueue").classList.remove("field-missing");
+            clearInlineMessage(document.getElementById("otherQueue"));
         }
     }
 
@@ -5473,8 +5810,10 @@ function validateCaseInformation() {
         if (!callerId) {
             missing.push("Cosmo/Call ID");
             document.getElementById("caseCallerId").classList.add("field-missing");
+            showInlineMessage(document.getElementById("caseCallerId"), "Required", { timeout: 0 });
         } else {
             document.getElementById("caseCallerId").classList.remove("field-missing");
+            clearInlineMessage(document.getElementById("caseCallerId"));
         }
     }
 
@@ -5523,17 +5862,22 @@ function initCaseInfoLiveValidation() {
     });
 }
 
-initCaseInfoLiveValidation();
-
 async function copyCaseInformation() {
+    const copyBtn = document.getElementById("copyCaseInfoBtn");
     const missingFields = validateCaseInformation();
     if (missingFields.length > 0) {
-        alert(
-            "Please complete the following field(s) before copying:\n\n- " +
-            missingFields.join("\n- ")
+        showInlineMessage(
+            copyBtn.parentElement,
+            "Complete " + missingFields.length + " required field" +
+                (missingFields.length === 1 ? "" : "s") + " before copying: " +
+                missingFields.join(", ") + ".",
+            { position: "beforebegin", timeout: 0 }
         );
+        const firstMissing = document.querySelector("#caseInfoModal .field-missing");
+        if (firstMissing) firstMissing.focus();
         return; // stop here — nothing gets copied
     }
+    clearInlineMessage(copyBtn.parentElement);
 
     const getValue = (id) => {
         const element = document.getElementById(id);
@@ -5628,14 +5972,14 @@ async function copyCaseInformation() {
             })
         ]);
 
-        const copyButton = document.querySelector(
-            "button[onclick='copyCaseInformation()']"
-        );
+        const copyButton = document.getElementById("copyCaseInfoBtn");
 
         showCopyFeedback(
             copyButton,
             "📋 Copy Case Information"
         );
+
+        purgeSensitiveStorage();
 
     } catch (error) {
         const hiddenOutput = document.getElementById(
@@ -5647,14 +5991,14 @@ async function copyCaseInformation() {
 
         document.execCommand("copy");
 
-        const copyButton = document.querySelector(
-            "button[onclick='copyCaseInformation()']"
-        );
+        const copyButton = document.getElementById("copyCaseInfoBtn");
 
         showCopyFeedback(
             copyButton,
             "📋 Copy Email Escalation Report"
         );
+
+        purgeSensitiveStorage();
     }
 }
 
@@ -5690,7 +6034,7 @@ document.getElementById("engagementType").addEventListener("change", () => {
     const platform = document.getElementById("platform").value.trim();
     const type = document.getElementById("engagementType").value.trim();
 
-    if (platform === "Client Endorsement" && type === "Outbound Call") {
+    if (platform === PLATFORM.clientEndorsement && type === ENGAGEMENT.outboundCall) {
         const yesRadio = document.querySelector(
             'input[name="outboundCall"][value="Yes"]'
         );
@@ -5702,26 +6046,38 @@ document.getElementById("engagementType").addEventListener("change", () => {
     }
 });
 
-/* Normal form fields */
+/* Normal form fields (the zone search box and the notepad have their own handlers) */
 document.querySelectorAll("input, textarea, select").forEach(el => {
+    if (el.id === "businessSearch" || el.id === "sideNotepadText") return;
+
     el.addEventListener("input", () => {
         generateIssueNotes();
         generateEngagement();
-        saveFormData();
+        saveFormData(el);
     });
 
     el.addEventListener("change", () => {
         generateIssueNotes();
         generateEngagement();
-        saveFormData();
+        saveFormData(el);
     });
 });
 
-/* Business Search */
-document.getElementById("businessSearch").addEventListener(
-    "input",
-    searchBusinessZones
+/* Business Search: wait for a short pause in typing before filtering all rows */
+const businessSearchInput = document.getElementById("businessSearch");
+const debouncedBusinessSearch = debounce(
+    searchBusinessZones,
+    CONFIG.timing.zoneSearchDebounceMs
 );
+
+businessSearchInput.addEventListener("input", () => {
+    // show/hide the clear (x) button immediately, filter after the pause
+    const clearBtn = document.getElementById("businessSearchClear");
+    if (clearBtn) {
+        clearBtn.classList.toggle("is-visible", businessSearchInput.value.trim().length > 0);
+    }
+    debouncedBusinessSearch();
+});
 
 /* =========================================================
    SIDE NOTEPAD — free-text scratchpad
@@ -5734,7 +6090,7 @@ const SIDE_NOTEPAD_STORAGE_KEY = "sideNotepad_text";
 let sideNotepadSaveTimeout;
 
 function loadSideNotepad() {
-    const saved = localStorage.getItem(SIDE_NOTEPAD_STORAGE_KEY);
+    const saved = store.get(SIDE_NOTEPAD_STORAGE_KEY);
     const textarea = document.getElementById("sideNotepadText");
     if (textarea && saved !== null) {
         textarea.value = saved;
@@ -5751,11 +6107,16 @@ function flashSideNotepadStatus(message) {
     }, 1400);
 }
 
+function setSideTabsHidden(hidden) {
+    document.querySelectorAll(".side-tabs .side-notepad-tab").forEach(tab => {
+        tab.classList.toggle("is-hidden", hidden);
+    });
+}
+
 function openSideNotepad() {
     document.getElementById("sideNotepadModal").classList.add("show");
-    const tab = document.getElementById("sideNotepadTab");
-    tab.classList.add("is-hidden");
-    tab.setAttribute("aria-expanded", "true");
+    setSideTabsHidden(true);
+    document.getElementById("sideNotepadTab").setAttribute("aria-expanded", "true");
     setTimeout(() => {
         const textarea = document.getElementById("sideNotepadText");
         if (textarea) textarea.focus();
@@ -5763,10 +6124,12 @@ function openSideNotepad() {
 }
 
 function closeSideNotepad() {
-    document.getElementById("sideNotepadModal").classList.remove("show");
-    const tab = document.getElementById("sideNotepadTab");
-    tab.classList.remove("is-hidden");
-    tab.setAttribute("aria-expanded", "false");
+    const modal = document.getElementById("sideNotepadModal");
+    if (!modal.classList.contains("show")) return;
+
+    modal.classList.remove("show");
+    document.getElementById("sideNotepadTab").setAttribute("aria-expanded", "false");
+    setSideTabsHidden(false);
 }
 
 function toggleSideNotepad() {
@@ -5783,21 +6146,84 @@ function clearSideNotepad() {
     if (!textarea) return;
     if (textarea.value && !confirm("Clear all notepad text?")) return;
     textarea.value = "";
-    localStorage.removeItem(SIDE_NOTEPAD_STORAGE_KEY);
+    store.remove(SIDE_NOTEPAD_STORAGE_KEY);
     flashSideNotepadStatus("Cleared");
     textarea.focus();
 }
-
-loadSideNotepad();
 
 document.getElementById("sideNotepadText").addEventListener("input", function() {
     clearTimeout(sideNotepadSaveTimeout);
     const value = this.value;
     sideNotepadSaveTimeout = setTimeout(() => {
-        localStorage.setItem(SIDE_NOTEPAD_STORAGE_KEY, value);
-        flashSideNotepadStatus("Saved");
+        const saved = store.set(SIDE_NOTEPAD_STORAGE_KEY, value);
+        flashSideNotepadStatus(saved ? "Saved" : "Not saved \u2014 storage unavailable");
     }, 400);
 });
+
+/* =========================================================
+   INIT  (one place for everything that used to hang off
+   five separate DOMContentLoaded listeners)
+   ========================================================= */
+
+function init() {
+    // one-time setup that used to run at the top level
+    syncCaseFields();
+    initCaseInfoLiveValidation();
+    loadSideNotepad();
+
+    // break alarms
+    loadBreakAlarmSchedule();
+    loadActiveBreakTimer();
+
+    const trainingDurationInput = document.getElementById("breakAlarmDuration_training");
+    if (trainingDurationInput) {
+        trainingDurationInput.addEventListener("change", () => {
+            updateTrainingDurationLabel();
+        });
+    }
+
+    // form state
+    loadFormData();
+    syncPlatformToOutboundCall();
+    updatePersonaDropdown();
+    updateCategoryFields(true);
+    updateEngagementPersonaVisibility();
+    generateIssueNotes();
+    generateEngagement();
+    searchBusinessZones();
+
+    // outbound call: live-sync the Cosmo ID while typing, then one initial sync
+    const outboundCosmoId = document.getElementById("outboundCallCosmoId");
+    if (outboundCosmoId) {
+        outboundCosmoId.addEventListener("input", () => {
+            const selected = document.querySelector('input[name="outboundCall"]:checked');
+
+            // Only sync when Outbound Call = Yes
+            if (selected && selected.value === "Yes") {
+                syncOutboundCallToAllSections();
+            }
+        });
+    }
+    syncOutboundCallToAllSections();
+
+    // post URL -> case info URL
+    const mainUrl = document.getElementById("url");
+    if (mainUrl) {
+        mainUrl.addEventListener("input", syncCaseUrl);
+        mainUrl.addEventListener("change", syncCaseUrl);
+    }
+    syncCaseUrl();
+
+    // theme toggle label
+    updateDarkModeToggle();
+
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+} else {
+    init();
+}
 
 </script>
 
