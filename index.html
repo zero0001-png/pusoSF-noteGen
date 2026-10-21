@@ -4990,28 +4990,24 @@ function generateEngagement() {
        ========================================================= */
 
     const headerLines = [];
-    const headerParts = [];
 
-    if (platform && platform !== PLATFORM.callback) {
+    if (platform && platform !== PLATFORM.callback && platform !== PLATFORM.clientEndorsement) {
+        // Layout: "Platform | Engagement Type" then "Persona used: X"
+        headerLines.push(type ? `${platform} | ${type}` : platform);
+
+        if (persona) {
+            headerLines.push(`Persona used: ${persona}`);
+        }
+    } else {
         if (platform === PLATFORM.clientEndorsement) {
-            headerParts.push(
+            headerLines.push(
                 persona ? `${platform} from ${persona}` : platform
             );
-        } else {
-            headerParts.push(platform);
-
-            if (persona) {
-                headerParts.push(`Persona used: ${persona}`);
-            }
         }
-    }
 
-    if (headerParts.length) {
-        headerLines.push(headerParts.join(" | "));
-    }
-
-    if (type) {
-        headerLines.push(type);
+        if (type) {
+            headerLines.push(type);
+        }
     }
 
     const contactParts = [];
