@@ -4361,18 +4361,17 @@ function updateCategoryFields(isInitialLoad = false) {
 
         [
 
-            "Report Trouble - NIC/NDT",
+			"  ",
+			"Bantay Kable (164)",
+			"Follow Up Repair",
+			"Report Trouble - NDT",
 			"Report Trouble - NIC",
-            "Report Trouble - NDT",
-            "Report Trouble - SIC/INTERMITTENT",
-			"Follow Up Repair (OFSC)",
-            "Follow Up Repair (Outage)",
-            "Report Trouble - IPTV",
-            "Report Trouble - VAS (Defective Unit / Content Issue)",
-            "Bantay Kable (164)",
-            "Modem Requests (Super Admin / Local GUI / Change WiFi UN/PW)",
-            "Service Restoration (Customer Confirmed)",
-            "Service Restoration (Unconfirmed)"
+			"Report Trouble - SIC/INTERMITTENT",
+			"Report Trouble - IPTV",
+			"Report Trouble - VAS (Defective Unit / Content Issue)",
+			"Modem Requests (Super Admin / Local GUI / Change WiFi UN/PW)",
+			"Service Restoration"
+			
         ].forEach(o => {
             const opt = document.createElement("option");
             opt.value = o;
@@ -4388,28 +4387,29 @@ function updateCategoryFields(isInitialLoad = false) {
         ticketContainer.style.display = "block";
 
         [
-            "Relocation",
-            "Relocation (Follow Up)",
-            "New Application",
-            "New Application (Follow Up)",
-            "Cignal Activation",
-            "Upgrade / Downgrade",
-            "Disconnection",
-            "Reconnection",
-            "Account / Billing Concerns",
-			"Payment Concerns",
-            "myHome Concerns",
-            "Bill Dispute",
-			"Rebate",
-            "Refund",
-            "VAS Activation (HBO Max / Netflix / Viu)",
-			"VAS Delivery (Follow Up)",
-			"Inmove",
-			"Wire Re-Route",
-			"Change Ownership",
+			"Account / Billing Concerns",
 			"Always On",
+			"Bill Dispute",
+			"Change Ownership",
+			"Cignal / IPTV",
+			"Device Add-ons (Mesh, Cameras, etc.)",
+			"Disconnection",
 			"Migration",
-            "Others"
+			"myHome Concerns",
+			"New Application",
+			"New Application (Follow Up)",
+			"Others",
+			"Payment Concerns",
+			"Rebate",
+			"Reconnection",
+			"Refund",
+			"Relocation",
+			"Relocation (Follow Up)",
+			"Simple SO (Inmove, Wire Re-Route, etc)",
+			"Upgrade / Downgrade",
+			"VAS Activation (HBO Max / Netflix / Viu)",
+			"VAS Delivery (Follow Up)"
+			
         ].forEach(o => {
             const opt = document.createElement("option");
             opt.value = o;
@@ -4436,6 +4436,7 @@ function updateCategoryFields(isInitialLoad = false) {
             "Speed Add On",
             "Speed Alignment",
             "Wifi Mesh"
+			
         ].forEach(o => {
             const opt = document.createElement("option");
             opt.value = o;
@@ -4462,7 +4463,9 @@ function updateCategoryFields(isInitialLoad = false) {
             "SSC Personnel",
             "Technician",
             "Customer Service Complaints",
-            "Telesales"
+            "Telesales", 
+			"Chatbot / IVRS Complaints"
+			
         ].forEach(o => {
             const opt = document.createElement("option");
             opt.value = o;
@@ -4523,7 +4526,7 @@ function updateCategoryFields(isInitialLoad = false) {
         [
             " ",
             "Positive Experience",
-            "Product / Brand Promotion",
+            "Brand / Product Promotion",
             "Success Story / Testimonial",
             "Brand Defense",
             "Product / Service Satisfaction",
